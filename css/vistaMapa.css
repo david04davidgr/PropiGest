@@ -1,0 +1,535 @@
+*{
+    padding: 0;
+}
+
+body{
+    display: flex;
+    margin: 0 auto;
+    font-family: 'Lato';
+    overflow: hidden;
+}
+
+aside{
+    position: relative;
+    width: 12vh;
+    height: 100vh;
+    padding: 0.6%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background-color: #4CAF50;
+    border-right: 2px solid white;
+
+    h1{
+        color: #333;
+        text-shadow: 2px 2px 2px #f5f5f5;
+        text-align: center;
+    }
+
+    .menu{
+        width: 100%;
+        border-top: 2px solid #f5f5f5;
+
+        ul{
+            width: 100%;
+            padding-left: 0;
+        }
+
+        li{
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            font-size: 1rem;
+            list-style: none;
+            padding: 8%;
+            margin-bottom: 15%;
+            border-radius: 10px;
+
+            a{
+                text-decoration: none;
+                color: #333;
+
+                img{
+                    width: 70%;
+                    padding: 2%;
+                    vertical-align: middle;
+                }
+            }
+
+            &:hover{
+                background-color: rgba(255, 255, 255, 0.603) ;
+            }
+        }
+    }
+
+    .cuenta{
+        position: absolute;
+        width: 85%;
+        text-align: center;
+        bottom: 0;
+        margin-bottom: 10%;
+
+        hr{
+            border: 0.75px solid #f5f5f5;
+            border-color: #f5f5f5;
+        }
+
+        img{
+            width: 50%;
+        }
+    }
+}
+
+main {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+
+    #map {
+        position: relative;
+        width: 80%;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        z-index: 0;
+
+        /* Popup general de Leaflet */
+        .leaflet-popup-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 120%;
+            padding: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            max-width: 90vw;
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .leaflet-popup-close-button {
+            position: absolute;
+            top: 1.5%;
+            right: -17%;
+            width: 15%;
+            height: auto;
+            font-size: 1.40rem;
+            text-align: center;
+            color: #333;
+            background: none;
+            border-radius: 100%;
+            border: 2px solid #f5f5f5;
+            cursor: pointer;
+            transition: 0.5s;
+
+            &:hover {
+                color: #ff0000;
+                transform: scale(1.05);
+                transition: all 0.3s ease;
+            }
+        }
+
+        /* Estilos buscador */
+        .leaflet-control-geocoder {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80vw;
+            background-color: transparent;
+            z-index: 1000;
+            border: none;
+        }
+        
+        .leaflet-control-geocoder-form {
+            width: 25%;
+            height: 2.25vh;
+            padding: 0.25%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-items: center;
+            background-color: #f5f5f5;
+            border: 2px solid #333;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        .leaflet-control-geocoder-form input {
+            width: 100%;
+        }
+
+        .leaflet-control-geocoder-alternatives {
+            width: 25%;
+            position: absolute;
+            display: block;
+            top: 100%;
+            background-color: #81c784;
+            list-style: none;
+            padding: 0;
+            margin: 0
+        }
+
+        .leaflet-control-geocoder-alternatives-minimized {
+            display: none;
+            height: 0;
+            visibility: hidden;
+        }
+        
+        /* Estilo para el contenedor de resultados */
+        .leaflet-control-geocoder-alternatives-list {
+            transform: translateX(-50%); /* Centra los resultados */
+            width: 100%; /* Asegura que tenga el mismo ancho que el input */
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Estilo para cada resultado individual */
+        .leaflet-control-geocoder-alternatives-list li {
+            padding: 8px;
+            cursor: pointer;
+        }
+        
+        .leaflet-control-geocoder-alternatives-list li:hover {
+            background-color: #f5f5f5;
+        }
+
+
+        /* Contenedor principal */
+        .tarjeta_propiedad {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: #fff;
+        }
+
+        /* Imagen dentro del contenedor */
+        .tarjeta_propiedad img {
+            width: 120%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* Contenido debajo de la imagen */
+        .tarjeta_propiedad .contenido {
+            padding: 1% 1%;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.25;
+
+            .status{
+                color: #4CAF50;
+
+                i{
+                    padding-left: 1%;
+                }
+            }
+        }
+
+        /* Botón personalizado */
+        .tarjeta_propiedad .btn {
+            display: inline-block;
+            padding: 9% 40%;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Hover en el botón */
+        .tarjeta_propiedad .btn:hover {
+            background-color: #45a049;
+        }
+
+        .cont_new_propiedad{
+            width: 25%;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            position: absolute;
+            top: 91vh;
+            left: 0.75%;
+
+            a#new_propiedad{
+                z-index: 999;
+                width: 70px;
+                height: 70px;
+                text-align: center;
+                line-height: 70px;
+                border-radius: 100%;
+                font-size: 2rem;
+                font-weight: bold;
+                text-decoration: none;
+                background-color: #333;
+                color: #f5f5f5;
+                border: 2px solid #4CAF50;
+                cursor: pointer;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background-color: #424242;
+                    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+                }
+
+                &:active {
+                    background-color: #1e7e34;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    transform: scale(1);
+                }
+            }
+
+            #text_new_propiedad{
+                opacity: 0;
+                visibility: hidden;
+                z-index: 998;
+                background-color: white;
+                padding: 1%;
+                font-weight: bold;
+                padding-left: 13%;
+                margin-left: -11%;
+                border: 2px solid #333;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                /* transition: opacity 0.5s ease, visibility 0.5s ease; */
+            }
+
+            a#new_propiedad:hover + #text_new_propiedad{
+                opacity: 1;
+                visibility: visible;
+                /* animation: info 1s forwards; Se asegura que quede en el estado final */
+            }
+
+            /* @keyframes info {
+                    from{
+                        margin-left:-20%;
+                    }
+                    to{
+                        margin-left: -11%;
+                    }
+            } */
+        }
+
+        .btn_lista_container{
+            position: absolute;
+            right: 0.5%;
+            bottom: 1.80%;
+            z-index: 999;
+
+            button{
+                width: 50px;
+                height: 50px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #333;
+                border: 2px solid #45a049;
+                border-radius: 30px;
+            }
+
+        }
+
+        .leaflet-control-layers {
+            position: absolute;
+            right: 50%;
+            background-color: #333;
+            color: white;
+            border: 3px solid #81c784;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Cambiar el fondo al pasar el ratón */
+        .leaflet-control-layers:hover {
+            background-color: #45a049;
+        }
+
+        /* Personalizar la lista desplegable */
+        .leaflet-control-layers-list {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* Cambiar el estilo de los checkboxes o radios */
+        .leaflet-control-layers input[type="radio"],
+        .leaflet-control-layers input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+        }
+
+        /* Cambiar el estilo de los textos de las capas */
+        .leaflet-control-layers label {
+            color: #333333;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    }
+
+    .listaPropiedadesContainer{
+        width: 20%;
+        height: 100vh;
+        max-height: 100vh;
+        overflow-y: auto;
+        position: absolute;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+        align-items: center;
+        background-color: #333;
+        border-left: 3px solid #81c784;
+
+        .btn_todas_container{
+            width: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+
+        }
+        
+        .btn_todas{
+            width: 100%;
+            padding: 2%;
+            outline: none;
+            border: none;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #333;
+            background-color: #81c784;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            transition: 0.5s;
+            
+            &:hover{
+                transition: 0.8s ease-in-out;
+                transform: scale(0.99);
+                background-color: #67b36a;
+                cursor: pointer;
+            }
+        }
+
+        ul{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+        li{
+            list-style: none;
+        }
+
+        .tarjeta_propiedad_aside {
+            position: relative;
+            width: 80%;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            /* padding-bottom: 12%; */
+            margin-bottom: 4%;
+            
+            img {
+                width: 100%;
+                height: 50%;
+                object-fit: cover;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+            }
+            
+            /* .contenido{
+        
+            } */
+        
+            a{
+                width: 50%;
+            }
+            
+            .btn_izqd {
+                width: 100%;
+                height: 5vh;
+                border: none;
+                outline: none;
+                font-size: 1rem;
+                font-weight: bold;
+                color: #fff;
+                background-color: #4CAF50;
+                border-bottom-left-radius: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                
+                &:hover {
+                    background-color: #45a049;
+                }
+            }
+            
+            .btn_drch {
+                width: 100%;
+                height: 5vh;
+                border: none;
+                outline: none;
+                font-size: 1rem;
+                font-weight: bold;
+                color: #fff;
+                background-color: #4CAF50;
+                border-bottom-right-radius: 20px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: background-color 0.3s ease, transform 0.2s ease;
+                
+                &:hover {
+                    background-color: #45a049;
+                }
+            }
+        
+        }
+
+        .foot_tarjeta{
+            width: 100%;
+            position: absolute;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            bottom: 0;
+    
+        }
+        
+
+    }
+
+}

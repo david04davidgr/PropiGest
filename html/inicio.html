@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renter - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/95eacc2461.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+    <link rel="stylesheet" href="../css/inicio.css">
+</head>
+<body>
+    <aside>
+        <h1>Renter</h1>
+        <div class="menu">
+            <ul>
+                <li><a href="#"><img src="../src/casa (1).png" alt="Inicio" title="Inicio"></a></li>
+                <li><a href=""><img src="../src/beneficiarse.png" alt="Balance" title="Balance"></a></li>
+                <li><a href=""><img src="../src/inquilino.png" alt="Inquilinos" title="Inquilinos"></a></li>
+                <li><a href=""><img src="../src/documentacion.png" alt="Documentos" title="Documentos"></a></li>
+                <li><a href=""><img src="../src/limpieza.png" alt="Mantenimiento" title="Mantenimiento"></a></li>
+            </ul>
+        </div>
+        <div class="cuenta">
+            <hr>
+            <a href=""><img src="../src/user.png" alt="cuenta" title="Cuenta"></a>
+        </div>
+    </aside>
+    <main>
+        <div class="estadisticas">
+            <div class="metrica_balance">
+                <canvas id="graphBalance"></canvas>
+                <div class="infoBalance">
+                    <div class="ingresos">
+                        <p>5000€</p>
+                        <h2>Ingresos</h2>
+                    </div>
+                    <div class="gastos">
+                        <p>300€</p>
+                        <h2>Gastos</h2>
+                    </div>
+                </div>
+                <!-- <h2>Balance</h2> -->
+            </div>
+            <div class="metrica_bar_actividad">
+                <canvas id="graphActividad"></canvas>
+                <h2>Actividad</h2>
+            </div>
+            <div class="metrica_actividad">
+                <div class="disponibles-noContainer">
+                    <div class="disponibles">
+                        <p id="propiedadesDisponibles">-</p>
+                        <h4>Disponibles</h4>
+                    </div>
+                    <div class="no-disponibles">
+                        <p id="propiedadesNoDisponibles">-</p>
+                        <h4>No Disponibles</h4>
+                    </div>
+                </div>
+                <div class="total">
+                    <p id="totalPropiedades">-</p>
+                    <h3>Total</h3>
+                </div>
+            </div>
+        </div>
+        <div class="propiedades_container" id="propiedades_container">
+            
+        </div>
+    </main>
+</body>
+<script src="../js/inicio.js"></script>
+</html>
