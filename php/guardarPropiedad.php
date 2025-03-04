@@ -63,7 +63,8 @@ $stmt->bind_param("ssssdsdsssssiiis",
 );
 
 if ($stmt->execute()) {
-    echo "Registro insertado correctamente";
+    $id_propiedad = $conn->insert_id;
+    header("Location: ../html/vistaMapa.html?id=". $id_propiedad); //No funciona
 } else {
     echo "Error: " . $stmt->error;
 }
