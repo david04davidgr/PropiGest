@@ -41,10 +41,29 @@
             //Icono propiedad
             let houseIcon = L.icon({
               iconUrl: '../src/casa (1).png',
-              iconSize: [64, 64],       // Tamaño reducido
-              iconAnchor: [32, 64],     // Mitad del ancho y base del ícono
-              popupAnchor: [0, -64]     // Popup sobre el ícono
+              iconSize: [64, 64],
+              iconAnchor: [32, 64],
+              popupAnchor: [0, -64]
             });
+
+            //Añade buscador
+            L.Control.geocoder({
+              defaultMarkGeocode: false,
+              position: 'topleft',
+              placeholder: 'Buscar dirección...',
+              geocoder: L.Control.Geocoder.nominatim()
+            })
+              .on('markgeocode', function (e) {
+                const bbox = e.geocode.bbox;
+                const poly = L.polygon([
+                  bbox.getSouthEast(),
+                  bbox.getNorthEast(),
+                  bbox.getNorthWest(),
+                  bbox.getSouthWest()
+                ]);
+                map.fitBounds(poly.getBounds());
+              })
+              .addTo(map);
 
             //Obtencion de propiedades y creado automatico de tarjetas
               //Obtencion de datos BD
@@ -83,9 +102,9 @@
 
             function onMapClick(e) {
               popup
-                .setLatLng(e.latlng) // Configura la posición del popup
-                .setContent(`Ubicacion Guardada ✅`) // Configura el contenido
-                .openOn(map); // Muestra el popup en el mapa
+                .setLatLng(e.latlng)
+                .setContent(`Ubicacion Guardada ✅`)
+                .openOn(map);
 
                 latitud = e.latlng.lat;
                 longitud = e.latlng.lng;
@@ -96,10 +115,9 @@
             map.on('click', onMapClick);
             
           } else {
-              // Si ya existe, redibujar el mapa para que se vea bien
               map.invalidateSize();
           }
-      }, 200); // Esperar un poco para evitar errores
+      }, 200);
   });
 
   btnEnviar.addEventListener('click', function(e){

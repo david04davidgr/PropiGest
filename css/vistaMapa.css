@@ -316,13 +316,13 @@ main {
                 border: 2px solid #333;
                 border-top-right-radius: 10px;
                 border-bottom-right-radius: 10px;
-                /* transition: opacity 0.5s ease, visibility 0.5s ease; */
+                transition: opacity 0.25s ease, visibility 0.25s ease;
             }
 
             a#new_propiedad:hover + #text_new_propiedad{
                 opacity: 1;
                 visibility: visible;
-                /* animation: info 1s forwards; Se asegura que quede en el estado final */
+                animation: info 1s forwards;
             }
 
             /* @keyframes info {

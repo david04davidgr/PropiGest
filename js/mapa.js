@@ -78,10 +78,6 @@
         })
         .addTo(map);
 
-        document.querySelector('.leaflet-control-geocoder input').addEventListener('input', function() {
-            geocoderControl._geocode(); // Ejecuta la búsqueda mientras escribes
-        });
-
         //Evita un click sobre el mapa bajo el boton
         L.DomEvent.disableClickPropagation(document.querySelector('#new_propiedad'));
         L.DomEvent.disableClickPropagation(document.querySelector('#btn_lista'));
@@ -112,23 +108,6 @@
                 }
             });
         }
-
-        // const marker = L.marker([39.464398, -6.37877], { icon: houseIcon }).addTo(map)
-        //     .bindPopup('<b>Hola este es el piso de David</b><br />I am a popup.')
-        //     ;
-
-        // const circle = L.circle([39.464398, -6.37877], {
-        //     color: 'red',
-        //     fillColor: '#f03',
-        //     fillOpacity: 0.5,
-        //     radius: 20
-        // }).addTo(map).bindPopup('Area del piso de David.');
-
-        // const polygon = L.polygon([
-        //     [51.509, -0.08],
-        //     [51.503, -0.06],
-        //     [51.51, -0.047]
-        // ]).addTo(map).bindPopup('I am a polygon.');
 
         const popup = L.popup();
 
