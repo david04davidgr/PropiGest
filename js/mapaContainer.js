@@ -9,7 +9,7 @@ let estado_lista = true;
 //Funciones 
 
     //Obtencion de datos BD
-    fetch('./../php/inicio.php')
+    fetch('./../php/obtenerPropiedades.php')
         .then(response => response.json())
         .then(data => {
             // console.log(data);

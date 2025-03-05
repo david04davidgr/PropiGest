@@ -64,7 +64,7 @@ $stmt->bind_param("ssssdsdsssssiiis",
 
 if ($stmt->execute()) {
     $id_propiedad = $conn->insert_id;
-    header("Location: ../html/vistaMapa.html?id=". $id_propiedad); //No funciona
+    header("Location: ../html/vistaMapa.html?id_propiedad=". $id_propiedad); //No funciona
 } else {
     echo "Error: " . $stmt->error;
 }

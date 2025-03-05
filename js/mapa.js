@@ -40,10 +40,12 @@
         iconAnchor: [32, 64],     // Mitad del ancho y base del ícono
         popupAnchor: [0, -64]     // Popup sobre el ícono
     });
+
+    let marcardores = new Map();
     
     //Obtencion de propiedades y creado automatico de tarjetas
         //Obtencion de datos BD
-        fetch('./../php/inicio.php')
+        fetch('./../php/obtenerPropiedades.php')
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -102,7 +104,9 @@
                 }              
 
                 if (prop.latitud || prop.longitud != null) {
-                    L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><button class="btn">Administrar</button></div>`);            
+                    let marcador = L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><button class="btn">Administrar</button></div>`);            
+                    
+                    marcardores.set(prop.id,marcador)
                 }else{
                     console.error(`La propiedad ${prop.nombre} no tiene ubicacion definida`)
                 }
@@ -168,9 +172,13 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.latitud && data.longitud) {
+                        let marcador = marcardores.get(id);
                         console.log(data.longitud, data.latitud);
+                        console.log(marcador);
                         
-                        map.setView([data.latitud, data.longitud], 50).openPopup();
+
+                        map.setView([data.latitud, data.longitud], 50);
+                        marcador.openPopup();
                     } else {
                         console.error("Coordenadas no encontradas para la propiedad.");
                     }
