@@ -11,7 +11,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
-//  echo "Conexión exitosa!";
+    // echo('conexion exitosa');
 
 try {
     $pdo = new PDO("mysql:serverName=$servername;dbname=$dbname;charset=utf8", $username, $password);
