@@ -107,22 +107,39 @@
             let imagen = prop.imagenes ? prop.imagenes : '../uploads/imagenes/default.png';
 
             if(prop.disponibilidad === "1"){
-                status = `Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+                status = `Disponible <i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
                 disponibles += 1;  
             }
             if(prop.disponibilidad === "0"){
-                status = `No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
+                status = `No Disponible <i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
                 noDisponibles += 1;
             }
 
             div.classList.add('tarjeta_propiedad');
             div.innerHTML = `
                 <img src="${imagen}" width="100%" alt="casa villanueva">
-                <p class="contenido">
-                    <b>${prop.nombre}</b><br>
-                    <b>${prop.precio}€/${prop.frecuencia_pago}</b><br>
-                    <b class="status">${status}</b>
-                </p>
+                <div class="contenido">
+                    <div class="izqd">
+                        <div class="nombre_info">
+                            <p>Nombre</p>
+                            <h4>${prop.nombre}</h4>
+                        </div>
+                        <div class="precio_info">
+                            <p>Precio</p>
+                            <h4>${prop.precio}€/${prop.frecuencia_pago}</h4>
+                        </div>
+                    </div>
+                    <div class="drch">
+                        <div class="tipo_info">
+                            <p>Tipo</p>
+                            <h4>${prop.tipo}</h4>
+                        </div>
+                        <div class="dispo_info">
+                            <p>Disponibilidad</p>
+                            <h4>${status}</h4>
+                        </div>
+                    </div>
+                </div>
                 <div class="foot_tarjeta">
                     <a href="">
                         <button class="btn_izqd"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
