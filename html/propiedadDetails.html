@@ -4,36 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/inicio.css">
+    <link rel="stylesheet" href="../css/propiedadDetails.css">
 </head>
 <body>
+    <aside>
+        <h1>Renter</h1>
+        <div class="menu">
+            <ul>
+                <li id="inicio"><a href="#"><img src="../src/casa (1).png" alt="Inicio" title="Inicio"></a></li>
+                <li><a href=""><img src="../src/beneficiarse.png" alt="Balance" title="Balance"></a></li>
+                <li><a href=""><img src="../src/inquilino.png" alt="Inquilinos" title="Inquilinos"></a></li>
+                <li><a href=""><img src="../src/documentacion.png" alt="Documentos" title="Documentos"></a></li>
+                <li><a href=""><img src="../src/limpieza.png" alt="Mantenimiento" title="Mantenimiento"></a></li>
+            </ul>
+        </div>
+        <div class="cuenta">
+            <hr>
+            <a href=""><img src="../src/user.png" alt="cuenta" title="Cuenta"></a>
+        </div>
+    </aside>
     <!-- Datos de momento en bruto, por pasar a obtencion por id de BD -->
-    <div class="info_container">
-        <img src="../uploads/imagenes/cortijodecoto2.png" alt="coto">
-        <div class="datos_principales">
-            <div class="izqd">
-                <div class="nombre_info">
-                    <p>Nombre</p>
-                    <h4>Villa García</h4>
-                </div>
-                <div class="tipo_info">
-                    <p>Tipo</p>
-                    <h4>Chalet</h4>
-                </div>
+    <main>
+
+        <div class="info_container">
+            <div class="carrusel_imagenes">
+                <img src="../uploads/imagenes/cortijodecoto2.png" alt="coto">
             </div>
-            <div class="centro">
-                <div class="precio_info">
-                    <p>Precio</p>
-                    <h4>700€/Semana</h4>
+            <div class="datos_principales">
+                <div class="izqd">
+                    <div class="nombre_info">
+                        <p>Nombre</p>
+                        <h4>Villa García</h4>
+                    </div>
+                    <div class="tipo_info">
+                        <p>Tipo</p>
+                        <h4>Chalet</h4>
+                    </div>
                 </div>
-            </div>
-            <div class="drch">
-                <div class="dispo_info">
-                    <p>Disponibilidad</p>
-                    <h4>${status}</h4>
+                <div class="centro">
+                    <div class="precio_info">
+                        <p>Precio</p>
+                        <h4>700€/Semana</h4>
+                    </div>
+                    <div class="tamanio_info">
+                        <p>Tamaño (m2)</p>
+                        <h4>500 m2</h4>
+                    </div>
+                </div>
+                <div class="drch">
+                    <div class="dispo_info">
+                        <p>Disponibilidad</p>
+                        <h4>Disponible✅</h4>
+                    </div>
+                    <div class="anio_info">
+                        <p>Año Construcción</p>
+                        <h4>2005</h4>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </body>
 </html>

@@ -1,0 +1,213 @@
+body{
+    display: flex;
+    margin: 0 auto;
+    padding: 0;
+    font-family: "lato", serif;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+aside{
+    position: relative;
+    width: 12vh;
+    height: 100vh;
+    padding: 0.6%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background-color: #4CAF50;
+    border-right: 2px solid white;
+
+    h1{
+        display: flex;
+        justify-content: center;
+        color: #333;
+        text-shadow: 2px 2px 2px #f5f5f5;
+        text-align: center;
+    }
+
+    .menu{
+        width: 100%;
+        border-top: 2px solid #f5f5f5;
+
+        ul{
+            width: 100%;
+            padding-left: 0;
+        }
+
+        li{
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            font-size: 1rem;
+            list-style: none;
+            padding: 8%;
+            margin-bottom: 15%;
+            border-radius: 10px;
+            
+            a{
+                text-decoration: none;
+                color: #333;
+
+                img{
+                    width: 70%;
+                    padding: 2%;
+                    vertical-align: middle;
+                }
+            }
+
+            &:hover{
+                background-color: rgba(245, 245, 245, 0.75) ;
+            }
+        }
+
+        li#inicio{
+            background-color: rgba(245, 245, 245, 0.75);
+        }
+    }
+
+    .cuenta{
+        position: absolute;
+        width: 85%;
+        text-align: center;
+        bottom: 0;
+        margin-bottom: 10%;
+
+        img{
+            width: 50%;
+        }
+    }
+}
+
+main{
+    background-color: #f5f5f5;
+    width: 100%;
+    height: 100%;
+}
+
+.info_container{
+    /* width: 98%; */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2%;
+    border-radius: 20px;
+    border: 2px solid #4CAF50;
+}
+
+.carrusel_imagenes{
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    margin-top: 1%;
+    
+    img{
+        width: 95%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+}
+
+.datos_principales{
+    width: 95%;
+    height: 39.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    gap: 10%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    border-radius: 20px;
+    border: 2px solid #333;
+
+    h4{
+        font-weight: bold;
+        margin: 0;
+    }
+
+    p{
+        font-weight: 300;
+        margin: 0;
+    }
+}
+
+.izqd{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    .nombre_info{
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+
+    .tipo_info{
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+}
+
+.centro{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    .precio_info{
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+
+    .tamanio_info{
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+}
+
+.drch{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    .dispo_info{
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+    
+    .anio_info{
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+}
