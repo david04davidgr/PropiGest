@@ -115,19 +115,30 @@ main{
     }
 }
 
-.datos_principales{
+.datos_container{
     width: 95%;
     height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: left;
-    gap: 10%;
     margin-top: 1%;
     margin-bottom: 1%;
     border-radius: 20px;
     border: 2px solid #333;
     background-color: white;
+
+    hr{
+        width: 60%;
+        border: 0.5px solid #4CAF50;
+        /* margin: 2% auto; */
+    }
+}
+
+.datos{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    gap: 10%;
+    margin-bottom: 1%;
+    margin-left: 2%;
 
     h4{
         font-size: 1.15rem;
@@ -151,7 +162,7 @@ main{
     align-items: center;
 
     .nombre_info{
-        width: 40%;
+        width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -159,7 +170,23 @@ main{
     }
 
     .tipo_info{
-        width: 40%;
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+
+    .habitaciones_info{
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+
+    .direccion_info{
+        width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -176,7 +203,7 @@ main{
     align-items: center;
 
     .precio_info{
-        width: 40%;
+        width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -184,7 +211,23 @@ main{
     }
 
     .tamanio_info{
-        width: 40%;
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+
+    .banios_info{
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+
+    .ciudad_info{
+        width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -201,7 +244,7 @@ main{
     align-items: center;
 
     .dispo_info{
-        width: 40%;
+        width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -209,10 +252,77 @@ main{
     }
 
     .anio_info{
-        width: 40%;
+        width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
         padding: 5%;
     }
+
+    .plantas_info{
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+
+    .codPostal_info{
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5%;
+    }
+}
+
+.map_container{
+    width: 100%;
+    height: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div#map{
+    width: 72%;
+    height: 90%;
+    margin: 2% 5%;
+    border-radius: 10px;
+    border: 2px solid #4CAF50;
+}
+
+.botones{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2%;
+    margin-bottom: 1.5%;
+}
+
+.editar{
+    width: 35%;
+    height: 50px;
+    background-color: #14a1ff;
+    outline: none;
+    border: 2px solid #333;
+    border-radius: 5px;
+    color: #f5f5f5;
+    font-weight: bold;
+    font-size: 1.15rem;
+    cursor: pointer;
+}
+
+.eliminar{
+    width: 35%;
+    height: 50px;
+    background-color: rgba(255, 0, 0, 0.09);
+    outline: none;
+    border: 2px solid red;
+    border-radius: 5px;
+    color: red;
+    font-weight: bold;
+    font-size: 1.15rem;
+    cursor: pointer;
 }
