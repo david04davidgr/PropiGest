@@ -41,143 +41,148 @@
         popupAnchor: [0, -64]     // Popup sobre el ícono
     });
 
-    let marcardores = new Map();
+    window.marcardores = new Map();
+    
     
     //Obtencion de propiedades y creado automatico de tarjetas
-        //Obtencion de datos BD
-        fetch('./../php/obtenerPropiedades.php')
+    //Obtencion de datos BD
+    fetch('./../php/obtenerPropiedades.php')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        createCards(data);
+    })
+    .catch(error => console.error('Error al obtener las propiedades: ',error));
+    
+    //Funciones
+    
+    //Funciones Mapa
+    L.control.layers(baseMaps).addTo(map);
+    
+    //Añade buscador
+    L.Control.geocoder({
+        defaultMarkGeocode: false,
+        position: 'topleft',
+        placeholder: 'Buscar dirección...',
+        collapsed: false,
+        geocoder: L.Control.Geocoder.nominatim()
+    })
+    .on('markgeocode', function(e) {
+        const bbox = e.geocode.bbox;
+        const poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+        ]);
+        map.fitBounds(poly.getBounds());
+    })
+    .addTo(map);
+    
+    //Evita un click sobre el mapa bajo el boton
+    L.DomEvent.disableClickPropagation(document.querySelector('#new_propiedad'));
+    L.DomEvent.disableClickPropagation(document.querySelector('#btn_lista'));
+    
+    //Marcadores del mapa
+    function createCards(propiedades){
+        
+        console.log(propiedades);
+        
+        propiedades.forEach(prop => {
+            
+            let status;
+            let imagen = prop.imagenes ? prop.imagenes : 'uploads/imagenes/default.png';
+            
+            if(prop.disponibilidad === "1"){
+                status = `Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+            }
+            if(prop.disponibilidad === "0"){
+                status = `No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
+            }              
+            
+            if (prop.latitud || prop.longitud != null) {
+                let marcador = L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><div class="foot_tarjeta">
+                    <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}">
+                        <button class="btn_izqd"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
+                    </a>
+                </div></div>`);            
+                
+                marcardores.set(prop.id,marcador)
+            }else{
+                console.error(`La propiedad ${prop.nombre} no tiene ubicacion definida`)
+            }
+        });
+    }
+    
+    const popup = L.popup();
+    
+    function onMapClick(e) {
+        popup
+        .setLatLng(e.latlng) // Configura la posición del popup
+        .setContent(`You clicked the map at ${e.latlng.toString()}`) // Configura el contenido
+        .openOn(map); // Muestra el popup en el mapa
+    }
+    
+    map.on('click', onMapClick);
+    
+    
+    function adjustMapSize() {
+        const currentCenter = map.getCenter();
+        const currentZoom = map.getZoom();
+        
+        // Invalidar tamaño y restaurar vista
+        map.invalidateSize();
+        map.setView(currentCenter, currentZoom, { animate: false });
+    }
+    
+    // Exportar el mapa y la función (si estás usando módulos ES6)
+    window.map = map; // Exponer el mapa a nivel global
+    window.adjustMapSize = adjustMapSize; // Exponer la función de ajuste
+    
+    function getQueryParam(param){
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(param);
+        
+        return urlParams.get(param);
+    }
+    
+    //Funcion para centrar la propiedad por su latitud y longitud
+    function centrarPropiedad(propiedadId){
+        let id = propiedadId || getQueryParam("id_propiedad");
+        console.log(propiedadId);
+        
+        if (id) {
+            fetch(`../php/vistaMapa.php?id_propiedad=${id}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                createCards(data);
-            })
-            .catch(error => console.error('Error al obtener las propiedades: ',error));
-
-//Funciones
-
-    //Funciones Mapa
-        L.control.layers(baseMaps).addTo(map);
-
-        //Añade buscador
-        L.Control.geocoder({
-            defaultMarkGeocode: false,
-            position: 'topleft',
-            placeholder: 'Buscar dirección...',
-            collapsed: false,
-            geocoder: L.Control.Geocoder.nominatim()
-        })
-        .on('markgeocode', function(e) {
-            const bbox = e.geocode.bbox;
-            const poly = L.polygon([
-                bbox.getSouthEast(),
-                bbox.getNorthEast(),
-                bbox.getNorthWest(),
-                bbox.getSouthWest()
-            ]);
-            map.fitBounds(poly.getBounds());
-        })
-        .addTo(map);
-
-        //Evita un click sobre el mapa bajo el boton
-        L.DomEvent.disableClickPropagation(document.querySelector('#new_propiedad'));
-        L.DomEvent.disableClickPropagation(document.querySelector('#btn_lista'));
-
-        //Marcadores del mapa
-        function createCards(propiedades){
-
-            console.log(propiedades);
-            
-            propiedades.forEach(prop => {
-
-                let status;
-                let imagen = prop.imagenes ? prop.imagenes : 'uploads/imagenes/default.png';
-
-                if(prop.disponibilidad === "1"){
-                    status = `Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
-                }
-                if(prop.disponibilidad === "0"){
-                    status = `No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
-                }              
-
-                if (prop.latitud || prop.longitud != null) {
-                    let marcador = L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><button class="btn">Administrar</button></div>`);            
+                if (data.latitud && data.longitud) {
+                    let marcador = marcardores.get(id);
+                    console.log(data.longitud, data.latitud);
+                    console.log(marcador);
                     
-                    marcardores.set(prop.id,marcador)
-                }else{
-                    console.error(`La propiedad ${prop.nombre} no tiene ubicacion definida`)
-                }
-            });
-        }
-
-        const popup = L.popup();
-
-        function onMapClick(e) {
-            popup
-                .setLatLng(e.latlng) // Configura la posición del popup
-                .setContent(`You clicked the map at ${e.latlng.toString()}`) // Configura el contenido
-                .openOn(map); // Muestra el popup en el mapa
-        }
-
-        map.on('click', onMapClick);
-
-
-        function adjustMapSize() {
-            const currentCenter = map.getCenter();
-            const currentZoom = map.getZoom();
-        
-            // Invalidar tamaño y restaurar vista
-            map.invalidateSize();
-            map.setView(currentCenter, currentZoom, { animate: false });
-        }
-        
-        // Exportar el mapa y la función (si estás usando módulos ES6)
-        window.map = map; // Exponer el mapa a nivel global
-        window.adjustMapSize = adjustMapSize; // Exponer la función de ajuste
-
-        function getQueryParam(param){
-            const urlParams = new URLSearchParams(window.location.search);
-            console.log(param);
-            
-            return urlParams.get(param);
-        }
-
-        //Funcion para centrar la propiedad por su latitud y longitud
-        function centrarPropiedad(propiedadId){
-            let id = propiedadId || getQueryParam("id_propiedad");
-            console.log(propiedadId);
-            
-            if (id) {
-                fetch(`../php/vistaMapa.php?id_propiedad=${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.latitud && data.longitud) {
-                        let marcador = marcardores.get(id);
-                        console.log(data.longitud, data.latitud);
-                        console.log(marcador);
-                        
-
-                        map.setView([data.latitud, data.longitud], 50);
-                        marcador.openPopup();
-                    } else {
-                        console.error("Coordenadas no encontradas para la propiedad.");
-                    }
-                })
-                .catch(error => console.error("Error al obtener coordenadas:", error));
-            }
-        }
-
-        //Asigna eventos a todos los botones "Ver en Mapa" y obtiene su data-id
-        document.addEventListener("DOMContentLoaded", function(){
-            centrarPropiedad(),
-            
-            document.addEventListener('click', function(event){
-                if (event.target.classList.contains('btn_drch')) {
-                    event.preventDefault();
-                    const propiedadId = event.target.dataset.id;
-
-                    if (propiedadId) {
-                        centrarPropiedad(propiedadId);
-                    }
+                    
+                    map.setView([data.latitud, data.longitud], 50);
+                    marcador.openPopup();
+                } else {
+                    console.error("Coordenadas no encontradas para la propiedad.");
                 }
             })
-        });
+            .catch(error => console.error("Error al obtener coordenadas:", error));
+        }
+    }
+    
+    //Asigna eventos a todos los botones "Ver en Mapa" y obtiene su data-id
+    document.addEventListener("DOMContentLoaded", function(){
+        centrarPropiedad(),
+        
+        document.addEventListener('click', function(event){
+            if (event.target.classList.contains('btn_drch')) {
+                event.preventDefault();
+                const propiedadId = event.target.dataset.id;
+                
+                if (propiedadId) {
+                    centrarPropiedad(propiedadId);
+                }
+            }
+        })
+    });
