@@ -121,6 +121,9 @@ function mostrarPropiedad(propiedad){
                     </div>
                 </div>
                 <div class="map_container">
+                    <a href="" class="btn_container">
+                        <button>Abrir Mapa</button>
+                    </a>
                     <div id="map"></div>
                 </div>
                 <div class="botones">
@@ -189,5 +192,4 @@ function mostrarPropiedad(propiedad){
     }else{
         console.error('No se ha podido generar correctamente el marcador');
     }
-{/* <button class="btn">Administrar</button> */}
 }

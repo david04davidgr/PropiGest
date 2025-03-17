@@ -1,7 +1,7 @@
 //Variables
 
     //Declaración del mapa y control de capas
-    const map = L.map('map').setView([39.464398, -6.37877], 17);
+    const map = L.map('map').setView([40.416925, -3.703507], 6);
 
     let normalView = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -102,8 +102,8 @@
             
             if (prop.latitud || prop.longitud != null) {
                 let marcador = L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><div class="foot_tarjeta">
-                    <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}">
-                        <button class="btn_izqd"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
+                    <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}" class="btn_container">
+                        <button class="btn_admin"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
                     </a>
                 </div></div>`);            
                 

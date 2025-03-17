@@ -80,7 +80,7 @@ let estado_lista = true;
                         <b class="status">${status}</b>
                     </p>
                     <div class="foot_tarjeta">
-                        <a href="">
+                        <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}">
                             <button class="btn_izqd"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
                         </a>
                         <a href="../html/vistaMapa.html">
