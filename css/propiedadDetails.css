@@ -279,23 +279,43 @@ main{
 .map_container{
     width: 100%;
     height: 450px;
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    align-items: center;
-    gap: 0;
+    position: relative;
 }
 
 .btn_container{
-    border: 2px solid red;
-    
+    position: absolute;
+    width: 10%;
+    height: 30px;
+    top: -6%;
+    left: 13.85%;
+
+    button{
+        width: 100%;
+        height: 100%;
+        padding: 2%;
+        outline: none;
+        border: none;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        background-color: #4CAF50;
+        color: #f5f5f5;
+        font-weight: bold;
+        transition: 0.5s;
+
+        &:hover{
+            background-color: #3e9b3f;
+            cursor: pointer;
+        }
+    }
 }
 
 div#map{
     width: 72%;
     height: 90%;
-    margin: 0% 5%;
+    margin: 0% auto;
+    margin-top: 3%;
     border-radius: 10px;
+    border-top-left-radius: 0;
     border: 2px solid #4CAF50;
 }
 

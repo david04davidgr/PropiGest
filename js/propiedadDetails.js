@@ -121,7 +121,7 @@ function mostrarPropiedad(propiedad){
                     </div>
                 </div>
                 <div class="map_container">
-                    <a href="" class="btn_container">
+                    <a href="vistaMapa.html?id_propiedad=${propiedad.id}" class="btn_container">
                         <button>Abrir Mapa</button>
                     </a>
                     <div id="map"></div>
