@@ -353,3 +353,7 @@ div#map{
     font-size: 1.15rem;
     cursor: pointer;
 }
+
+.modal {
+    margin-top: 20vh;
+}

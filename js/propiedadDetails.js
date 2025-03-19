@@ -21,6 +21,35 @@ if(id){
     console.log('no se pasa el id, ', id);
 }
 
+document.getElementById("btnConfirm").addEventListener("click", function () {
+    const propiedadId = this.getAttribute("data-id");
+    console.log(propiedadId);
+    
+    eliminarPropiedad(propiedadId)
+});
+
+function eliminarPropiedad(id_propiedad) {
+
+    console.log(id_propiedad);
+    
+    fetch(`../php/eliminarPropiedad.php?id_propiedad=${id_propiedad}`, {
+        method: "DELETE"
+    })
+        .then(response => response.json())
+        
+        .then(data => {
+            console.log(data);            
+            
+            if (data.success) {
+                alert("Propiedad eliminada correctamente");
+                window.location.href("../html/inicio.html")
+            } else {
+                alert("Error al eliminar la propiedad")
+            }
+        })
+        .catch(error => console.error("Error:", error));
+}
+
 function mostrarPropiedad(propiedad){
     const contenedor = document.querySelector('#info_container');
     console.log(propiedad);
@@ -128,8 +157,34 @@ function mostrarPropiedad(propiedad){
                 </div>
                 <div class="botones">
                     <button class="editar"><i class="fa-solid fa-square-pen" style="color: #ffffff;"></i> Editar</button>
-                    <button class="eliminar"><i class="fa-solid fa-trash" style="color: #ff0000;"></i> Eliminar</button>
+                    <button 
+                        type="button"
+                        class="eliminar" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#deleteModal"
+                        >
+                        <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
+                        Eliminar
+                    </button>
                 </div>
+            </div>
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header py-2">
+                      <h6 class="modal-title">Confirmar eliminación</h6>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-2">
+                        ¿Realmente desea eliminar esta propiedad?
+                    </div>
+                    <div class="modal-footer py-1">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                      <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" data-id="${propiedad.id}" >Confirmar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
     `
     //Declaración del mapa y control de capas
