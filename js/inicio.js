@@ -107,11 +107,11 @@
             let imagen = prop.imagenes ? prop.imagenes : '../uploads/imagenes/default.png';
 
             if(prop.disponibilidad === "1"){
-                status = `Disponible <i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+                status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
                 disponibles += 1;  
             }
             if(prop.disponibilidad === "0"){
-                status = `No Disponible <i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
+                status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
                 noDisponibles += 1;
             }
 
