@@ -122,7 +122,14 @@ function mostrarPropiedad(propiedad){
                     <div id="map"></div>
                 </div>
                 <div class="botones">
-                    <button class="editar"><i class="fa-solid fa-square-pen" style="color: #ffffff;"></i> Editar</button>
+                    <button 
+                        class="editar"
+                        class="editar"
+                        data-bs-toggle="modal" 
+                        onclick='openEditModal(${JSON.stringify(propiedad)})'
+                        ><i class="fa-solid fa-square-pen" style="color: #ffffff;"></i> 
+                        Editar
+                    </button>
                     <button 
                         type="button"
                         class="eliminar" 
@@ -133,6 +140,114 @@ function mostrarPropiedad(propiedad){
                         Eliminar
                     </button>
                 </div>
+            </div>
+            <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h6 class="modal-title">Editar Propiedad</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-2">
+                    <div class="row g-2 mb-3">
+                    <div class="col-md-8">
+                      <label for="nombre" class="form-label mb-1">Nombre</label>
+                      <input type="text" id="editNombre" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="tipo" class="form-label mb-1">Tipo</label>
+                      <select name="tipo" id="editTipo" class="form-select" required>
+                        <option selected disabled value="">Seleccione un tipo</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Piso">Piso</option>
+                        <option value="Apartamento">Apartamento</option>
+                        <option value="Chalet">Chalet</option>
+                        <option value="Otro">Otro</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="precio" class="form-label mb-1">Precio</label>
+                      <input type="number" class="form-control" id="editPrecio" name="precio" placeholder="----€" required>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="frecuencia" class="form-label mb-1">Frecuencia</label>
+                      <select name="frecuencia" id="editFrecuencia_pago" class="form-select" required>
+                      <option value="mes">Mes</option>
+                        <option value="noche">Noche</option>
+                        <option value="semana">Semana</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="disponibilidad" class="form-label mb-1">¿Disponible?</label>
+                      <select name="disponibilidad" id="editDisponibilidad" class="form-select" required>
+                        <option value="1">Sí</option>
+                        <option value="0">No</option>
+                      </select>
+                    </div>
+                  </div>
+          
+                  <hr class="my-2">
+
+                  <div class="row mb-3">
+                    <div class="col-12">
+                      <label for="direccion" class="form-label mb-1">Dirección</label>
+                      <input type="text" class="form-control" id="editDireccion" name="direccion" required>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-8">
+                      <label for="ciudad" class="form-label mb-1">Ciudad</label>
+                      <input type="text" class="form-control" id="editCiudad" name="ciudad" required>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="codigo_postal" class="form-label mb-1">C.P.</label>
+                      <input type="number" class="form-control" id="editCodigo_postal" name="codigo_postal" required>
+                    </div>
+                  </div>
+
+                  <!--Añadir aqui el mapa para el cambio de latitud y longitud-->
+
+                  <hr class="my-2">
+
+                  <div class="row mb-3">
+                    <!-- Tamaño y Planta -->
+                    <div class="col-md-6">
+                      <label for="tamaño" class="form-label mb-1">Tamaño (m²)</label>
+                      <input type="number" class="form-control" id="editTamanio" name="tamaño" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="planta" class="form-label mb-1">Planta</label>
+                      <input type="text" class="form-control" id="editPlanta" name="planta">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="habitaciones" class="form-label mb-1">Habitaciones</label>
+                      <input type="number" class="form-control" id="editHabitaciones" name="habitaciones" min="0">
+                    </div>
+                    <div class="col-md-4">
+                      <label for="baños" class="form-label mb-1">Baños</label>
+                      <input type="number" class="form-control" id="editBanios" name="baños" min="0" >
+                    </div>
+                    <div class="col-md-4">
+                      <label for="año_construccion" class="form-label mb-1">Año const.</label>
+                      <input type="number" class="form-control" id="editAnio" name="año_construccion" min="1500" max="2100">
+                    </div>
+                  </div>
+
+
+                </div>
+                <div class="modal-footer py-1">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="btnSaveChanges">Guardar Cambios</button>
+                </div>
+                </div>
+            </div>
             </div>
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -152,6 +267,7 @@ function mostrarPropiedad(propiedad){
                 </div>
               </div>
             </div>
+
     `
     //Declaración del mapa y control de capas
     const map = L.map('map', {
@@ -217,8 +333,8 @@ function mostrarPropiedad(propiedad){
 }
 
 //Apertura del modal de confirmacion
-function openDeleteModal(propiedad_id){
-    var modal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+function openDeleteModal(propiedad_id){    
+    let modal = new bootstrap.Modal(document.getElementById('deleteModal'), {
         keyboard: false
     });
     modal.show();
@@ -249,6 +365,96 @@ fetch(`../php/eliminarPropiedad.php`, {
             window.location.href = '../html/inicio.html';
         } else {
             alert("Error al eliminar la propiedad")
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function openEditModal(propiedad){
+    console.log(propiedad);
+    
+    //Cambio de valores
+    document.getElementById('editNombre').value = propiedad.nombre;
+    document.getElementById('editTipo').value = propiedad.tipo;
+    document.getElementById('editPrecio').value = propiedad.precio;
+    document.getElementById('editFrecuencia_pago').value = propiedad.frecuencia_pago;
+    document.getElementById('editDisponibilidad').value = propiedad.disponibilidad;
+    document.getElementById('editDireccion').value = propiedad.direccion;
+    document.getElementById('editCiudad').value = propiedad.ciudad;
+    document.getElementById('editCodigo_postal').value = propiedad.codigo_postal;
+    // document.getElementById('editLatitud').value = propiedad.latitud;
+    // document.getElementById('editLongitud').value = propiedad.longitud;
+    document.getElementById('editTamanio').value = propiedad.tamanio;
+    document.getElementById('editPlanta').value = propiedad.planta;
+    document.getElementById('editHabitaciones').value = propiedad.numeroHabitaciones;
+    document.getElementById('editBanios').value = propiedad.numeroBanios;
+    document.getElementById('editAnio').value = propiedad.anioConstruccion;
+
+    //Abrir modal
+    let modal = new bootstrap.Modal(document.getElementById('editModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    //Guardar
+    document.getElementById('btnSaveChanges').onclick = function() {
+        guardarCambios(propiedad.id);
+    };
+}
+
+function guardarCambios(propiedad_id){
+    //Obtener los datos del formulario
+    const nombre = document.getElementById('editNombre').value = propiedad.nombre;
+    const tipo = document.getElementById('editTipo').value = propiedad.tipo;
+    const precio = document.getElementById('editPrecio').value = propiedad.precio;
+    const frecuencia_pago = document.getElementById('editFrecuencia_pago').value = propiedad.frecuencia_pago;
+    const disponibilidad = document.getElementById('editDisponibilidad').value = propiedad.disponibilidad;
+    const direccion = document.getElementById('editDireccion').value = propiedad.direccion;
+    const ciudad = document.getElementById('editCiudad').value = propiedad.ciudad;
+    const codigo_postal = document.getElementById('editCodigo_postal').value = propiedad.codigo_postal;
+    // const latitud = document.getElementById('editLatitud').value = propiedad.latitud;
+    // const longitud = document.getElementById('editLongitud').value = propiedad.longitud;
+    const tamanio = document.getElementById('editTamanio').value = propiedad.tamanio;
+    const planta = document.getElementById('editPlanta').value = propiedad.planta;
+    const habitaciones = document.getElementById('editHabitaciones').value = propiedad.numeroHabitaciones;
+    const banios = document.getElementById('editBanios').value = propiedad.numeroBanios;
+    const anioConstruccion = document.getElementById('editAnio').value = propiedad.anioConstruccion;
+
+    //seteo de valores en objeto
+    const propiedadActualizada = {
+        id: propiedad_id,
+        nombre: nombre,
+        tipo: tipo,
+        precio: precio,
+        frecuencia_pago: frecuencia_pago,
+        disponibilidad: disponibilidad,
+        direccion: direccion,
+        ciudad: ciudad,
+        codigo_postal: codigo_postal,
+        // latitud: latitud,
+        // longitud: longitud,
+        tamanio: tamanio,
+        planta: planta,
+        numeroHabitaciones: habitaciones,
+        numeroBanios: banios,
+        anioConstruccion: anioConstruccion
+    };
+
+    //Envio de datos
+    fetch('../php/editarPropiedad.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(propiedadActualizada)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Propiedad actualizada correctamente");
+            window.location.reload(); // Recargar la página para reflejar los cambios
+        } else {
+            alert("Error al actualizar la propiedad");
         }
     })
     .catch(error => console.error("Error:", error));
