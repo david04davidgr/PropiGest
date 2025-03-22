@@ -2,40 +2,45 @@
 
 require_once 'conexion.php';
 
-    if (isset($_GET['id_propiedad'])) {
-        $id_propiedad = intval($_GET['id_propiedad']); // Seguridad: Convertir a número entero
+header("Content-Type: application/json");
 
-        
-        try{
-            echo $id_propiedad;
-            $pdo->beginTransaction(); // Iniciar transacción para evitar errores de integridad referencial
+//Comprueba si se recibió la solicitud correctamente con el id
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id_propiedad'])) {
+    $id_propiedad = intval($_POST['id_propiedad']); //Convertir a entero para mayor seguridad
 
-            // Obtener imágenes asociadas
-            $stmt = $pdo->prepare("SELECT imagenes FROM propiedades WHERE id = ?");
-            $stmt->execute([$id_propiedad]);
-            $imagenes = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    
-            // Eliminar imágenes de la carpeta
-            foreach ($imagenes as $imagen) {
-                $rutaCompleta = "../uploads/" . $imagen;
+    try {
+        $pdo->beginTransaction();
+
+        //Obtiene imágenes de la propiedad
+        $stmt = $pdo->prepare("SELECT imagenes FROM propiedades WHERE id = ?");
+        $stmt->execute([$id_propiedad]);
+        $imagenes = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        //Comprueba si hay imagenes
+        if ($imagenes && !empty($imagenes['imagenes'])) {
+            $listaImagenes = explode(",", $imagenes['imagenes']);
+
+            //Eliminar imágenes de la carpeta
+            foreach ($listaImagenes as $imagen) {
+                $rutaCompleta = "../uploads/" . trim($imagen);
                 if (file_exists($rutaCompleta)) {
                     unlink($rutaCompleta);
                 }
-            } 
-
-            // Eliminar la propiedad
-            $stmt = $pdo->prepare("DELETE FROM propiedades WHERE id = ?");
-            $stmt->execute([$id_propiedad]);
-
-            $pdo->commit(); // Confirmar cambios en la base de datos
-
-            echo json_encode(["success" => true, "message" => "Propiedad eliminada correctamente"]);
-        } catch (Exception $e){
-            $pdo->rollBack();
-            echo json_encode(["success" => false, "message" => "Error al eliminar: " . $e->getMessage()]);
+            }
         }
+
+        //Eliminar la propiedad de la base de datos
+        $stmt = $pdo->prepare("DELETE FROM propiedades WHERE id = ?");
+        $stmt->execute([$id_propiedad]);
+
+        $pdo->commit(); //Confirmar cambios
+
+        echo json_encode(["success" => true, "message" => "Propiedad eliminada correctamente"]);
+    } catch (Exception $e) {
+        $pdo->rollBack(); //Revertir cambios si hay error
+        echo json_encode(["success" => false, "message" => "Error al eliminar: " . $e->getMessage()]);
     }
-    else{
-        echo json_encode(["success" => false, "message" => "Solicitud no válida"]);
-    }
+} else {
+    echo json_encode(["success" => false, "message" => "Solicitud no válida"]);
+}
 ?>

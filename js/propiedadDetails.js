@@ -7,7 +7,6 @@ function getQueryParam(param){
 
 //Obtencion de datos BD
 let id = getQueryParam("id_propiedad");
-console.log(id);
 
 if(id){
     fetch(`./../php/obtenerPropiedadById.php?id_propiedad=${id}`)
@@ -21,42 +20,10 @@ if(id){
     console.log('no se pasa el id, ', id);
 }
 
-document.getElementById("btnConfirm").addEventListener("click", function () {
-    const propiedadId = this.getAttribute("data-id");
-    console.log(propiedadId);
-    
-    eliminarPropiedad(propiedadId)
-});
-
-function eliminarPropiedad(id_propiedad) {
-
-    console.log(id_propiedad);
-    
-    fetch(`../php/eliminarPropiedad.php?id_propiedad=${id_propiedad}`, {
-        method: "DELETE"
-    })
-        .then(response => response.json())
-        
-        .then(data => {
-            console.log(data);            
-            
-            if (data.success) {
-                alert("Propiedad eliminada correctamente");
-                window.location.href("../html/inicio.html")
-            } else {
-                alert("Error al eliminar la propiedad")
-            }
-        })
-        .catch(error => console.error("Error:", error));
-}
-
 function mostrarPropiedad(propiedad){
     const contenedor = document.querySelector('#info_container');
-    console.log(propiedad);
 
     contenedor.innerHTML = '';
-
-    // const div = document.createElement('div');
 
     let status;
 
@@ -69,7 +36,6 @@ function mostrarPropiedad(propiedad){
         status = `No Disponible <i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
     }
 
-    // div.classList.add('info_container');
     contenedor.innerHTML = `
         <div class="carrusel_imagenes">
                 <img src="${imagen}" alt="Imagen ${propiedad.nombre}">
@@ -161,7 +127,7 @@ function mostrarPropiedad(propiedad){
                         type="button"
                         class="eliminar" 
                         data-bs-toggle="modal" 
-                        data-bs-target="#deleteModal"
+                        onclick="openDeleteModal(${propiedad.id})"
                         >
                         <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
                         Eliminar
@@ -180,7 +146,7 @@ function mostrarPropiedad(propiedad){
                     </div>
                     <div class="modal-footer py-1">
                       <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                      <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" data-id="${propiedad.id}" >Confirmar</button>
+                      <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onclick="eliminarPropiedad(${propiedad.id})" >Confirmar</button>
                     </div>
                   </div>
                 </div>
@@ -190,10 +156,10 @@ function mostrarPropiedad(propiedad){
     //Declaración del mapa y control de capas
     const map = L.map('map', {
         zoomControl: false,
-        dragging: false,      // Deshabilita el arrastre
-        scrollWheelZoom: false,  // Deshabilita el zoom con la rueda del mouse
-        doubleClickZoom: false,  // Deshabilita el zoom con doble clic
-        touchZoom: false,    // Deshabilita el zoom táctil en móviles
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        touchZoom: false,
         boxZoom: false,      // Deshabilita el zoom con caja
         keyboard: false      // Deshabilita la navegación con teclado
     }).setView([`${propiedad.latitud + 0.006}`, `${propiedad.longitud}`], 14);
@@ -247,4 +213,43 @@ function mostrarPropiedad(propiedad){
     }else{
         console.error('No se ha podido generar correctamente el marcador');
     }
+    
+}
+
+//Apertura del modal de confirmacion
+function openDeleteModal(propiedad_id){
+    var modal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    //En el click del boton usa la funcion
+    document.getElementById('btnConfirm').onclick = function() {
+        eliminarPropiedad(propiedad_id);
+    };
+}
+
+//Funcion que elimina la propiedad por su id
+function eliminarPropiedad(propiedad_id) {
+
+let formData = new FormData();
+formData.append("id_propiedad", propiedad_id) //Almacena el id como cuerpo de la solicitud
+
+fetch(`../php/eliminarPropiedad.php`, {
+    method: "POST",
+    body: formData
+})
+    .then(response => response.json())
+    
+    .then(data => {
+        console.log(data);            
+        
+        if (data.success) {
+            alert("Propiedad eliminada correctamente");
+            window.location.href = '../html/inicio.html';
+        } else {
+            alert("Error al eliminar la propiedad")
+        }
+    })
+    .catch(error => console.error("Error:", error));
 }
