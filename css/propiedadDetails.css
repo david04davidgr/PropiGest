@@ -86,6 +86,7 @@ main{
     min-height: 99vh;
     box-sizing: border-box;
     margin: 1.75% 4%;
+    background-color: #f5f5f5;
 }
 
 .info_container{
@@ -95,6 +96,7 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #333;
     /* padding-bottom: 5%; */
     border-radius: 20px;
     border: 2px solid #4CAF50;
@@ -127,7 +129,8 @@ main{
     hr{
         width: 60%;
         border: 0.5px solid #4CAF50;
-        /* margin: 2% auto; */
+        margin: 0 auto;
+        opacity: 100%;
     }
 }
 
@@ -136,7 +139,7 @@ main{
     justify-content: center;
     align-items: center;
     text-align: left;
-    gap: 10%;
+    gap: 4%;
     margin-bottom: 1%;
     margin-left: 2%;
 
@@ -153,8 +156,9 @@ main{
     }
 }
 
+/* Datos column izqd */
 .izqd{
-    width: 20%;
+    width: 25%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -194,8 +198,9 @@ main{
     }
 }
 
+/* Datos column centro */
 .centro{
-    width: 20%;
+    width: 25%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -235,8 +240,9 @@ main{
     }
 }
 
+/* Datos column derecha */
 .drch{
-    width: 20%;
+    width: 25%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -276,18 +282,20 @@ main{
     }
 }
 
+/* Mapa */
 .map_container{
     width: 100%;
     height: 450px;
     position: relative;
 }
 
+/* Boton "ver en mapa" */
 .btn_container{
     position: absolute;
     width: 10%;
     height: 30px;
     top: -6%;
-    left: 13.85%;
+    left: 14%;
 
     button{
         width: 100%;
@@ -313,12 +321,13 @@ div#map{
     width: 72%;
     height: 90%;
     margin: 0% auto;
-    margin-top: 3%;
+    margin-top: 5%;
     border-radius: 10px;
     border-top-left-radius: 0;
     border: 2px solid #4CAF50;
 }
 
+/* Botones pie tarjeta */
 .botones{
     width: 100%;
     display: flex;

@@ -21,7 +21,14 @@ if(id){
 }
 
 function mostrarPropiedad(propiedad){
+    const title = document.querySelector('#title');
     const contenedor = document.querySelector('#info_container');
+
+    title.innerHTML = '';
+
+    title.innerHTML = `
+        PropiGest - ${propiedad.nombre}
+    `
 
     contenedor.innerHTML = '';
 
@@ -30,13 +37,18 @@ function mostrarPropiedad(propiedad){
     let imagen = propiedad.imagenes ? propiedad.imagenes : '../uploads/imagenes/default.png';
 
     if (propiedad.disponibilidad == 1) {
-        status = `Disponible <i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+        status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
         }
     if (propiedad.disponibilidad == 0) {
-        status = `No Disponible <i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
+        status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
     }
 
+
+
     contenedor.innerHTML = `
+        <head>
+            <title>PropieGest - ${propiedad.nombre}</title>
+        </head>
         <div class="carrusel_imagenes">
                 <img src="${imagen}" alt="Imagen ${propiedad.nombre}">
             </div>
@@ -189,7 +201,7 @@ function mostrarPropiedad(propiedad){
                     </div>
                   </div>
           
-                  <hr class="my-2">
+                  <hr class="my-2 border border-success border-1 opacity-50">
 
                   <div class="row mb-3">
                     <div class="col-12">
@@ -211,7 +223,7 @@ function mostrarPropiedad(propiedad){
 
                   <!--Añadir aqui el mapa para el cambio de latitud y longitud-->
 
-                  <hr class="my-2">
+                  <hr class="my-2 border border-success border-1 opacity-50">
 
                   <div class="row mb-3">
                     <!-- Tamaño y Planta -->
@@ -239,7 +251,6 @@ function mostrarPropiedad(propiedad){
                       <input type="number" class="form-control" id="editAnio" name="año_construccion" min="1500" max="2100">
                     </div>
                   </div>
-
 
                 </div>
                 <div class="modal-footer py-1">
@@ -361,10 +372,7 @@ fetch(`../php/eliminarPropiedad.php`, {
         console.log(data);            
         
         if (data.success) {
-            alert("Propiedad eliminada correctamente");
             window.location.href = '../html/inicio.html';
-        } else {
-            alert("Error al eliminar la propiedad")
         }
     })
     .catch(error => console.error("Error:", error));
@@ -399,26 +407,28 @@ function openEditModal(propiedad){
     //Guardar
     document.getElementById('btnSaveChanges').onclick = function() {
         guardarCambios(propiedad.id);
+        console.log('Voy a guardar');
+        
     };
 }
 
 function guardarCambios(propiedad_id){
     //Obtener los datos del formulario
-    const nombre = document.getElementById('editNombre').value = propiedad.nombre;
-    const tipo = document.getElementById('editTipo').value = propiedad.tipo;
-    const precio = document.getElementById('editPrecio').value = propiedad.precio;
-    const frecuencia_pago = document.getElementById('editFrecuencia_pago').value = propiedad.frecuencia_pago;
-    const disponibilidad = document.getElementById('editDisponibilidad').value = propiedad.disponibilidad;
-    const direccion = document.getElementById('editDireccion').value = propiedad.direccion;
-    const ciudad = document.getElementById('editCiudad').value = propiedad.ciudad;
-    const codigo_postal = document.getElementById('editCodigo_postal').value = propiedad.codigo_postal;
-    // const latitud = document.getElementById('editLatitud').value = propiedad.latitud;
-    // const longitud = document.getElementById('editLongitud').value = propiedad.longitud;
-    const tamanio = document.getElementById('editTamanio').value = propiedad.tamanio;
-    const planta = document.getElementById('editPlanta').value = propiedad.planta;
-    const habitaciones = document.getElementById('editHabitaciones').value = propiedad.numeroHabitaciones;
-    const banios = document.getElementById('editBanios').value = propiedad.numeroBanios;
-    const anioConstruccion = document.getElementById('editAnio').value = propiedad.anioConstruccion;
+    const nombre = document.getElementById('editNombre').value;
+    const tipo = document.getElementById('editTipo').value;
+    const precio = document.getElementById('editPrecio').value;
+    const frecuencia_pago = document.getElementById('editFrecuencia_pago').value;
+    const disponibilidad = document.getElementById('editDisponibilidad').value;
+    const direccion = document.getElementById('editDireccion').value;
+    const ciudad = document.getElementById('editCiudad').value;
+    const codigo_postal = document.getElementById('editCodigo_postal').value;
+    // const latitud = document.getElementById('editLatitud').value;
+    // const longitud = document.getElementById('editLongitud').value;
+    const tamanio = document.getElementById('editTamanio').value;
+    const planta = document.getElementById('editPlanta').value;
+    const habitaciones = document.getElementById('editHabitaciones').value;
+    const banios = document.getElementById('editBanios').value;
+    const anioConstruccion = document.getElementById('editAnio').value;
 
     //seteo de valores en objeto
     const propiedadActualizada = {
@@ -451,10 +461,7 @@ function guardarCambios(propiedad_id){
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert("Propiedad actualizada correctamente");
             window.location.reload(); // Recargar la página para reflejar los cambios
-        } else {
-            alert("Error al actualizar la propiedad");
         }
     })
     .catch(error => console.error("Error:", error));
