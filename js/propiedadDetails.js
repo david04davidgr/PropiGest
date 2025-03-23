@@ -24,8 +24,13 @@ function mostrarPropiedad(propiedad){
     const title = document.querySelector('#title');
     const contenedor = document.querySelector('#info_container');
 
+    console.log(propiedad.imagenes);
+    
+    let imagenes = propiedad.imagenes;
+    imagenes = imagenes ? imagenes.split(',') : [];
+    console.log(imagenes);
+    
     title.innerHTML = '';
-
     title.innerHTML = `
         PropiGest - ${propiedad.nombre}
     `
@@ -34,7 +39,11 @@ function mostrarPropiedad(propiedad){
 
     let status;
 
-    let imagen = propiedad.imagenes ? propiedad.imagenes : '../uploads/imagenes/default.png';
+    let imagenDefault = '../uploads/imagenes/default.png';
+
+    if (imagenes.length === 0) {
+        imagenes = [imagenDefault];
+    }
 
     if (propiedad.disponibilidad == 1) {
         status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
@@ -43,14 +52,32 @@ function mostrarPropiedad(propiedad){
         status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
     }
 
-
+    // Crear el carrusel de imágenes
+    let carruselHTML = '';
+    imagenes.forEach((imagen, index) => {
+        carruselHTML += `
+            <div class="carousel-item carrusel_imagenes ${index === 0 ? 'active' : ''}">
+                <img src="${imagen}" alt="Imagen ${propiedad.nombre}" class="img_carrusel">
+            </div>
+        `;
+    });
 
     contenedor.innerHTML = `
         <head>
             <title>PropieGest - ${propiedad.nombre}</title>
         </head>
-        <div class="carrusel_imagenes">
-                <img src="${imagen}" alt="Imagen ${propiedad.nombre}">
+        <div id="carruselImagenes" class="carousel slide">
+                <div class="carousel-inner">
+                    ${carruselHTML}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carruselImagenes" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carruselImagenes" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
             <div class="datos_container">
                 <div class="datos">
@@ -334,7 +361,7 @@ function mostrarPropiedad(propiedad){
 
     //Creado de marcador
     if (propiedad.latitud || propiedad.longitud != null) {
-        let marcador = L.marker([`${propiedad.latitud}`, `${propiedad.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${propiedad.nombre}"><p class="contenido"><b>${propiedad.nombre}</b><br><b>${propiedad.precio}€/${propiedad.frecuencia_pago}</b><br><b class="status">${status}</b></p></div>`);
+        let marcador = L.marker([`${propiedad.latitud}`, `${propiedad.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagenes[0]}" width="100%" alt="${propiedad.nombre}"><p class="contenido"><b>${propiedad.nombre}</b><br><b>${propiedad.precio}€/${propiedad.frecuencia_pago}</b><br><b class="status">${status}</b></p></div>`);
         
         marcador.openPopup();
     }else{

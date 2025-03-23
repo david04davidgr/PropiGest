@@ -104,17 +104,34 @@ main{
 
 .carrusel_imagenes{
     width: 100%;
-    height: 500px;
+    height: 600px;
     display: flex;
     justify-content: center;
-    margin-top: 1%;
+}
+    
+.img_carrusel{
+    width: 95%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: 10px;
+}
 
-    img{
-        width: 95%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 10px;
-    }
+.carousel {
+    width: 95%;
+    max-width: 100%;
+}
+
+.carousel-inner {
+    width: 100%;
+}
+
+.carousel-item {
+    width: 100%;
+}
+
+.carousel-item img {
+    width: 100%;
+    object-fit: contain;
 }
 
 .datos_container{
