@@ -104,7 +104,14 @@
             const div = document.createElement('div');
             let status;   
 
-            let imagen = prop.imagenes ? prop.imagenes : '../uploads/imagenes/default.png';
+            let imagenes = prop.imagenes;
+            imagenes = imagenes ? imagenes.split(',') : [];
+
+            let imagenDefault = '../uploads/imagenes/default.png';
+
+            if (imagenes.length === 0) {
+                imagenes[0] = [imagenDefault];
+            }
 
             if(prop.disponibilidad === "1"){
                 status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
@@ -117,7 +124,7 @@
 
             div.classList.add('tarjeta_propiedad');
             div.innerHTML = `
-                <img src="${imagen}" width="100%" alt="casa villanueva">
+                <img src="${imagenes[0]}" width="100%" alt="casa villanueva">
                 <div class="contenido">
                     <div class="izqd">
                         <div class="nombre_info">
