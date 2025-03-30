@@ -493,3 +493,14 @@ function guardarCambios(propiedad_id){
     })
     .catch(error => console.error("Error:", error));
 }
+
+//Funcion para esconder el menu con click fuera
+document.addEventListener("click", function (event) {
+    const menu = document.getElementById("circularMenu");
+    const btn = document.querySelector(".floating-btn");
+
+    // Si el menú está abierto y el clic NO es dentro del menú ni del botón, lo cierra
+    if (menu.classList.contains("active") && !menu.contains(event.target) && !btn.contains(event.target)) {
+        menu.classList.remove("active");
+    }
+});
