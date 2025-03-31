@@ -100,64 +100,77 @@
         const contenedor = document.querySelector('#propiedades_container');
         contenedor.innerHTML = '';
 
-        propiedades.forEach(prop => {
+        if (propiedades.length >=1) {
+            propiedades.forEach(prop => {
+                const div = document.createElement('div');
+                let status;   
+    
+                let imagenes = prop.imagenes;
+                imagenes = imagenes ? imagenes.split(',') : [];
+    
+                let imagenDefault = '../uploads/imagenes/default.png';
+    
+                if (imagenes.length === 0) {
+                    imagenes[0] = [imagenDefault];
+                }
+    
+                if(prop.disponibilidad === "1"){
+                    status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
+                    disponibles += 1;  
+                }
+                if(prop.disponibilidad === "0"){
+                    status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
+                    noDisponibles += 1;
+                }
+    
+                div.classList.add('tarjeta_propiedad');
+                div.innerHTML = `
+                    <img src="${imagenes[0]}" width="100%" alt="casa villanueva">
+                    <div class="contenido">
+                        <div class="izqd">
+                            <div class="nombre_info">
+                                <p>Nombre</p>
+                                <h4>${prop.nombre}</h4>
+                            </div>
+                            <div class="precio_info">
+                                <p>Precio</p>
+                                <h4>${prop.precio}€/${prop.frecuencia_pago}</h4>
+                            </div>
+                        </div>
+                        <div class="drch">
+                            <div class="tipo_info">
+                                <p>Tipo</p>
+                                <h4>${prop.tipo}</h4>
+                            </div>
+                            <div class="dispo_info">
+                                <p>Disponibilidad</p>
+                                <h4>${status}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="foot_tarjeta">
+                        <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}">
+                            <button class="btn_izqd"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
+                        </a>
+                        <a href="../html/vistaMapa.html?id_propiedad=${prop.id}">
+                            <button class="btn_drch"><i class="fa-regular fa-map"></i> Ver en mapa</button>
+                        </a>
+                    </div>
+                `;
+                contenedor.appendChild(div);
+            });
+        }else{
             const div = document.createElement('div');
-            let status;   
-
-            let imagenes = prop.imagenes;
-            imagenes = imagenes ? imagenes.split(',') : [];
-
-            let imagenDefault = '../uploads/imagenes/default.png';
-
-            if (imagenes.length === 0) {
-                imagenes[0] = [imagenDefault];
-            }
-
-            if(prop.disponibilidad === "1"){
-                status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
-                disponibles += 1;  
-            }
-            if(prop.disponibilidad === "0"){
-                status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
-                noDisponibles += 1;
-            }
-
-            div.classList.add('tarjeta_propiedad');
             div.innerHTML = `
-                <img src="${imagenes[0]}" width="100%" alt="casa villanueva">
-                <div class="contenido">
-                    <div class="izqd">
-                        <div class="nombre_info">
-                            <p>Nombre</p>
-                            <h4>${prop.nombre}</h4>
-                        </div>
-                        <div class="precio_info">
-                            <p>Precio</p>
-                            <h4>${prop.precio}€/${prop.frecuencia_pago}</h4>
-                        </div>
-                    </div>
-                    <div class="drch">
-                        <div class="tipo_info">
-                            <p>Tipo</p>
-                            <h4>${prop.tipo}</h4>
-                        </div>
-                        <div class="dispo_info">
-                            <p>Disponibilidad</p>
-                            <h4>${status}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="foot_tarjeta">
-                    <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}">
-                        <button class="btn_izqd"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
-                    </a>
-                    <a href="../html/vistaMapa.html?id_propiedad=${prop.id}">
-                        <button class="btn_drch"><i class="fa-regular fa-map"></i> Ver en mapa</button>
+                <div class="buttonContainer">
+                    <p>¡Añade tu primera propiedad!</p>
+                    <a href="../html/newPropiedad.html">
+                        <button class="addPropiedadBtn">+ Añadir Propiedad</button>
                     </a>
                 </div>
             `;
             contenedor.appendChild(div);
-        });
+        }
 
         mostarPropiedadesDisponibles(disponibles);
         mostarPropiedadesNoDisponibles(noDisponibles);
