@@ -10,7 +10,8 @@ body{
 
 aside{
     position: fixed;
-    width: 12vh;
+    width: 6vw;
+    min-width: 80px; 
     height: 100vh;
     padding: 0.6%;
     box-sizing: border-box;
@@ -94,7 +95,6 @@ main{
     box-sizing: border-box;
     margin: 1.75% 4%;
     margin-left: 10%;
-    background-color: #f5f5f5;
 }
 
 .circular-menu {
@@ -204,7 +204,7 @@ main{
   }
 
 .info_container{
-    /* width: 98%; */
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -213,6 +213,7 @@ main{
     background-color: #333;
     border-radius: 20px;
     border: 6px solid #4CAF50;
+    /* margin-left: 5%; */
 }
 
 .carrusel_imagenes{

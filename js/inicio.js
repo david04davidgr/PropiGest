@@ -89,18 +89,19 @@
     })
     .catch(error => console.error('Error al obtener las propiedades: ',error));
     
-    let disponibles = 0;
-    let noDisponibles = 0;         
-
-//Funciones
+    
+    //Funciones
     new Chart(graficoBalance, configBal);//Crea grafico de balance
     new Chart(graficoActividad, config);//Crea grafico de actividad
-
+    
     function mostrarPropiedades(propiedades){
+        let disponibles = 0;
+        let noDisponibles = 0;     
+            
         const contenedor = document.querySelector('#propiedades_container');
         contenedor.innerHTML = '';
 
-        if (propiedades.length >=1) {
+        if (propiedades.length >=1 && propiedades) {
             propiedades.forEach(prop => {
                 const div = document.createElement('div');
                 let status;   
@@ -160,8 +161,7 @@
                 contenedor.appendChild(div);
             });
         }else{
-            const div = document.createElement('div');
-            div.innerHTML = `
+            contenedor.innerHTML = `
                 <div class="buttonContainer">
                     <p>¡Añade tu primera propiedad!</p>
                     <a href="../html/newPropiedad.html">
@@ -169,7 +169,6 @@
                     </a>
                 </div>
             `;
-            contenedor.appendChild(div);
         }
 
         mostarPropiedadesDisponibles(disponibles);

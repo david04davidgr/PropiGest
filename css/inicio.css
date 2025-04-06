@@ -99,8 +99,8 @@ main{
 
 .buttonContainer{
     width: 100%;
-    height: 100%;
-    margin-top: 95%;
+    height: 90%;
+    /* margin-top: 95%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -462,6 +462,40 @@ main{
         position: absolute;
         top: 92vh;
         left: 6.5%;
+        z-index: 999;
+        text-align: center;
+        line-height: 60px;
+        border-radius: 100%;
+        font-size: 2rem;
+        font-weight: bold;
+        text-decoration: none;
+        background-color: #333;
+        color: #f5f5f5;
+        border: 2px solid #4CAF50;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #424242;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        &:active {
+            background-color: #1e7e34;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: scale(1);
+        }
+    }
+
+    a#vista_mapa{
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 92vh;
+        right: 1%;
         z-index: 999;
         text-align: center;
         line-height: 60px;
