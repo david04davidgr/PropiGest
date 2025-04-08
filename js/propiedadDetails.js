@@ -1,3 +1,7 @@
+const title = document.querySelector('#title');
+const carrusel = document.querySelector('#carrusel_imagenes');
+const datosContainer = document.querySelector('#datosContainer');
+const balanceButton = document.querySelector('#balanceButton');
 
 function getQueryParam(param){
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,8 +25,6 @@ if(id){
 }
 
 function mostrarPropiedad(propiedad){
-    const title = document.querySelector('#title');
-    const contenedor = document.querySelector('#info_container');
 
     console.log(propiedad.imagenes);
     
@@ -35,7 +37,9 @@ function mostrarPropiedad(propiedad){
         PropiGest - ${propiedad.nombre}
     `
 
-    contenedor.innerHTML = '';
+    carrusel.innerHTML = '';
+
+    datosContainer.innerHTML = '';
 
     let status;
 
@@ -62,7 +66,7 @@ function mostrarPropiedad(propiedad){
         `;
     });
 
-    contenedor.innerHTML = `
+    carrusel.innerHTML = `
         <head>
             <title>PropieGest - ${propiedad.nombre}</title>
         </head>
@@ -78,8 +82,10 @@ function mostrarPropiedad(propiedad){
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
-            </div>
-            <div class="datos_container">
+        </div>
+    `;
+
+    datosContainer.innerHTML=`
                 <div class="datos">
                     <div class="izqd">
                         <div class="nombre_info">
@@ -304,9 +310,8 @@ function mostrarPropiedad(propiedad){
                   </div>
                 </div>
               </div>
-            </div>
+    `;
 
-    `
     //Declaración del mapa y control de capas
     const map = L.map('map', {
         zoomControl: false,
@@ -504,3 +509,12 @@ document.addEventListener("click", function (event) {
         menu.classList.remove("active");
     }
 });
+
+balanceButton.addEventListener('click', function (){    
+    datosContainer.innerHTML = '';
+    
+    datosContainer.innerHTML = `
+        
+    `;
+    console.log(datosContainer.innerHTML);
+})
