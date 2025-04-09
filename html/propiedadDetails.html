@@ -18,6 +18,10 @@
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Graficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-utils"></script>
 </head>
 <body>
     <aside>
@@ -208,12 +212,18 @@
                   <a href="#" class="menu-item fa fa-file"></a>
                 </menu>
             </div>
-            <!-- SECCION BALANCE
+            <!-- SECCION BALANCE -->
             
-            <div class="info_container" id="info_container">
-                <div class="balanceButtons">
-                    <button id="btnIngreso" class="fa-solid fa-plus">Ingreso</button>
-                    <button id="btnGasto" class="fa-solid fa-minus">Gasto</button>
+            <!-- <div class="info_container" id="info_container">
+                <div class="balanceContainer">
+                    <div class="graficosContainer">
+                        <canvas id="donutBalance"></canvas>
+                        <canvas id="barrasVersus"></canvas>
+                    </div>
+                    <div class="balanceButtons">
+                        <button id="btnIngreso" class="btnIngreso"><i class="fa-solid fa-plus"></i> Ingreso</button>
+                        <button id="btnGasto" class="btnGasto"><i class="fa-solid fa-minus"></i> Gasto</button>
+                    </div>
                 </div>
             </div> -->
     </main>

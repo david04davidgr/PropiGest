@@ -510,11 +510,101 @@ document.addEventListener("click", function (event) {
     }
 });
 
-balanceButton.addEventListener('click', function (){    
+balanceButton.addEventListener('click', function (){  
+    
     datosContainer.innerHTML = '';
     
     datosContainer.innerHTML = `
-        
+                <div class="balanceContainer">
+                    <div class="graficosContainer">
+                        <canvas id="donutBalance"></canvas>
+                        <canvas id="barrasVersus"></canvas>
+                    </div>
+                    <hr>
+                    <div class="balanceButtons">
+                        <button id="btnIngreso" class="btnIngreso"><i class="fa-solid fa-plus"></i> Ingreso</button>
+                        <button id="btnGasto" class="btnGasto"><i class="fa-solid fa-minus"></i> Gasto</button>
+                    </div>
+                </div>
     `;
-    console.log(datosContainer.innerHTML);
+
+        //Grafico Balance
+        let graficoBalance = document.querySelector('#donutBalance');
+        const labelsBal = ['Ingresos', 'Gastos'];
+        const colorsBal = ['#4caf50','rgb(255, 0, 0)'];
+    
+        const dataBal = {
+            labels: labelsBal,
+            datasets: [{
+                data: [5000,350],
+                backgroundColor: colorsBal,
+            }]
+        };
+        
+        const configBal = {
+            type: 'doughnut',
+            data: dataBal,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color:'#f5f5f5',
+                        }
+                    }
+                }
+            }
+        };
+    
+        new Chart(graficoBalance, configBal);//Crea grafico de balance
+    
+        //Grafico doble barras
+    
+        let barrasBalance = document.querySelector('#barrasVersus');
+    
+        
+        const DATA_COUNT = 12;
+        const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 1000};
+    
+        const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Ingresos',
+                    data: [400, 500, 300, 700, 600, 800, 450, 620, 300, 500, 650, 700],
+                    borderColor: 'rgba(75, 192, 192)',
+                    backgroundColor: 'rgb(75, 192, 192, 0.5)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Gastos',
+                    data: [300, 400, 350, 600, 500, 700, 400, 500, 250, 400, 550, 600],
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderWidth: 1
+                }
+            ]
+        };
+        
+        const configBarras = {
+            type: 'bar',
+            data: data,
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Chart.js Bar Chart'
+                }
+              }
+            },
+        };
+    
+        new Chart(barrasBalance, configBarras);//Crea grafico de balance
 })
