@@ -81,7 +81,13 @@
 
     //Obtencion de datos BD
     fetch('./../php/obtenerPropiedades.php')
-    .then(response => response.json())
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
     .then(data => {
         console.log(data);
         mostrarPropiedades(data);
@@ -115,11 +121,11 @@
                     imagenes[0] = [imagenDefault];
                 }
     
-                if(prop.disponibilidad === "1"){
+                if(prop.disponibilidad === 1){
                     status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
                     disponibles += 1;  
                 }
-                if(prop.disponibilidad === "0"){
+                if(prop.disponibilidad === 0){
                     status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
                     noDisponibles += 1;
                 }

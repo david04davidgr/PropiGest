@@ -1,5 +1,5 @@
 <?php
-
+include 'verificarSesion.php';
 require_once 'conexion.php';
 
 header("Content-Type: application/json");

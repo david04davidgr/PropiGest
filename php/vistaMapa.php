@@ -1,4 +1,5 @@
 <?php
+include 'verificarSesion.php';
 require 'conexion.php'; // Asegúrate de conectar a la BD
 
 if (isset($_GET['id_propiedad'])) {

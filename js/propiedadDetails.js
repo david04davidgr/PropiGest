@@ -14,8 +14,13 @@ let id = getQueryParam("id_propiedad");
 
 if(id){
     fetch(`./../php/obtenerPropiedadById.php?id_propiedad=${id}`)
-    .then(response => response.json())
-    .then(data => {
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
         propiedad = data;
         mostrarPropiedad(propiedad);
     })
@@ -391,15 +396,20 @@ function openDeleteModal(propiedad_id){
 //Funcion que elimina la propiedad por su id
 function eliminarPropiedad(propiedad_id) {
 
-let formData = new FormData();
-formData.append("id_propiedad", propiedad_id) //Almacena el id como cuerpo de la solicitud
+    let formData = new FormData();
+    formData.append("id_propiedad", propiedad_id) //Almacena el id como cuerpo de la solicitud
 
-fetch(`../php/eliminarPropiedad.php`, {
-    method: "POST",
-    body: formData
-})
-    .then(response => response.json())
-    
+    fetch(`../php/eliminarPropiedad.php`, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    
     .then(data => {
         console.log(data);            
         
@@ -490,8 +500,13 @@ function guardarCambios(propiedad_id){
         },
         body: JSON.stringify(propiedadActualizada)
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
         if (data.success) {
             window.location.reload(); // Recargar la página para reflejar los cambios
         }

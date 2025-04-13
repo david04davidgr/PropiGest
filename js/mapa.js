@@ -47,8 +47,13 @@
     //Obtencion de propiedades y creado automatico de tarjetas
     //Obtencion de datos BD
     fetch('./../php/obtenerPropiedades.php')
-    .then(response => response.json())
-    .then(data => {
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
         console.log(data);
         createCards(data);
     })
@@ -153,8 +158,13 @@
         
         if (id) {
             fetch(`../php/vistaMapa.php?id_propiedad=${id}`)
-            .then(response => response.json())
-            .then(data => {
+            .then(response => {
+                if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+                    window.location.href = '../index.html';
+                    return;
+                }
+                return response.json();
+            })            .then(data => {
                 if (data.latitud && data.longitud) {
                     let marcador = marcardores.get(id);
                     console.log(data.longitud, data.latitud);

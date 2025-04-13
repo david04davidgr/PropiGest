@@ -1,5 +1,5 @@
 <?php 
-
+include 'verificarSesion.php';
 include 'conexion.php';
 
 $imagenes = $_FILES['imagenes'];
@@ -52,19 +52,19 @@ if (empty($rutas_imagenes)) {
 $rutas_imagenes_str = implode(',', $rutas_imagenes);
 
 $sql = "INSERT INTO propiedades 
-        (imagenes, nombre, direccion, ciudad, codigo_postal, tipo, latitud, longitud, precio, frecuencia_pago, disponibilidad, tamanio, numeroHabitaciones, numeroBanios, planta, anioConstruccion) 
-        VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        (imagenes, nombre, direccion, ciudad, codigo_postal, tipo, latitud, longitud, precio, frecuencia_pago, disponibilidad, tamanio, numeroHabitaciones, numeroBanios, planta, anioConstruccion, idUsuario) 
+        VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
 
 // Ajustar el tipo de datos en el bind_param según la columna
-$stmt->bind_param("ssssdsdsssssiiis", 
-    $rutas_imagenes_str, $nombre, $direccion, $ciudad, $codigo_postal, $tipo, $latitud, $longitud, $precio, $frecuencia_pago, $disponibilidad, $tamanio, $habitaciones, $banios, $planta, $anioConstruccion
+$stmt->bind_param("ssssdsdsssssiiisi", 
+    $rutas_imagenes_str, $nombre, $direccion, $ciudad, $codigo_postal, $tipo, $latitud, $longitud, $precio, $frecuencia_pago, $disponibilidad, $tamanio, $habitaciones, $banios, $planta, $anioConstruccion, $_SESSION['usuario_id']
 );
 
 if ($stmt->execute()) {
     $id_propiedad = $conn->insert_id;
-    header("Location: ../html/vistaMapa.html?id_propiedad=". $id_propiedad); //No funciona
+    header("Location: ../html/vistaMapa.html?id_propiedad=". $id_propiedad);
 } else {
     echo "Error: " . $stmt->error;
 }
@@ -72,23 +72,4 @@ if ($stmt->execute()) {
 // Cerrar conexión
 $stmt->close();
 $conn->close();
-
-
-
-        // echo '<p>' . $nombre . '</p>';
-        // echo '<p>' . $tipo . '</p>';
-        // echo '<p>' . $precio . '</p>';
-        // echo '<p>' . $frecuencia . '</p>';
-        // echo '<p>' . $disponibilidad . '</p>';
-        // echo '<p>' . $direccion . '</p>';
-        // echo '<p>' . $ciudad . '</p>';
-        // echo '<p>' . $codigo_postal . '</p>';
-        // echo '<p>' . $latitud . '</p>';
-        // echo '<p>' . $longitud . '</p>';
-        // echo '<p>' . $tamanio . '</p>';
-        // echo '<p>' . $planta . '</p>';
-        // echo '<p>' . $habitaciones . '</p>';
-        // echo '<p>' . $banios . '</p>';
-        // echo '<p>' . $anioConstruccion . '</p>';
-
 ?>

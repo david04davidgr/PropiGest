@@ -10,8 +10,13 @@ let estado_lista = true;
 
     //Obtencion de datos BD
     fetch('./../php/obtenerPropiedades.php')
-        .then(response => response.json())
-        .then(data => {
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })        .then(data => {
             // console.log(data);
             listPropiedades(data);
         })
