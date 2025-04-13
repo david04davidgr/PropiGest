@@ -1,3 +1,15 @@
+//Verificacion de seguridad acceso
+fetch('./../php/verificarSesion.php')
+  .then(res => {
+    if (res.status === 401) {
+      window.location.href = '../index.html';
+    }
+  })
+  .catch(err => {
+    console.error('Error de sesión:', err);
+    window.location.href = '../index.html';
+  });
+
 //Variables
 
     //Declaración del mapa y control de capas
