@@ -3,6 +3,10 @@ const carrusel = document.querySelector('#carrusel_imagenes');
 const datosContainer = document.querySelector('#datosContainer');
 const balanceButton = document.querySelector('#balanceButton');
 
+let totalIngresos = 0;
+let totalGastos = 0;
+let balance = 0;
+
 function getQueryParam(param){
     const urlParams = new URLSearchParams(window.location.search);
     
@@ -32,7 +36,8 @@ if(id){
             return;
         }
         return response.json();
-    })    .then(data => {
+    })    
+    .then(data => {
         propiedad = data;
         mostrarPropiedad(propiedad);
     })
@@ -537,7 +542,90 @@ document.addEventListener("click", function (event) {
     }
 });
 
+if(id){
+    fetch(`./../php/obtenerMovimientos.php?id_propiedad=${id}`)
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        movimientos = data;
+    })
+}
+
 balanceButton.addEventListener('click', function (){  
+
+        let cabeceraTabla = `
+        <div class="tablaMovimientos">
+                        <table class="table table-striped table-bordered">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Concepto</th>
+                                <th>Tipo</th> <!-- Ingreso o Gasto -->
+                                <th>Comentarios</th> <!-- Alquiler, mantenimiento, luz, etc -->
+                                <th>Importe (€)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+        `
+        
+        let datosMovimientos = '';
+        let tipo = '';
+
+        if (movimientos.length > 0) {
+            movimientos.forEach(movimiento => {
+
+                if (movimiento.tipo.toLowerCase() == "ingreso") {
+                    totalIngresos += movimiento.cantidad;
+                    balance = totalIngresos - totalGastos;
+                    tipo = 'bg-success';
+                }else{
+                    totalGastos += movimiento.cantidad;
+                    balance = totalIngresos - totalGastos;
+                    tipo = 'bg-danger';
+                }
+
+                datosMovimientos += `
+                    <tr>
+                        <td>${movimiento.fecha}</td>
+                        <td>${movimiento.concepto}</td>
+                        <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
+                        <td>${movimiento.comentarios}</td>
+                        <td>${movimiento.cantidad}</td>
+                    </tr>
+                `
+            });
+        }else{
+            datosMovimientos = `
+                <tr class="table-secondary fw-bold">
+                    <td colspan="5" class="text-center">No hay movimientos todavia</td>
+                </tr>
+            `
+        }
+
+        let pieTabla = `
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-secondary fw-bold">
+                                <td colspan="4" class="text-end">Total ingresos:</td>
+                                <td class="text-success">${totalIngresos} €</td>
+                                </tr>
+                                <tr class="table-secondary fw-bold">
+                                <td colspan="4" class="text-end">Total gastos:</td>
+                                <td class="text-danger">-${totalGastos} €</td>
+                                </tr>
+                                <tr class="table-secondary fw-bold">
+                                <td colspan="4" class="text-end">Balance:</td>
+                                <td class="text-primary">${balance} €</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+            </div>
+        `
     
     datosContainer.innerHTML = '';
     
@@ -552,6 +640,9 @@ balanceButton.addEventListener('click', function (){
                         <button id="btnIngreso" class="btnIngreso"><i class="fa-solid fa-plus"></i> Ingreso</button>
                         <button id="btnGasto" class="btnGasto"><i class="fa-solid fa-minus"></i> Gasto</button>
                     </div>
+                    ${cabeceraTabla}
+                    ${datosMovimientos}
+                    ${pieTabla}
                 </div>
     `;
 
@@ -578,7 +669,11 @@ balanceButton.addEventListener('click', function (){
                     legend: {
                         position: 'bottom',
                         labels: {
-                            color:'#f5f5f5',
+                            color:'#333',
+                            font:{
+                                size:14,
+                                weight: 'bold'
+                            }
                         }
                     }
                 }

@@ -68,12 +68,12 @@ let estado_lista = true;
                 let status;
                 let imagen = prop.imagenes ? prop.imagenes : '../uploads/imagenes/default.png';
 
-                if(prop.disponibilidad === "1"){
-                    status = `Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+                if(prop.disponibilidad === 1){
+                    status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
                 }
-                if(prop.disponibilidad === "0"){
-                    status = `No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
-                }
+                if(prop.disponibilidad === 0){
+                    status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
+                }             
 
                 const li = document.createElement('li');
                 li.classList.add('tarjeta_propiedad_aside');

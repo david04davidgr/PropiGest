@@ -110,12 +110,12 @@ fetch('./../php/verificarSesion.php')
             let status;
             let imagen = prop.imagenes ? prop.imagenes : 'uploads/imagenes/default.png';
             
-            if(prop.disponibilidad === "1"){
-                status = `Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+            if(prop.disponibilidad === 1){
+                status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
             }
-            if(prop.disponibilidad === "0"){
-                status = `No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
-            }              
+            if(prop.disponibilidad === 0){
+                status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
+            }             
             
             if (prop.latitud || prop.longitud != null) {
                 let marcador = L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><div class="foot_tarjeta">
