@@ -575,18 +575,21 @@ balanceButton.addEventListener('click', function (){
         
         let datosMovimientos = '';
         let tipo = '';
+        let cantidad = '';
 
         if (movimientos.length > 0) {
             movimientos.forEach(movimiento => {
 
                 if (movimiento.tipo.toLowerCase() == "ingreso") {
-                    totalIngresos += movimiento.cantidad;
-                    balance = totalIngresos - totalGastos;
                     tipo = 'bg-success';
-                }else{
-                    totalGastos += movimiento.cantidad;
+                    cantidad = `class="cantidadIngreso">`
+                    totalIngresos += Number(movimiento.cantidad);
                     balance = totalIngresos - totalGastos;
+                }else{
                     tipo = 'bg-danger';
+                    cantidad = `class="cantidadGasto">-`
+                    totalGastos += Number(movimiento.cantidad);
+                    balance = totalIngresos - totalGastos;
                 }
 
                 datosMovimientos += `
@@ -595,7 +598,7 @@ balanceButton.addEventListener('click', function (){
                         <td>${movimiento.concepto}</td>
                         <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
                         <td>${movimiento.comentarios}</td>
-                        <td>${movimiento.cantidad}</td>
+                        <td ${cantidad}${movimiento.cantidad}</td>
                     </tr>
                 `
             });
@@ -609,20 +612,6 @@ balanceButton.addEventListener('click', function (){
 
         let pieTabla = `
                             </tbody>
-                            <tfoot>
-                                <tr class="table-secondary fw-bold">
-                                <td colspan="4" class="text-end">Total ingresos:</td>
-                                <td class="text-success">${totalIngresos} €</td>
-                                </tr>
-                                <tr class="table-secondary fw-bold">
-                                <td colspan="4" class="text-end">Total gastos:</td>
-                                <td class="text-danger">-${totalGastos} €</td>
-                                </tr>
-                                <tr class="table-secondary fw-bold">
-                                <td colspan="4" class="text-end">Balance:</td>
-                                <td class="text-primary">${balance} €</td>
-                                </tr>
-                            </tfoot>
                         </table>
             </div>
         `
@@ -631,6 +620,17 @@ balanceButton.addEventListener('click', function (){
     
     datosContainer.innerHTML = `
                 <div class="balanceContainer">
+                    <div class="datosPrincipales">
+                        <div class="balance">
+                            ${balance}
+                        </div>
+                        <div class="ingresos">
+                            ${totalIngresos}
+                        </div>
+                        <div class="gastos">
+                            ${totalGastos}
+                        </div>
+                    </div>
                     <div class="graficosContainer">
                         <canvas id="donutBalance"></canvas>
                         <canvas id="barrasVersus"></canvas>
@@ -654,7 +654,7 @@ balanceButton.addEventListener('click', function (){
         const dataBal = {
             labels: labelsBal,
             datasets: [{
-                data: [5000,350],
+                data: [totalIngresos,totalGastos],
                 backgroundColor: colorsBal,
             }]
         };
@@ -696,14 +696,14 @@ balanceButton.addEventListener('click', function (){
             datasets: [
                 {
                     label: 'Ingresos',
-                    data: [400, 500, 300, 700, 600, 800, 450, 620, 300, 500, 650, 700],
+                    data: [totalIngresos, 500, 300, 700, 600, 800, 450, 620, 300, 500, 650, 700],
                     borderColor: 'rgba(75, 192, 192)',
                     backgroundColor: 'rgb(75, 192, 192, 0.5)',
                     borderWidth: 1
                 },
                 {
                     label: 'Gastos',
-                    data: [300, 400, 350, 600, 500, 700, 400, 500, 250, 400, 550, 600],
+                    data: [totalGastos, 400, 350, 600, 500, 700, 400, 500, 250, 400, 550, 600],
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     borderWidth: 1
