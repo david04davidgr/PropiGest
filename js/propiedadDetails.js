@@ -558,10 +558,17 @@ if(id){
 
 balanceButton.addEventListener('click', function (){  
 
+    totalIngresos = 0;
+    totalGastos = 0;
+    balance = 0;
+
+    let ingresosPorMes = Array(12).fill(0);
+    let gastosPorMes = Array(12).fill(0);
+
         let cabeceraTabla = `
         <div class="tablaMovimientos">
                         <table class="table table-striped table-bordered">
-                            <thead class="table-dark">
+                            <thead class="cabeceraTabla">
                             <tr>
                                 <th>Fecha</th>
                                 <th>Concepto</th>
@@ -579,16 +586,19 @@ balanceButton.addEventListener('click', function (){
 
         if (movimientos.length > 0) {
             movimientos.forEach(movimiento => {
+                const mes = new Date(movimiento.fecha).getMonth();
 
                 if (movimiento.tipo.toLowerCase() == "ingreso") {
                     tipo = 'bg-success';
                     cantidad = `class="cantidadIngreso">`
-                    totalIngresos += Number(movimiento.cantidad);
+                    totalIngresos += Number(movimiento.cantidad); //pendiente de sustituir
+                    ingresosPorMes[mes] += Number(movimiento.cantidad);
                     balance = totalIngresos - totalGastos;
                 }else{
                     tipo = 'bg-danger';
                     cantidad = `class="cantidadGasto">-`
-                    totalGastos += Number(movimiento.cantidad);
+                    totalGastos += Number(movimiento.cantidad); //pendiente de sustituir
+                    gastosPorMes[mes] += Number(movimiento.cantidad);
                     balance = totalIngresos - totalGastos;
                 }
 
@@ -622,13 +632,16 @@ balanceButton.addEventListener('click', function (){
                 <div class="balanceContainer">
                     <div class="datosPrincipales">
                         <div class="balance">
-                            ${balance}
+                            <h4>Balance</h4>
+                            <p>${balance}€</p>
                         </div>
                         <div class="ingresos">
-                            ${totalIngresos}
+                            <h4>Ingresos totales</h4>
+                            <p>+${totalIngresos}€</p>
                         </div>
                         <div class="gastos">
-                            ${totalGastos}
+                            <h4>Gastos totales</h4>
+                            <p>-${totalGastos}€</p>
                         </div>
                     </div>
                     <div class="graficosContainer">
@@ -696,14 +709,14 @@ balanceButton.addEventListener('click', function (){
             datasets: [
                 {
                     label: 'Ingresos',
-                    data: [totalIngresos, 500, 300, 700, 600, 800, 450, 620, 300, 500, 650, 700],
+                    data: ingresosPorMes,
                     borderColor: 'rgba(75, 192, 192)',
                     backgroundColor: 'rgb(75, 192, 192, 0.5)',
                     borderWidth: 1
                 },
                 {
                     label: 'Gastos',
-                    data: [totalGastos, 400, 350, 600, 500, 700, 400, 500, 250, 400, 550, 600],
+                    data: gastosPorMes,
                     borderColor: 'rgb(255, 99, 132)',
                     backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     borderWidth: 1
