@@ -676,6 +676,8 @@ div#map{
     width: 90%;
     margin-top: 2%;
     margin-bottom: 1%;
+    max-height: 300px;
+    overflow-y: scroll;
 
     .cabeceraTabla>tr>th{
         background-color: #333;
@@ -691,4 +693,12 @@ div#map{
         color: red;
         font-weight: bold;
     }
+}
+
+form#addIngreso{
+    padding: 5%;
+}
+
+form#addGasto{
+    padding: 5%;
 }

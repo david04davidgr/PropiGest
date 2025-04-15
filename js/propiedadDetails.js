@@ -558,12 +558,14 @@ if(id){
 
 balanceButton.addEventListener('click', function (){  
 
-    totalIngresos = 0;
-    totalGastos = 0;
-    balance = 0;
+    // totalIngresos = 0;
+    // totalGastos = 0;
+    // balance = 0;
 
+    const mes = new Date().getMonth();
     let ingresosPorMes = Array(12).fill(0);
     let gastosPorMes = Array(12).fill(0);
+    let balancePorMes = Array(12).fill(0)
 
         let cabeceraTabla = `
         <div class="tablaMovimientos">
@@ -586,20 +588,19 @@ balanceButton.addEventListener('click', function (){
 
         if (movimientos.length > 0) {
             movimientos.forEach(movimiento => {
-                const mes = new Date(movimiento.fecha).getMonth();
 
                 if (movimiento.tipo.toLowerCase() == "ingreso") {
                     tipo = 'bg-success';
                     cantidad = `class="cantidadIngreso">`
-                    totalIngresos += Number(movimiento.cantidad); //pendiente de sustituir
+                    // totalIngresos += Number(movimiento.cantidad); //pendiente de sustituir
                     ingresosPorMes[mes] += Number(movimiento.cantidad);
-                    balance = totalIngresos - totalGastos;
+                    balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
                 }else{
                     tipo = 'bg-danger';
                     cantidad = `class="cantidadGasto">-`
-                    totalGastos += Number(movimiento.cantidad); //pendiente de sustituir
+                    // totalGastos += Number(movimiento.cantidad); //pendiente de sustituir
                     gastosPorMes[mes] += Number(movimiento.cantidad);
-                    balance = totalIngresos - totalGastos;
+                    balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
                 }
 
                 datosMovimientos += `
@@ -608,7 +609,7 @@ balanceButton.addEventListener('click', function (){
                         <td>${movimiento.concepto}</td>
                         <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
                         <td>${movimiento.comentarios}</td>
-                        <td ${cantidad}${movimiento.cantidad}</td>
+                        <td ${cantidad}${movimiento.cantidad}€</td>
                     </tr>
                 `
             });
@@ -633,15 +634,15 @@ balanceButton.addEventListener('click', function (){
                     <div class="datosPrincipales">
                         <div class="balance">
                             <h4>Balance</h4>
-                            <p>${balance}€</p>
+                            <p>${balancePorMes[mes]}€</p>
                         </div>
                         <div class="ingresos">
                             <h4>Ingresos totales</h4>
-                            <p>+${totalIngresos}€</p>
+                            <p>+${ingresosPorMes[mes]}€</p>
                         </div>
                         <div class="gastos">
                             <h4>Gastos totales</h4>
-                            <p>-${totalGastos}€</p>
+                            <p>-${gastosPorMes[mes]}€</p>
                         </div>
                     </div>
                     <div class="graficosContainer">
@@ -650,14 +651,76 @@ balanceButton.addEventListener('click', function (){
                     </div>
                     <hr>
                     <div class="balanceButtons">
-                        <button id="btnIngreso" class="btnIngreso"><i class="fa-solid fa-plus"></i> Ingreso</button>
-                        <button id="btnGasto" class="btnGasto"><i class="fa-solid fa-minus"></i> Gasto</button>
+                        <button id="btnIngreso" class="btnIngreso" data-bs-toggle="modal" 
+                        data-bs-target="#ingresoModal"><i class="fa-solid fa-plus"></i> Ingreso</button>
+                        <button id="btnGasto" class="btnGasto" data-bs-toggle="modal" 
+                        data-bs-target="#gastoModal"><i class="fa-solid fa-minus"></i> Gasto</button>
                     </div>
                     ${cabeceraTabla}
                     ${datosMovimientos}
                     ${pieTabla}
                 </div>
-    `;
+                <div class="modal fade" id="ingresoModal" tabindex="-1" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header py-2">
+                            <h6 class="modal-title">Añadir ingreso</h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-2">
+                            <form id="addIngreso">
+                                <div class="mb-3">
+                                    <label for="concepto" class="form-label">Concepto *</label>
+                                    <input type="text" class="form-control" id="conceptoIngrs" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cantidad" class="form-label">Cantidad (€)*</label>
+                                    <input type="number" class="form-control" id="cantidadIngrs" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="comentarios" class="form-label">Comentarios</label>
+                                    <input type="text" class="form-control" id="comentariosIngrs">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer py-1">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-sm btn-success" data-bs-dismiss="modal" onclick="guardarIngresos(${id})">+ Añadir</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="gastoModal" tabindex="-1" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header py-2">
+                            <h6 class="modal-title">Añadir gasto</h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-2">
+                            <form id="addGasto">
+                                 <div class="mb-3">
+                                    <label for="concepto" class="form-label">Concepto *</label>
+                                    <input type="text" class="form-control" id="conceptoGasto" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cantidad" class="form-label">Cantidad (€)*</label>
+                                    <input type="number" class="form-control" id="cantidadGasto" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="comentarios" class="form-label">Comentarios</label>
+                                    <input type="text" class="form-control" id="comentariosGasto">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer py-1">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="guardarGastos(${id})">- Añadir</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+    `;    
 
         //Grafico Balance
         let graficoBalance = document.querySelector('#donutBalance');
@@ -667,7 +730,7 @@ balanceButton.addEventListener('click', function (){
         const dataBal = {
             labels: labelsBal,
             datasets: [{
-                data: [totalIngresos,totalGastos],
+                data: [ingresosPorMes[mes],gastosPorMes[mes]],
                 backgroundColor: colorsBal,
             }]
         };
@@ -731,11 +794,11 @@ balanceButton.addEventListener('click', function (){
               responsive: true,
               plugins: {
                 legend: {
-                  position: 'top',
+                  position: 'bottom',
                 },
                 title: {
                   display: true,
-                  text: 'Chart.js Bar Chart'
+                  text: 'Balance Anual'
                 }
               }
             },
@@ -743,3 +806,58 @@ balanceButton.addEventListener('click', function (){
     
         new Chart(barrasBalance, configBarras);//Crea grafico de balance
 })
+
+function guardarIngresos(id){
+    const conceptoIngrs = document.querySelector('#conceptoIngrs').value;
+    const cantidadIngrs = document.querySelector('#cantidadIngrs').value;
+    const comentariosIngrs = document.querySelector('#comentariosIngrs').value;
+
+    const ingreso = {
+        idPropiedad: id,
+        concepto: conceptoIngrs,
+        cantidad: cantidadIngrs,
+        tipo: 'Ingreso',
+        comentarios: comentariosIngrs,
+    }
+
+    console.log(ingreso);
+    
+
+    // //Envio de datos
+    // fetch('../php/guardarMovimientos.php', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(ingreso)
+    // })
+    // .then(response => {
+    //     if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+    //         window.location.href = '../index.html';
+    //         return;
+    //     }
+    //     return response.json();
+    // })    .then(data => {
+    //     if (data.success) {
+    //         window.location.reload(); // Recargar la página para reflejar los cambios
+    //     }
+    // })
+    // .catch(error => console.error("Error:", error));
+}
+
+function guardarGastos(id){
+    const conceptoGasto = document.querySelector('#conceptoGasto').value;
+    const cantidadGasto = document.querySelector('#cantidadGasto').value;
+    const comentariosGasto = document.querySelector('#comentariosGasto').value;
+
+    const gasto = {
+        idPropiedad: id,
+        concepto: conceptoGasto,
+        cantidad: cantidadGasto,
+        tipo: 'Gasto',
+        comentarios: comentariosGasto,
+    }
+
+    console.log(gasto);
+    
+}
