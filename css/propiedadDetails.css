@@ -525,7 +525,18 @@ div#map{
     hr{
         margin-bottom: 2%;
     }
+}
 
+.volverButton{
+    width: 100%;
+    text-align: left;
+    margin-left: 2%;
+    margin-top: 0.5%;
+
+    a{
+        color: #4CAF50;
+        font-weight: bold;
+    }
 }
 
 .datosPrincipales{
@@ -701,4 +712,10 @@ form#addIngreso{
 
 form#addGasto{
     padding: 5%;
+}
+
+/* Reservas y calendario */
+
+.calendarContainer{
+    padding: 2%;
 }

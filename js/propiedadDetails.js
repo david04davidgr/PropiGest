@@ -2,6 +2,7 @@ const title = document.querySelector('#title');
 const carrusel = document.querySelector('#carrusel_imagenes');
 const datosContainer = document.querySelector('#datosContainer');
 const balanceButton = document.querySelector('#balanceButton');
+const reservaButton = document.querySelector('#reservaButton')
 
 let totalIngresos = 0;
 let totalGastos = 0;
@@ -542,270 +543,267 @@ document.addEventListener("click", function (event) {
     }
 });
 
-if(id){
-    fetch(`./../php/obtenerMovimientos.php?id_propiedad=${id}`)
-    .then(response => {
-        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
-            window.location.href = '../index.html';
-            return;
-        }
-        return response.json();
-    })
-    .then(data => {
-        movimientos = data;
-    })
-}
+//Movimientos
+function cargarMovimientos(id){
+    if(id){
+        fetch(`./../php/obtenerMovimientos.php?id_propiedad=${id}`)
+        .then(response => {
+            if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+                window.location.href = '../index.html';
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            movimientos = data;
 
-balanceButton.addEventListener('click', function (){  
+            const mes = new Date().getMonth();
+            let ingresosPorMes = Array(12).fill(0);
+            let gastosPorMes = Array(12).fill(0);
+            let balancePorMes = Array(12).fill(0)
 
-    // totalIngresos = 0;
-    // totalGastos = 0;
-    // balance = 0;
+                let cabeceraTabla = `
+                <div class="tablaMovimientos">
+                                <table class="table table-striped table-bordered">
+                                    <thead class="cabeceraTabla">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Concepto</th>
+                                        <th>Tipo</th> <!-- Ingreso o Gasto -->
+                                        <th>Comentarios</th> <!-- Alquiler, mantenimiento, luz, etc -->
+                                        <th>Importe (€)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                `
+                
+                let datosMovimientos = '';
+                let tipo = '';
+                let cantidad = '';
 
-    const mes = new Date().getMonth();
-    let ingresosPorMes = Array(12).fill(0);
-    let gastosPorMes = Array(12).fill(0);
-    let balancePorMes = Array(12).fill(0)
+                if (movimientos.length > 0) {
+                    movimientos.forEach(movimiento => {
 
-        let cabeceraTabla = `
-        <div class="tablaMovimientos">
-                        <table class="table table-striped table-bordered">
-                            <thead class="cabeceraTabla">
+                        if (movimiento.tipo.toLowerCase() == "ingreso") {
+                            tipo = 'bg-success';
+                            cantidad = `class="cantidadIngreso">`
+                            ingresosPorMes[mes] += Number(movimiento.cantidad);
+                            balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
+                        }else{
+                            tipo = 'bg-danger';
+                            cantidad = `class="cantidadGasto">-`
+                            gastosPorMes[mes] += Number(movimiento.cantidad);
+                            balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
+                        }
+
+                        datosMovimientos += `
                             <tr>
-                                <th>Fecha</th>
-                                <th>Concepto</th>
-                                <th>Tipo</th> <!-- Ingreso o Gasto -->
-                                <th>Comentarios</th> <!-- Alquiler, mantenimiento, luz, etc -->
-                                <th>Importe (€)</th>
+                                <td>${movimiento.fecha}</td>
+                                <td>${movimiento.concepto}</td>
+                                <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
+                                <td>${movimiento.comentarios}</td>
+                                <td ${cantidad}${movimiento.cantidad}€</td>
                             </tr>
-                            </thead>
-                            <tbody>
-        `
-        
-        let datosMovimientos = '';
-        let tipo = '';
-        let cantidad = '';
-
-        if (movimientos.length > 0) {
-            movimientos.forEach(movimiento => {
-
-                if (movimiento.tipo.toLowerCase() == "ingreso") {
-                    tipo = 'bg-success';
-                    cantidad = `class="cantidadIngreso">`
-                    // totalIngresos += Number(movimiento.cantidad); //pendiente de sustituir
-                    ingresosPorMes[mes] += Number(movimiento.cantidad);
-                    balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
+                        `
+                    });
                 }else{
-                    tipo = 'bg-danger';
-                    cantidad = `class="cantidadGasto">-`
-                    // totalGastos += Number(movimiento.cantidad); //pendiente de sustituir
-                    gastosPorMes[mes] += Number(movimiento.cantidad);
-                    balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
+                    datosMovimientos = `
+                        <tr class="table-secondary fw-bold">
+                            <td colspan="5" class="text-center">No hay movimientos todavia</td>
+                        </tr>
+                    `
                 }
 
-                datosMovimientos += `
-                    <tr>
-                        <td>${movimiento.fecha}</td>
-                        <td>${movimiento.concepto}</td>
-                        <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
-                        <td>${movimiento.comentarios}</td>
-                        <td ${cantidad}${movimiento.cantidad}€</td>
-                    </tr>
-                `
-            });
-        }else{
-            datosMovimientos = `
-                <tr class="table-secondary fw-bold">
-                    <td colspan="5" class="text-center">No hay movimientos todavia</td>
-                </tr>
-            `
-        }
+                let pieTabla = `
+                                    </tbody>
+                                </table>
+                    </div>
+                `;
 
-        let pieTabla = `
-                            </tbody>
-                        </table>
-            </div>
-        `
-    
-    datosContainer.innerHTML = '';
-    
-    datosContainer.innerHTML = `
-                <div class="balanceContainer">
-                    <div class="datosPrincipales">
-                        <div class="balance">
-                            <h4>Balance</h4>
-                            <p>${balancePorMes[mes]}€</p>
-                        </div>
-                        <div class="ingresos">
-                            <h4>Ingresos totales</h4>
-                            <p>+${ingresosPorMes[mes]}€</p>
-                        </div>
-                        <div class="gastos">
-                            <h4>Gastos totales</h4>
-                            <p>-${gastosPorMes[mes]}€</p>
-                        </div>
-                    </div>
-                    <div class="graficosContainer">
-                        <canvas id="donutBalance"></canvas>
-                        <canvas id="barrasVersus"></canvas>
-                    </div>
-                    <hr>
-                    <div class="balanceButtons">
-                        <button id="btnIngreso" class="btnIngreso" data-bs-toggle="modal" 
-                        data-bs-target="#ingresoModal"><i class="fa-solid fa-plus"></i> Ingreso</button>
-                        <button id="btnGasto" class="btnGasto" data-bs-toggle="modal" 
-                        data-bs-target="#gastoModal"><i class="fa-solid fa-minus"></i> Gasto</button>
-                    </div>
-                    ${cabeceraTabla}
-                    ${datosMovimientos}
-                    ${pieTabla}
-                </div>
-                <div class="modal fade" id="ingresoModal" tabindex="-1" aria-hidden="false">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                        <div class="modal-header py-2">
-                            <h6 class="modal-title">Añadir ingreso</h6>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body p-2">
-                            <form id="addIngreso">
-                                <div class="mb-3">
-                                    <label for="concepto" class="form-label">Concepto *</label>
-                                    <input type="text" class="form-control" id="conceptoIngrs" required>
+                datosContainer.innerHTML = '';
+            
+                datosContainer.innerHTML = `
+                            <div class="balanceContainer">
+                                <div class="volverButton">
+                                    <a href="propiedadDetails.html?id_propiedad=${id}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="cantidad" class="form-label">Cantidad (€)*</label>
-                                    <input type="number" class="form-control" id="cantidadIngrs" required>
+                                <div class="datosPrincipales">
+                                    <div class="balance">
+                                        <h4>Balance</h4>
+                                        <p>${balancePorMes[mes]}€</p>
+                                    </div>
+                                    <div class="ingresos">
+                                        <h4>Ingresos totales</h4>
+                                        <p>+${ingresosPorMes[mes]}€</p>
+                                    </div>
+                                    <div class="gastos">
+                                        <h4>Gastos totales</h4>
+                                        <p>-${gastosPorMes[mes]}€</p>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="comentarios" class="form-label">Comentarios</label>
-                                    <input type="text" class="form-control" id="comentariosIngrs">
+                                <div class="graficosContainer">
+                                    <canvas id="donutBalance"></canvas>
+                                    <canvas id="barrasVersus"></canvas>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer py-1">
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-sm btn-success" data-bs-dismiss="modal" onclick="guardarIngresos(${id})">+ Añadir</button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="gastoModal" tabindex="-1" aria-hidden="false">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                        <div class="modal-header py-2">
-                            <h6 class="modal-title">Añadir gasto</h6>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body p-2">
-                            <form id="addGasto">
-                                 <div class="mb-3">
-                                    <label for="concepto" class="form-label">Concepto *</label>
-                                    <input type="text" class="form-control" id="conceptoGasto" required>
+                                <hr>
+                                <div class="balanceButtons">
+                                    <button id="btnIngreso" class="btnIngreso" data-bs-toggle="modal" 
+                                    data-bs-target="#ingresoModal"><i class="fa-solid fa-plus"></i> Ingreso</button>
+                                    <button id="btnGasto" class="btnGasto" data-bs-toggle="modal" 
+                                    data-bs-target="#gastoModal"><i class="fa-solid fa-minus"></i> Gasto</button>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="cantidad" class="form-label">Cantidad (€)*</label>
-                                    <input type="number" class="form-control" id="cantidadGasto" required>
+                                ${cabeceraTabla}
+                                ${datosMovimientos}
+                                ${pieTabla}
+                            </div>
+                            <div class="modal fade" id="ingresoModal" tabindex="-1" aria-hidden="false">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h6 class="modal-title">Añadir ingreso</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-2">
+                                        <form id="addIngreso">
+                                            <div class="mb-3">
+                                                <label for="concepto" class="form-label">Concepto *</label>
+                                                <input type="text" class="form-control" id="conceptoIngrs" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="cantidad" class="form-label">Cantidad (€)*</label>
+                                                <input type="number" class="form-control" id="cantidadIngrs" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="comentarios" class="form-label">Comentarios</label>
+                                                <input type="text" class="form-control" id="comentariosIngrs">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-sm btn-success" data-bs-dismiss="modal" onclick="guardarIngresos(${id})">+ Añadir</button>
+                                    </div>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="comentarios" class="form-label">Comentarios</label>
-                                    <input type="text" class="form-control" id="comentariosGasto">
+                            </div>
+                            <div class="modal fade" id="gastoModal" tabindex="-1" aria-hidden="false">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h6 class="modal-title">Añadir gasto</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-2">
+                                        <form id="addGasto">
+                                            <div class="mb-3">
+                                                <label for="concepto" class="form-label">Concepto *</label>
+                                                <input type="text" class="form-control" id="conceptoGasto" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="cantidad" class="form-label">Cantidad (€)*</label>
+                                                <input type="number" class="form-control" id="cantidadGasto" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="comentarios" class="form-label">Comentarios</label>
+                                                <input type="text" class="form-control" id="comentariosGasto">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="guardarGastos(${id})">- Añadir</button>
+                                    </div>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer py-1">
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="guardarGastos(${id})">- Añadir</button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-    `;    
-
-        //Grafico Balance
-        let graficoBalance = document.querySelector('#donutBalance');
-        const labelsBal = ['Ingresos', 'Gastos'];
-        const colorsBal = ['#4caf50','rgb(255, 0, 0)'];
-    
-        const dataBal = {
-            labels: labelsBal,
-            datasets: [{
-                data: [ingresosPorMes[mes],gastosPorMes[mes]],
-                backgroundColor: colorsBal,
-            }]
-        };
-        
-        const configBal = {
-            type: 'doughnut',
-            data: dataBal,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color:'#333',
-                            font:{
-                                size:14,
-                                weight: 'bold'
+                            </div>
+                `;
+            
+                //Grafico Balance
+                let graficoBalance = document.querySelector('#donutBalance');
+                const labelsBal = ['Ingresos', 'Gastos'];
+                const colorsBal = ['#4caf50','rgb(255, 0, 0)'];
+            
+                const dataBal = {
+                    labels: labelsBal,
+                    datasets: [{
+                        data: [ingresosPorMes[mes],gastosPorMes[mes]],
+                        backgroundColor: colorsBal,
+                    }]
+                };
+                
+                const configBal = {
+                    type: 'doughnut',
+                    data: dataBal,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color:'#333',
+                                    font:{
+                                        size:14,
+                                        weight: 'bold'
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-        };
-    
-        new Chart(graficoBalance, configBal);//Crea grafico de balance
-    
-        //Grafico doble barras
-    
-        let barrasBalance = document.querySelector('#barrasVersus');
-    
-        
-        const DATA_COUNT = 12;
-        const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 1000};
-    
-        const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-        const data = {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Ingresos',
-                    data: ingresosPorMes,
-                    borderColor: 'rgba(75, 192, 192)',
-                    backgroundColor: 'rgb(75, 192, 192, 0.5)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Gastos',
-                    data: gastosPorMes,
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    borderWidth: 1
-                }
-            ]
-        };
-        
-        const configBarras = {
-            type: 'bar',
-            data: data,
-            options: {
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'bottom',
-                },
-                title: {
-                  display: true,
-                  text: 'Balance Anual'
-                }
-              }
-            },
-        };
-    
-        new Chart(barrasBalance, configBarras);//Crea grafico de balance
-})
+                };
+            
+                new Chart(graficoBalance, configBal);//Crea grafico de balance
+            
+                //Grafico doble barras
+            
+                let barrasBalance = document.querySelector('#barrasVersus');
+            
+                
+                const DATA_COUNT = 12;
+                const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 1000};
+            
+                const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                const dataBarras = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Ingresos',
+                            data: ingresosPorMes,
+                            borderColor: 'rgba(75, 192, 192)',
+                            backgroundColor: 'rgb(75, 192, 192, 0.5)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Gastos',
+                            data: gastosPorMes,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderWidth: 1
+                        }
+                    ]
+                };
+                
+                const configBarras = {
+                    type: 'bar',
+                    data: dataBarras,
+                    options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                        position: 'bottom',
+                        },
+                        title: {
+                        display: true,
+                        text: 'Balance Anual'
+                        }
+                    }
+                    },
+                };
+            
+                new Chart(barrasBalance, configBarras);//Crea grafico de balance
+        })
+    }
+}
 
 function guardarIngresos(id){
     const conceptoIngrs = document.querySelector('#conceptoIngrs').value;
@@ -823,26 +821,31 @@ function guardarIngresos(id){
     console.log(ingreso);
     
 
-    // //Envio de datos
-    // fetch('../php/guardarMovimientos.php', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(ingreso)
-    // })
-    // .then(response => {
-    //     if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
-    //         window.location.href = '../index.html';
-    //         return;
-    //     }
-    //     return response.json();
-    // })    .then(data => {
-    //     if (data.success) {
-    //         window.location.reload(); // Recargar la página para reflejar los cambios
-    //     }
-    // })
-    // .catch(error => console.error("Error:", error));
+    //Envio de datos
+    fetch('../php/guardarMovimientos.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ingreso)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
+        if (data.success) {
+            setTimeout(() =>{
+                cargarMovimientos(id);
+                conceptoIngrs = '';
+                cantidadIngrs = '';
+                comentariosIngrs = '';
+            }, 1000)
+        }
+    })
+    .catch(error => console.error("Error:", error));
 }
 
 function guardarGastos(id){
@@ -860,4 +863,83 @@ function guardarGastos(id){
 
     console.log(gasto);
     
+    //Envio de datos
+    fetch('../php/guardarMovimientos.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(gasto)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
+        if (data.success) {
+            cargarMovimientos(id);
+            conceptoGasto = '';
+            cantidadGasto = '';
+            comentariosGasto = '';
+        }
+    })
+    .catch(error => console.error("Error:", error));
 }
+
+// Reservas
+function cargarReservas(id){
+
+    datosContainer.innerHTML = '';
+    datosContainer.innerHTML = `
+        <div class="calendarContainer">
+              <div id="calendar"></div>
+        </div>
+    `;
+
+        const calendarEl = document.getElementById('calendar');
+    
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          locale: 'es',
+          height: 'auto',
+          events: [
+            {
+              title: 'Reservado',
+              start: '2025-04-20',
+              end: '2025-04-23',
+              color: '#dc3545'
+            },
+            {
+              title: 'Ocupado',
+              start: '2025-04-28',
+              end: '2025-04-28',
+              color: '#ffc107'
+            },
+            {
+                title: 'Ocupado x2',
+                start: '2025-04-28',
+                end: '2025-04-28',
+                color: '#dc3545'
+            },
+            {
+                title: 'Ocupado x2',
+                start: '2025-04-28',
+                end: '2025-04-30',
+                color: '#dc3545'
+            }
+          ]
+        });
+    
+        calendar.render();
+}
+
+//Llamadas menú
+balanceButton.addEventListener('click', function (){  
+    cargarMovimientos(id);
+})
+
+reservaButton.addEventListener('click', function (){  
+    cargarReservas(id);
+})
