@@ -902,8 +902,32 @@ function cargarReservas(id){
     
         const calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-          locale: 'es',
+          locale: 'esLocale',
+          firstDay: 1,
           height: 'auto',
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          },
+          buttonText:{
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día',
+            list: 'Agenda'
+          },
+          selectable: true,
+          editable: false,
+          dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
+          eventColor: '#378006', // color por defecto
+
+          dateClick: function(info) {
+            alert('Fecha seleccionada: ' + info.dateStr);
+          },
+          eventClick: function(info) {
+            alert('Evento: ' + info.event.title);
+          },
           events: [
             {
               title: 'Reservado',
@@ -929,7 +953,7 @@ function cargarReservas(id){
                 end: '2025-04-30',
                 color: '#dc3545'
             }
-          ]
+          ],   
         });
     
         calendar.render();
