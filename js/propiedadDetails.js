@@ -332,7 +332,7 @@ function mostrarPropiedad(propiedad){
                     </div>
                   </div>
                 </div>
-              </div>
+            </div>
     `;
 
     //Declaración del mapa y control de capas
@@ -837,12 +837,10 @@ function guardarIngresos(id){
         return response.json();
     })    .then(data => {
         if (data.success) {
-            setTimeout(() =>{
-                cargarMovimientos(id);
-                conceptoIngrs = '';
-                cantidadIngrs = '';
-                comentariosIngrs = '';
-            }, 1000)
+            cargarMovimientos(id);
+            conceptoIngrs = '';
+            cantidadIngrs = '';
+            comentariosIngrs = '';
         }
     })
     .catch(error => console.error("Error:", error));
@@ -893,8 +891,74 @@ function cargarReservas(id){
 
     datosContainer.innerHTML = '';
     datosContainer.innerHTML = `
+        <div class="buttonContainer">
+            <button id="newReserva" class="newReserva" data-bs-toggle="modal" data-bs-target="#newReservaModal">+ Añadir Reserva</button>
+        </div>
         <div class="calendarContainer">
               <div id="calendar"></div>
+        </div>
+        <div class="modal fade" id="newReservaModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                   <div class="modal-header py-2">
+                    <h6 class="modal-title">Añadir nueva reserva</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   </div>
+                   <div class="modal-body p-2">
+                    <div class="formReservaContainer">
+                        <form id="formReserva">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="fechaIni" class="form-label mb-1">Fecha Inicio</label>
+                                    <input id="fechaIni" type="date" class="form-control mb-1">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="fechaFin" class="form-label mb-1">Fecha Fin</label>
+                                    <input id="fechaFin" type="date" class="form-control mb-1">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mb-3">
+                                <div class="col-md-5">
+                                    <label for="nombreInquilino" class="form-label mb-1">Nombre Inquilino</label>
+                                    <input type="text" id="nombreInquilino" class="form-control mb-1">
+                                </div>
+                                <div class="col-md-7">
+                                    <label for="apellidosInquilino" class="form-label mb-1">Apellidos Inquilino</label>
+                                    <input type="text" id="apellidosInquilino" class="form-control mb-1">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="dniInquilino">DNI/NIE Inquilino</label>
+                                    <input type="text" id="dniInquilino">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="telefonoInquilino">Teléfono Inquilino</label>
+                                    <input type="tel">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="emailInquilino">Email Inquilino</label>
+                                    <input type="email">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="notas">Notas</label>
+                                    <textarea name="notas" id="notas"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                   </div>
+                   <div class="modal-footer py-1">
+                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                     <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" >Añadir</button>
+                   </div>
+                </div>
+            </div>
         </div>
     `;
 
@@ -957,6 +1021,54 @@ function cargarReservas(id){
         });
     
         calendar.render();
+}
+
+function guardarReserva(id){
+    const fechaInicio = document.querySelector('#');
+    const fechaFin = document.querySelector('#');
+    const nombreInquilino = document.querySelector('#');
+    const apellidosInquilino = document.querySelector('#');
+    const dniInquilino = document.querySelector('#');
+    const emailInquilino = document.querySelector('#');
+    const telefonoInquilino = document.querySelector('#');
+    const notas = document.querySelector('#');
+
+    const reserva = {
+        idPropiedad: id,
+        nombreInquilino: nombreInquilino,
+        cantidad: cantidadIngrs,
+        tipo: 'Ingreso',
+        comentarios: comentariosIngrs,
+    }
+
+    //Envio de datos
+    fetch('../php/guardarMovimientos.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reserva)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
+        if (data.success) {
+            cargarReservas(id);
+            fechaInicio = '';
+            fechaFin = '';
+            nombreInquilino = '';
+            apellidosInquilino = '';
+            dniInquilino = '';
+            emailInquilino = '';
+            telefonoInquilino = '';
+            notas = '';
+        }
+    })
+    .catch(error => console.error("Error:", error));
 }
 
 //Llamadas menú

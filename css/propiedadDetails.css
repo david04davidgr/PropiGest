@@ -11,7 +11,7 @@ body{
 aside{
     position: fixed;
     width: 6vw;
-    min-width: 80px; 
+    min-width: 80px;
     height: 100vh;
     padding: 0.6%;
     box-sizing: border-box;
@@ -102,14 +102,14 @@ main{
     bottom: 2%;
     right: 2em;
   }
-  
+
   .circular-menu .floating-btn {
     display: block;
     width: 5em;
     height: 5em;
     border-radius: 50%;
     background-color: rgb(76, 175, 80);;
-    box-shadow: 0 2px 5px 0 hsla(0, 0%, 0%, .26);  
+    box-shadow: 0 2px 5px 0 hsla(0, 0%, 0%, .26);
     color: hsl(0, 0%, 100%);
     text-align: center;
     line-height: 5em;
@@ -117,24 +117,24 @@ main{
     outline: 0;
     border: 4px solid #f5f5f5;
   }
-  
+
   .circular-menu.active .floating-btn {
     box-shadow: inset 0 0 3px hsla(0, 0%, 0%, .3);
   }
-  
+
   .circular-menu .floating-btn:active {
     box-shadow: 0 4px 8px 0 hsla(0, 0%, 0%, .4);
   }
-  
+
   .circular-menu .floating-btn i {
     font-size: 1.3em;
-    transition: transform .2s;  
+    transition: transform .2s;
   }
-  
+
   .circular-menu.active .floating-btn i {
     transform: rotate(-45deg);
   }
-  
+
   .circular-menu:after {
     display: block;
     content: ' ';
@@ -150,17 +150,17 @@ main{
     background-color: rgb(76, 175, 80);
     transition: all .3s ease;
   }
-  
+
   .circular-menu.active:after {
     transform: scale3d(6, 5.50, 1);
     transition-timing-function: cubic-bezier(.68, 1.55, .265, 1);
   }
-  
+
   .circular-menu .items-wrapper {
     padding: 0;
     margin: 0;
   }
-  
+
   .circular-menu .menu-item {
     position: absolute;
     top: 1.10em;
@@ -177,30 +177,30 @@ main{
     line-height: 3.5em;
     font-size: 1.08em;
     background-color: hsla(0,2%,100%,.3);
-    transition: transform .3s ease, background .2s ease; 
+    transition: transform .3s ease, background .2s ease;
   }
-  
+
   .circular-menu .menu-item:hover {
     background-color: hsla(0,0%,0%,.3);
   }
-  
+
   .circular-menu.active .menu-item {
     transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 2px solid #81c784;
   }
-  
+
   .circular-menu.active .menu-item:nth-child(1) {
     transform: translate3d(1em,-6.75em,0);
   }
-  
+
   .circular-menu.active .menu-item:nth-child(2) {
     transform: translate3d(-3.5em,-6.3em,0);
   }
-  
+
   .circular-menu.active .menu-item:nth-child(3) {
     transform: translate3d(-6.5em,-3.2em,0);
   }
-  
+
   .circular-menu.active .menu-item:nth-child(4) {
     transform: translate3d(-7em,0.85em,0);
   }
@@ -225,7 +225,7 @@ main{
     margin-top: 1%;
     margin-bottom: 1%;
 }
-    
+
 .img_carrusel{
     width: 95%;
     height: 100%;
@@ -285,7 +285,7 @@ main{
     gap: 4%;
     margin-bottom: 1%;
     margin-left: 2%;
-    
+
     &:first-child{
         margin-top: 3%;
     }
@@ -521,7 +521,7 @@ div#map{
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
     hr{
         margin-bottom: 2%;
     }
@@ -547,7 +547,7 @@ div#map{
     border-bottom: 2px solid lightgray;
     padding-top: 1%;
     padding-bottom: 1%;
-    
+
     .balance{
         width: 30%;
         display: flex;
@@ -572,7 +572,7 @@ div#map{
             margin: 0;
         }
     }
-    
+
     .ingresos{
         width: 30%;
         display: flex;
@@ -597,7 +597,7 @@ div#map{
             margin: 0;
         }
 }
-    
+
     .gastos{
         width: 30%;
         display: flex;
@@ -716,6 +716,38 @@ form#addGasto{
 
 /* Reservas y calendario */
 
-.calendarContainer{
+.buttonContainer{
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 2%;
+    padding-top: 1%;
+
+    button{
+        padding: 0.5%;
+        background-color: #4CAF50;
+        color: #f5f5f5;
+        font-weight: bold;
+        border: 3px solid #333333bd;
+        border-radius: 5px;
+        transition: 0.25s;
+
+        &:hover{
+            background-color: #337a35;
+        }
+    }
+}
+
+#formReserva{
     padding: 2%;
+}
+
+.calendarContainer{
+    margin: 2%;
+    padding: 2%;
+    margin-top: 1%;
+    padding-top: 1%;
+    border: 4px solid #333;
+    border-radius: 10px;
 }
