@@ -1,9 +1,9 @@
 body{
+    height: 100%;
     display: flex;
     margin: 0 auto;
     padding: 0;
     font-family: "lato", serif;
-    /* overflow-y: hidden; */
     overflow-x: hidden;
     background-color: #f5f5f5;
 }
@@ -512,7 +512,12 @@ div#map{
 }
 
 .modal {
-    margin-top: 20vh;
+    position: fixed;
+    top: 40%;
+}
+
+.formEdicion{
+    margin: 3%;
 }
 
 /* info Balance */
@@ -732,6 +737,7 @@ form#addGasto{
         border: 3px solid #333333bd;
         border-radius: 5px;
         transition: 0.25s;
+        margin-top: 1%;
 
         &:hover{
             background-color: #337a35;
@@ -741,6 +747,10 @@ form#addGasto{
 
 #formReserva{
     padding: 2%;
+}
+
+textarea#notas{
+    resize: none;
 }
 
 .calendarContainer{

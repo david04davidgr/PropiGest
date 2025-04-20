@@ -216,8 +216,8 @@ function mostrarPropiedad(propiedad){
                     <h6 class="modal-title">Editar Propiedad</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-2">
-                    <div class="row g-2 mb-3">
+                <div class="modal-body p-2 formEdicion">
+                  <div class="row g-2 mb-3">
                     <div class="col-md-8">
                       <label for="nombre" class="form-label mb-1">Nombre</label>
                       <input type="text" id="editNombre" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
@@ -816,10 +816,7 @@ function guardarIngresos(id){
         cantidad: cantidadIngrs,
         tipo: 'Ingreso',
         comentarios: comentariosIngrs,
-    }
-
-    console.log(ingreso);
-    
+    }    
 
     //Envio de datos
     fetch('../php/guardarMovimientos.php', {
@@ -846,6 +843,34 @@ function guardarIngresos(id){
     .catch(error => console.error("Error:", error));
 }
 
+function autoIngreso(id, concepto, cantidad){
+
+    const autoIngreso = {
+        idPropiedad: id,
+        concepto: concepto,
+        cantidad: cantidad,
+        tipo: 'Ingreso',
+        comentarios: '',
+    }
+    
+    //Envio de datos
+    fetch('../php/guardarMovimientos.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(autoIngreso)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .catch(error => console.error("Error:", error));
+}
+
 function guardarGastos(id){
     const conceptoGasto = document.querySelector('#conceptoGasto').value;
     const cantidadGasto = document.querySelector('#cantidadGasto').value;
@@ -858,8 +883,6 @@ function guardarGastos(id){
         tipo: 'Gasto',
         comentarios: comentariosGasto,
     }
-
-    console.log(gasto);
     
     //Envio de datos
     fetch('../php/guardarMovimientos.php', {
@@ -889,8 +912,81 @@ function guardarGastos(id){
 // Reservas
 function cargarReservas(id){
 
+    if (id) {
+        fetch(`./../php/obtenerReservas.php?id_propiedad=${id}`)
+        .then(response => {
+            if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+                window.location.href = '../index.html';
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+
+            reservas = data
+
+            let cabeceraTabla = `
+                <div class="tablaMovimientos">
+                                <table class="table table-striped table-bordered">
+                                    <thead class="cabeceraTabla">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Concepto</th>
+                                        <th>Tipo</th> <!-- Ingreso o Gasto -->
+                                        <th>Comentarios</th> <!-- Alquiler, mantenimiento, luz, etc -->
+                                        <th>Importe (€)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                `
+
+                if (reservas.length > 0) {
+                    reservas.forEach(reserva => {
+
+                        // if (movimiento.tipo.toLowerCase() == "ingreso") {
+                        //     tipo = 'bg-success';
+                        //     cantidad = `class="cantidadIngreso">`
+                        //     ingresosPorMes[mes] += Number(movimiento.cantidad);
+                        //     balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
+                        // }else{
+                        //     tipo = 'bg-danger';
+                        //     cantidad = `class="cantidadGasto">-`
+                        //     gastosPorMes[mes] += Number(movimiento.cantidad);
+                        //     balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
+                        // }
+
+                        datosReservas += `
+                            <tr>
+                                <td>${reserva.fecha}</td>
+                                <td>${reserva.concepto}</td>
+                                <td><span class="badge ${tipo}">${reserva.tipo}</span></td>
+                                <td>${movimiento.comentarios}</td>
+                                <td ${cantidad}${movimiento.cantidad}€</td>
+                            </tr>
+                        `
+                    });
+                }else{
+                    datosMovimientos = `
+                        <tr class="table-secondary fw-bold">
+                            <td colspan="5" class="text-center">No hay movimientos todavia</td>
+                        </tr>
+                    `
+                }
+
+                let pieTabla = `
+                                    </tbody>
+                                </table>
+                    </div>
+                `;
+
+        })        
+    }
+
     datosContainer.innerHTML = '';
     datosContainer.innerHTML = `
+        <div class="volverButton">
+            <a href="propiedadDetails.html?id_propiedad=${id}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
+        </div>
         <div class="buttonContainer">
             <button id="newReserva" class="newReserva" data-bs-toggle="modal" data-bs-target="#newReservaModal">+ Añadir Reserva</button>
         </div>
@@ -917,37 +1013,43 @@ function cargarReservas(id){
                                     <input id="fechaFin" type="date" class="form-control mb-1">
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="cobro" class="form-label mb-1">A cobrar (€):</label>
+                                    <input id="cobro" type="number" class="form-control mb-1">
+                                </div>
+                            </div>
                             <hr>
                             <div class="row mb-3">
                                 <div class="col-md-5">
-                                    <label for="nombreInquilino" class="form-label mb-1">Nombre Inquilino</label>
+                                    <label for="nombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
                                     <input type="text" id="nombreInquilino" class="form-control mb-1">
                                 </div>
                                 <div class="col-md-7">
-                                    <label for="apellidosInquilino" class="form-label mb-1">Apellidos Inquilino</label>
+                                    <label for="apellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
                                     <input type="text" id="apellidosInquilino" class="form-control mb-1">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="dniInquilino">DNI/NIE Inquilino</label>
-                                    <input type="text" id="dniInquilino">
+                                <div class="col-md-6">
+                                    <label for="dniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
+                                    <input type="text" id="dniInquilino" class="form-control mb-1">
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="telefonoInquilino">Teléfono Inquilino</label>
-                                    <input type="tel">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="emailInquilino">Email Inquilino</label>
-                                    <input type="email">
+                                <div class="col-md-6">
+                                    <label for="telefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
+                                    <input type="tel" id="telefonoInquilino" class="form-control mb-1">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <label for="notas">Notas</label>
-                                    <textarea name="notas" id="notas"></textarea>
+                                    <label for="emailInquilino" class="form-label mb-1">Email Inquilino</label>
+                                    <input type="email" id="emailInquilino" class="form-control mb-1">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="notas" class="form-label mb-1">Notas</label>
+                                    <textarea name="notas" id="notasReserva" class="form-control mb-1"></textarea>
                                 </div>
                             </div>
                         </form>
@@ -955,11 +1057,14 @@ function cargarReservas(id){
                    </div>
                    <div class="modal-footer py-1">
                      <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                     <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" >Añadir</button>
+                     <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${id})">+ Añadir</button>
                    </div>
                 </div>
             </div>
         </div>
+        ${cabeceraTabla}
+        ${datosReservas}
+        ${pieTabla}
     `;
 
         const calendarEl = document.getElementById('calendar');
@@ -1024,25 +1129,33 @@ function cargarReservas(id){
 }
 
 function guardarReserva(id){
-    const fechaInicio = document.querySelector('#');
-    const fechaFin = document.querySelector('#');
-    const nombreInquilino = document.querySelector('#');
-    const apellidosInquilino = document.querySelector('#');
-    const dniInquilino = document.querySelector('#');
-    const emailInquilino = document.querySelector('#');
-    const telefonoInquilino = document.querySelector('#');
-    const notas = document.querySelector('#');
+    const fechaInicio = document.querySelector('#fechaIni').value;
+    const fechaFin = document.querySelector('#fechaFin').value;
+    const cobro = document.querySelector('#cobro').value;
+    const nombreInquilino = document.querySelector('#nombreInquilino').value;
+    const apellidosInquilino = document.querySelector('#apellidosInquilino').value;
+    const dniInquilino = document.querySelector('#dniInquilino').value;
+    const emailInquilino = document.querySelector('#emailInquilino').value;
+    const telefonoInquilino = document.querySelector('#telefonoInquilino').value;
+    const notas = document.querySelector('#notasReserva').value;
 
     const reserva = {
         idPropiedad: id,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin,
+        cobro: cobro,
         nombreInquilino: nombreInquilino,
-        cantidad: cantidadIngrs,
-        tipo: 'Ingreso',
-        comentarios: comentariosIngrs,
+        apellidosInquilino: apellidosInquilino,
+        dniInquilino: dniInquilino,
+        telefonoInquilino: telefonoInquilino,
+        emailInquilino: emailInquilino,
+        notasReserva: notas,
     }
 
+    let concepto = 'Reserva '+ nombreInquilino + ' ' + fechaInicio + '/' + fechaFin;
+    
     //Envio de datos
-    fetch('../php/guardarMovimientos.php', {
+    fetch('../php/guardarReservas.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -1058,8 +1171,10 @@ function guardarReserva(id){
     })    .then(data => {
         if (data.success) {
             cargarReservas(id);
+            autoIngreso(id, concepto, cobro);
             fechaInicio = '';
             fechaFin = '';
+            cobro = '';
             nombreInquilino = '';
             apellidosInquilino = '';
             dniInquilino = '';
