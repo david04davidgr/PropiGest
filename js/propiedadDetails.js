@@ -912,6 +912,13 @@ function guardarGastos(id){
 // Reservas
 function cargarReservas(id){
 
+    let reservas = [];
+    let cabeceraTabla = '';
+    let datosReservas = '';
+    let pieTabla = '';
+
+    datosContainer.innerHTML = '';
+    
     if (id) {
         fetch(`./../php/obtenerReservas.php?id_propiedad=${id}`)
         .then(response => {
@@ -922,210 +929,192 @@ function cargarReservas(id){
             return response.json();
         })
         .then(data => {
+            reservas = data  
 
-            reservas = data
-
-            let cabeceraTabla = `
-                <div class="tablaMovimientos">
+            const eventosCalendario = reservas.map(reserva => {
+                return {
+                    title: `${reserva.nombreInquilino} ${reserva.apellidosInquilino}`,
+                    start: reserva.fechaInicio,
+                    end: reserva.fechaFin,
+                    color: '#4CAF50', // Puedes personalizar el color según el tipo de reserva
+                };
+            });
+            
+            cabeceraTabla = `
+                <div class="tablaReservas">
                                 <table class="table table-striped table-bordered">
                                     <thead class="cabeceraTabla">
                                     <tr>
-                                        <th>Fecha</th>
-                                        <th>Concepto</th>
-                                        <th>Tipo</th> <!-- Ingreso o Gasto -->
-                                        <th>Comentarios</th> <!-- Alquiler, mantenimiento, luz, etc -->
-                                        <th>Importe (€)</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Fecha Fin</th>
+                                        <th>Nombre Inq.</th>
+                                        <th>Apellidos Inq.</th>
+                                        <th>Teléfono Inq.</th>
+                                        <th>DNI Inq.</th>
+                                        <th>Email Inq.</th>
+                                        <th>Cobro</th>
+                                        <th>Notas</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                `
+                `;        
 
                 if (reservas.length > 0) {
+                    console.log(reservas);
+                    
                     reservas.forEach(reserva => {
-
-                        // if (movimiento.tipo.toLowerCase() == "ingreso") {
-                        //     tipo = 'bg-success';
-                        //     cantidad = `class="cantidadIngreso">`
-                        //     ingresosPorMes[mes] += Number(movimiento.cantidad);
-                        //     balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
-                        // }else{
-                        //     tipo = 'bg-danger';
-                        //     cantidad = `class="cantidadGasto">-`
-                        //     gastosPorMes[mes] += Number(movimiento.cantidad);
-                        //     balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
-                        // }
-
+                        console.log(reserva);
+                        
                         datosReservas += `
                             <tr>
-                                <td>${reserva.fecha}</td>
-                                <td>${reserva.concepto}</td>
-                                <td><span class="badge ${tipo}">${reserva.tipo}</span></td>
-                                <td>${movimiento.comentarios}</td>
-                                <td ${cantidad}${movimiento.cantidad}€</td>
+                                <td>${reserva.fechaInicio}</td>
+                                <td>${reserva.fechaFin}</td>
+                                <td>${reserva.nombreInquilino}</td>
+                                <td>${reserva.apellidosInquilino}</td>
+                                <td>${reserva.telefonoInquilino}</td>
+                                <td>${reserva.dniInquilino}</td>
+                                <td>${reserva.emailInquilino}</td>
+                                <td class="cobro">${reserva.cobro}€</td>
+                                <td>${reserva.notas}</td>
                             </tr>
                         `
-                    });
+                    });                    
                 }else{
-                    datosMovimientos = `
+                    datosReservas = `
                         <tr class="table-secondary fw-bold">
-                            <td colspan="5" class="text-center">No hay movimientos todavia</td>
+                            <td colspan="9" class="text-center">No hay reservas todavia</td>
                         </tr>
                     `
                 }
-
-                let pieTabla = `
+                
+                pieTabla = `
                                     </tbody>
                                 </table>
                     </div>
                 `;
 
-        })        
-    }
-
-    datosContainer.innerHTML = '';
-    datosContainer.innerHTML = `
-        <div class="volverButton">
-            <a href="propiedadDetails.html?id_propiedad=${id}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
-        </div>
-        <div class="buttonContainer">
-            <button id="newReserva" class="newReserva" data-bs-toggle="modal" data-bs-target="#newReservaModal">+ Añadir Reserva</button>
-        </div>
-        <div class="calendarContainer">
-              <div id="calendar"></div>
-        </div>
-        <div class="modal fade" id="newReservaModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                   <div class="modal-header py-2">
-                    <h6 class="modal-title">Añadir nueva reserva</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                   </div>
-                   <div class="modal-body p-2">
-                    <div class="formReservaContainer">
-                        <form id="formReserva">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="fechaIni" class="form-label mb-1">Fecha Inicio</label>
-                                    <input id="fechaIni" type="date" class="form-control mb-1">
+                datosContainer.innerHTML = `
+                    <div class="reservasContainer">
+                        <div class="volverButton">
+                            <a href="propiedadDetails.html?id_propiedad=${id}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
+                        </div>
+                        <div class="buttonContainer">
+                            <button id="newReserva" class="newReserva" data-bs-toggle="modal" data-bs-target="#newReservaModal">+ Añadir Reserva</button>
+                        </div>
+                        <div class="calendarContainer">
+                            <div id="calendar"></div>
+                        </div>
+                        <div class="modal fade" id="newReservaModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header py-2">
+                                    <h6 class="modal-title">Añadir nueva reserva</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="fechaFin" class="form-label mb-1">Fecha Fin</label>
-                                    <input id="fechaFin" type="date" class="form-control mb-1">
+                                <div class="modal-body p-2">
+                                    <div class="formReservaContainer">
+                                        <form id="formReserva">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="fechaIni" class="form-label mb-1">Fecha Inicio</label>
+                                                    <input id="fechaIni" type="dateTime-local" class="form-control mb-1">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="fechaFin" class="form-label mb-1">Fecha Fin</label>
+                                                    <input id="fechaFin" type="dateTime-local" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="cobro" class="form-label mb-1">A cobrar (€):</label>
+                                                    <input id="cobro" type="number" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row mb-3">
+                                                <div class="col-md-5">
+                                                    <label for="nombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
+                                                    <input type="text" id="nombreInquilino" class="form-control mb-1">
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <label for="apellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
+                                                    <input type="text" id="apellidosInquilino" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="dniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
+                                                    <input type="text" id="dniInquilino" class="form-control mb-1">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="telefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
+                                                    <input type="tel" id="telefonoInquilino" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="emailInquilino" class="form-label mb-1">Email Inquilino</label>
+                                                    <input type="email" id="emailInquilino" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="notas" class="form-label mb-1">Notas</label>
+                                                    <textarea name="notas" id="notasReserva" class="form-control mb-1"></textarea>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer py-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${id})">+ Añadir</button>
+                                </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="cobro" class="form-label mb-1">A cobrar (€):</label>
-                                    <input id="cobro" type="number" class="form-control mb-1">
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row mb-3">
-                                <div class="col-md-5">
-                                    <label for="nombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
-                                    <input type="text" id="nombreInquilino" class="form-control mb-1">
-                                </div>
-                                <div class="col-md-7">
-                                    <label for="apellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
-                                    <input type="text" id="apellidosInquilino" class="form-control mb-1">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="dniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
-                                    <input type="text" id="dniInquilino" class="form-control mb-1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="telefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
-                                    <input type="tel" id="telefonoInquilino" class="form-control mb-1">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="emailInquilino" class="form-label mb-1">Email Inquilino</label>
-                                    <input type="email" id="emailInquilino" class="form-control mb-1">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <label for="notas" class="form-label mb-1">Notas</label>
-                                    <textarea name="notas" id="notasReserva" class="form-control mb-1"></textarea>
-                                </div>
-                            </div>
-                        </form>
+                        </div>
+                        ${cabeceraTabla}
+                        ${datosReservas}
+                        ${pieTabla}
                     </div>
-                   </div>
-                   <div class="modal-footer py-1">
-                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                     <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${id})">+ Añadir</button>
-                   </div>
-                </div>
-            </div>
-        </div>
-        ${cabeceraTabla}
-        ${datosReservas}
-        ${pieTabla}
-    `;
+                `;
 
-        const calendarEl = document.getElementById('calendar');
-    
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          locale: 'esLocale',
-          firstDay: 1,
-          height: 'auto',
-          headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-          },
-          buttonText:{
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día',
-            list: 'Agenda'
-          },
-          selectable: true,
-          editable: false,
-          dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
-          eventColor: '#378006', // color por defecto
+                const calendarEl = document.getElementById('calendar');
+            
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'esLocale',
+                firstDay: 1,
+                height: 'auto',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText:{
+                    today: 'Hoy',
+                    month: 'Mes',
+                    week: 'Semana',
+                    day: 'Día',
+                    list: 'Agenda'
+                },
+                selectable: true,
+                editable: true,
+                dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
+                eventColor: '#378006', // color por defecto
 
-          dateClick: function(info) {
-            alert('Fecha seleccionada: ' + info.dateStr);
-          },
-          eventClick: function(info) {
-            alert('Evento: ' + info.event.title);
-          },
-          events: [
-            {
-              title: 'Reservado',
-              start: '2025-04-20',
-              end: '2025-04-23',
-              color: '#dc3545'
-            },
-            {
-              title: 'Ocupado',
-              start: '2025-04-28',
-              end: '2025-04-28',
-              color: '#ffc107'
-            },
-            {
-                title: 'Ocupado x2',
-                start: '2025-04-28',
-                end: '2025-04-28',
-                color: '#dc3545'
-            },
-            {
-                title: 'Ocupado x2',
-                start: '2025-04-28',
-                end: '2025-04-30',
-                color: '#dc3545'
-            }
-          ],   
-        });
-    
-        calendar.render();
+                dateClick: function(info) {
+                    alert('Fecha seleccionada: ' + info.dateStr);
+                },
+                eventClick: function(info) {
+                    alert('Evento: ' + info.event.title);
+                },
+                events: eventosCalendario,  
+                });
+            
+                calendar.render();
+            })
+        }
 }
 
 function guardarReserva(id){
