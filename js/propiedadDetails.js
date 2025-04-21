@@ -598,11 +598,15 @@ function cargarMovimientos(id){
 
                         datosMovimientos += `
                             <tr>
-                                <td>${movimiento.fecha}</td>
-                                <td>${movimiento.concepto}</td>
-                                <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
-                                <td>${movimiento.comentarios}</td>
-                                <td ${cantidad}${movimiento.cantidad}€</td>
+                            <td>${movimiento.fecha}</td>
+                            <td>${movimiento.concepto}</td>
+                            <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
+                            <td>${movimiento.comentarios}</td>
+                            <td ${cantidad}${movimiento.cantidad}€</td>
+                            <td class="acciones">
+                                <i class="fas fa-pen editar" title="Editar"></i>
+                                <i class="fas fa-trash eliminar" title="Eliminar"></i>
+                            </td>
                             </tr>
                         `
                     });
@@ -843,7 +847,7 @@ function guardarIngresos(id){
     .catch(error => console.error("Error:", error));
 }
 
-function autoIngreso(id, concepto, cantidad){
+function autoIngreso(id, concepto, cantidad, idReserva){
 
     const autoIngreso = {
         idPropiedad: id,
@@ -851,6 +855,7 @@ function autoIngreso(id, concepto, cantidad){
         cantidad: cantidad,
         tipo: 'Ingreso',
         comentarios: '',
+        idReserva: idReserva
     }
     
     //Envio de datos
@@ -1157,10 +1162,11 @@ function guardarReserva(id){
             return;
         }
         return response.json();
-    })    .then(data => {
+    })    
+    .then(data => {
+        autoIngreso(id, concepto, cobro, data.idReserva);
         if (data.success) {
             cargarReservas(id);
-            autoIngreso(id, concepto, cobro);
             fechaInicio = '';
             fechaFin = '';
             cobro = '';

@@ -41,7 +41,12 @@ try {
         ':notasReserva' => $notasReserva,
     ]);
 
-    echo json_encode(['success' => true]);
+    $idReserva = $pdo->lastInsertId();
+
+    echo json_encode([
+        'success' => true,
+        'idReserva' => $idReserva
+    ]);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'error' => 'Error en la base de datos: ' . $e->getMessage()]);
 }
