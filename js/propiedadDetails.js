@@ -8,6 +8,8 @@ let totalIngresos = 0;
 let totalGastos = 0;
 let balance = 0;
 
+let idMovimiento = 0;
+
 function getQueryParam(param){
     const urlParams = new URLSearchParams(window.location.search);
     
@@ -202,7 +204,7 @@ function mostrarPropiedad(propiedad){
                         type="button"
                         class="eliminar" 
                         data-bs-toggle="modal" 
-                        onclick="openDeleteModal(${propiedad.id})"
+                        onclick="openDeletePropiedadModal(${propiedad.id})"
                         >
                         <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
                         Eliminar
@@ -399,15 +401,15 @@ function mostrarPropiedad(propiedad){
 }
 
 //Apertura del modal de confirmacion
-function openDeleteModal(propiedad_id){    
+function openDeletePropiedadModal(id){    
     let modal = new bootstrap.Modal(document.getElementById('deleteModal'), {
         keyboard: false
     });
     modal.show();
 
-    //En el click del boton usa la funcion
+    // En el click del boton usa la funcion (puede ser de una propiedad u otro)
     document.getElementById('btnConfirm').onclick = function() {
-        eliminarPropiedad(propiedad_id);
+        eliminarPropiedad(id);
     };
 }
 
@@ -439,7 +441,6 @@ function eliminarPropiedad(propiedad_id) {
 }
 
 function openEditModal(propiedad){
-    console.log(propiedad);
     
     //Cambio de valores
     document.getElementById('editNombre').value = propiedad.nombre;
@@ -466,9 +467,7 @@ function openEditModal(propiedad){
 
     //Guardar
     document.getElementById('btnSaveChanges').onclick = function() {
-        guardarCambios(propiedad.id);
-        console.log('Voy a guardar');
-        
+        guardarCambios(propiedad.id);        
     };
 }
 
@@ -572,6 +571,7 @@ function cargarMovimientos(id){
                                         <th>Tipo</th> <!-- Ingreso o Gasto -->
                                         <th>Comentarios</th> <!-- Alquiler, mantenimiento, luz, etc -->
                                         <th>Importe (€)</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -598,16 +598,30 @@ function cargarMovimientos(id){
 
                         datosMovimientos += `
                             <tr>
-                            <td>${movimiento.fecha}</td>
-                            <td>${movimiento.concepto}</td>
-                            <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
-                            <td>${movimiento.comentarios}</td>
-                            <td ${cantidad}${movimiento.cantidad}€</td>
-                            <td class="acciones">
-                                <i class="fas fa-pen editar" title="Editar"></i>
-                                <i class="fas fa-trash eliminar" title="Eliminar"></i>
-                            </td>
+                                <td>${movimiento.fecha}</td>
+                                <td>${movimiento.concepto}</td>
+                                <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
+                                <td>${movimiento.comentarios}</td>
+                                <td ${cantidad}${movimiento.cantidad}€</td>
+                                <td class="acciones">
+                                    <button 
+                                        class="editar"
+                                        class="editar"
+                                        data-bs-toggle="modal" 
+                                        onclick='openEditMovimientoModal(${JSON.stringify(movimiento)})'
+                                        ><i class="fas fa-pen" style="color: #ffffff;"></i> 
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        class="eliminar" 
+                                        data-bs-toggle="modal" 
+                                        onclick="openDeleteMovimientoModal(${movimiento.id})"
+                                        >
+                                        <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
+                                    </button>
+                                </td>
                             </tr>
+
                         `
                     });
                 }else{
@@ -719,6 +733,130 @@ function cargarMovimientos(id){
                                     </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                    <h6 class="modal-title">Confirmar eliminación</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-2">
+                                        ¿Realmente desea eliminar este movimiento?
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="deleteMovimiento" data-bs-dismiss="modal">Confirmar</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="editMovimientoModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header py-2">
+                                    <h6 class="modal-title">Editar Propiedad</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-2 formEdicion">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-8">
+                                    <label for="nombre" class="form-label mb-1">Nombre</label>
+                                    <input type="text" id="editNombre" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="tipo" class="form-label mb-1">Tipo</label>
+                                    <select name="tipo" id="editTipo" class="form-select" required>
+                                        <option selected disabled value="">Seleccione un tipo</option>
+                                        <option value="Casa">Casa</option>
+                                        <option value="Piso">Piso</option>
+                                        <option value="Apartamento">Apartamento</option>
+                                        <option value="Chalet">Chalet</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                    <label for="precio" class="form-label mb-1">Precio</label>
+                                    <input type="number" class="form-control" id="editPrecio" name="precio" placeholder="----€" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="frecuencia" class="form-label mb-1">Frecuencia</label>
+                                    <select name="frecuencia" id="editFrecuencia_pago" class="form-select" required>
+                                    <option value="mes">Mes</option>
+                                        <option value="noche">Noche</option>
+                                        <option value="semana">Semana</option>
+                                    </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="disponibilidad" class="form-label mb-1">¿Disponible?</label>
+                                    <select name="disponibilidad" id="editDisponibilidad" class="form-select" required>
+                                        <option value="1">Sí</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                    </div>
+                                </div>
+                        
+                                <hr class="my-2 border border-success border-1 opacity-50">
+
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                    <label for="direccion" class="form-label mb-1">Dirección</label>
+                                    <input type="text" class="form-control" id="editDireccion" name="direccion" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                    <label for="ciudad" class="form-label mb-1">Ciudad</label>
+                                    <input type="text" class="form-control" id="editCiudad" name="ciudad" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="codigo_postal" class="form-label mb-1">C.P.</label>
+                                    <input type="number" class="form-control" id="editCodigo_postal" name="codigo_postal" required>
+                                    </div>
+                                </div>
+
+                                <!--Añadir aqui el mapa para el cambio de latitud y longitud-->
+
+                                <hr class="my-2 border border-success border-1 opacity-50">
+
+                                <div class="row mb-3">
+                                    <!-- Tamaño y Planta -->
+                                    <div class="col-md-6">
+                                    <label for="tamaño" class="form-label mb-1">Tamaño (m²)</label>
+                                    <input type="number" class="form-control" id="editTamanio" name="tamaño" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <label for="planta" class="form-label mb-1">Planta</label>
+                                    <input type="text" class="form-control" id="editPlanta" name="planta">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                    <label for="habitaciones" class="form-label mb-1">Habitaciones</label>
+                                    <input type="number" class="form-control" id="editHabitaciones" name="habitaciones" min="0">
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="baños" class="form-label mb-1">Baños</label>
+                                    <input type="number" class="form-control" id="editBanios" name="baños" min="0" >
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="año_construccion" class="form-label mb-1">Año const.</label>
+                                    <input type="number" class="form-control" id="editAnio" name="año_construccion" min="1500" max="2100">
+                                    </div>
+                                </div>
+
+                                </div>
+                                <div class="modal-footer py-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-sm btn-primary" id="btnSaveMovimientoChanges">Guardar Cambios</button>
+                                </div>
+                                </div>
+                            </div>
                             </div>
                 `;
             
@@ -914,6 +1052,69 @@ function guardarGastos(id){
     .catch(error => console.error("Error:", error));
 }
 
+function openDeleteMovimientoModal(id){    
+    let modal = new bootstrap.Modal(document.getElementById('deleteModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    // En el click del boton usa la funcion (puede ser de una propiedad u otro)
+    document.getElementById('deleteMovimiento').onclick = function(){
+        eliminarMovimiento(id);
+    }
+}
+
+
+function eliminarMovimiento(id){
+    
+    let formData = new FormData();
+
+    idMovimiento = id;
+
+    
+    formData.append("idMovimiento", id) //Almacena el id como cuerpo de la solicitud
+
+    fetch(`../php/eliminarMovimiento.php`, {
+        method: "POST",
+        body: formData,        
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    
+    .then(data => {        
+        if (data.success) {
+            cargarMovimientos(id);
+            //MENSAJE DE SUCCESS
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function openEditMovimientoModal(movimiento){
+
+    //Abrir modal
+    let modal = new bootstrap.Modal(document.getElementById('editMovimientoModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    //Guardar
+    document.getElementById('btnSaveMovimientoChanges').onclick = function() {
+        guardarCambiosMovimiento(movimiento.id);        
+    };
+}
+
+function guardarCambiosMovimiento(idMovimiento){
+    console.log(idMovimiento);
+
+    // Aquí va algo como esto
+    // document.getElementById('editNombre').value = propiedad.nombre;
+}
+
 // Reservas
 function cargarReservas(id){
 
@@ -941,7 +1142,7 @@ function cargarReservas(id){
                     title: `${reserva.nombreInquilino} ${reserva.apellidosInquilino}`,
                     start: reserva.fechaInicio,
                     end: reserva.fechaFin,
-                    color: '#4CAF50', // Puedes personalizar el color según el tipo de reserva
+                    color: '#4CAF50',
                 };
             });
             
@@ -1146,7 +1347,7 @@ function guardarReserva(id){
         notasReserva: notas,
     }
 
-    let concepto = 'Reserva '+ nombreInquilino + ' ' + fechaInicio + '/' + fechaFin;
+    let concepto = '<b>Reserva '+ nombreInquilino + '</b> ' + fechaInicio + '/' + fechaFin;
     
     //Envio de datos
     fetch('../php/guardarReservas.php', {

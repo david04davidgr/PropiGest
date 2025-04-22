@@ -218,6 +218,110 @@
                   <a href="#" class="menu-item fa fa-file"></a>
                 </menu>
             </div>
+            <div class="modal fade" id="editMovimientoModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header py-2">
+                        <h6 class="modal-title">Editar Movimiento</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-2 formEdicion">
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-8">
+                        <label for="concepto" class="form-label mb-1">Concepto</label>
+                        <input type="text" id="editConcepto" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
+                        </div>
+                        <div class="col-md-4">
+                        <label for="tipoMovimiento" class="form-label mb-1">Tipo</label>
+                        <select name="tipo" id="editTipoMovimiento" class="form-select" required>
+                            <option selected disabled value="">Seleccione un tipo</option>
+                            <option value="Gasto">Gasto</option>
+                            <option value="Ingreos">Ingreso</option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                        <label for="cantidadMovimiento" class="form-label mb-1">Cantidad</label>
+                        <input type="number" class="form-control" id="editCantidadMovimieto" name="cantidadMovimiento" placeholder="----€" required>
+                        </div>
+                        <div class="col-md-4">
+                        <label for="frecuencia" class="form-label mb-1">Frecuencia</label>
+                        <select name="frecuencia" id="editFrecuencia_pago" class="form-select" required>
+                        <option value="mes">Mes</option>
+                            <option value="noche">Noche</option>
+                            <option value="semana">Semana</option>
+                        </select>
+                        </div>
+                        <div class="col-md-4">
+                        <label for="disponibilidad" class="form-label mb-1">¿Disponible?</label>
+                        <select name="disponibilidad" id="editDisponibilidad" class="form-select" required>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                        </div>
+                    </div>
+            
+                    <hr class="my-2 border border-success border-1 opacity-50">
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                        <label for="direccion" class="form-label mb-1">Dirección</label>
+                        <input type="text" class="form-control" id="editDireccion" name="direccion" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                        <label for="ciudad" class="form-label mb-1">Ciudad</label>
+                        <input type="text" class="form-control" id="editCiudad" name="ciudad" required>
+                        </div>
+                        <div class="col-md-4">
+                        <label for="codigo_postal" class="form-label mb-1">C.P.</label>
+                        <input type="number" class="form-control" id="editCodigo_postal" name="codigo_postal" required>
+                        </div>
+                    </div>
+
+                    <!--Añadir aqui el mapa para el cambio de latitud y longitud-->
+
+                    <hr class="my-2 border border-success border-1 opacity-50">
+
+                    <div class="row mb-3">
+                        <!-- Tamaño y Planta -->
+                        <div class="col-md-6">
+                        <label for="tamaño" class="form-label mb-1">Tamaño (m²)</label>
+                        <input type="number" class="form-control" id="editTamanio" name="tamaño" required>
+                        </div>
+                        <div class="col-md-6">
+                        <label for="planta" class="form-label mb-1">Planta</label>
+                        <input type="text" class="form-control" id="editPlanta" name="planta">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                        <label for="habitaciones" class="form-label mb-1">Habitaciones</label>
+                        <input type="number" class="form-control" id="editHabitaciones" name="habitaciones" min="0">
+                        </div>
+                        <div class="col-md-4">
+                        <label for="baños" class="form-label mb-1">Baños</label>
+                        <input type="number" class="form-control" id="editBanios" name="baños" min="0" >
+                        </div>
+                        <div class="col-md-4">
+                        <label for="año_construccion" class="form-label mb-1">Año const.</label>
+                        <input type="number" class="form-control" id="editAnio" name="año_construccion" min="1500" max="2100">
+                        </div>
+                    </div>
+
+                    </div>
+                    <div class="modal-footer py-1">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSaveMovimientoChanges">Guardar Cambios</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
     </main>
     <script src="../js/propiedadDetails.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
