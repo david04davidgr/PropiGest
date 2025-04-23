@@ -692,9 +692,23 @@ div#map{
 .tablaMovimientos{
     width: 90%;
     margin-top: 2%;
-    margin-bottom: 1%;
+    margin-bottom: 2%;
     max-height: 300px;
     overflow-y: scroll;
+    
+    table#tablaMovimientos{
+        vertical-align: middle;
+        
+        tr>th:first-child{
+            border-top-left-radius: 10px;
+            border: none;
+        }
+
+        tr>th:last-child{
+            border-top-right-radius: 10px;
+            border: none;
+        }
+    }
 
     .cabeceraTabla>tr>th{
         background-color: #333;

@@ -21,8 +21,8 @@ if (isset($data['id'], $data['nombre'], $data['tipo'], $data['precio'], $data['d
     // $longitud = $data['longitud'] ?? null;
     $tamanio = $data['tamanio'] ?? null;
     $planta = $data['planta'] ?? null;
-    $habitaciones = $data['habitaciones'] ?? null;
-    $banios = $data['banios'] ?? null;
+    $habitaciones = $data['numeroHabitaciones'] ?? null;
+    $banios = $data['numeroBanios'] ?? null;
     $anioConstruccion = $data['anioConstruccion'] ?? null;
 
     try {

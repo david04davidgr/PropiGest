@@ -29,10 +29,10 @@ fetch('./../php/verificarSesion.php')
   });
 
 //Obtencion de datos BD
-let id = getQueryParam("id_propiedad");
+let idPropiedad = getQueryParam("id_propiedad");
 
-if(id){
-    fetch(`./../php/obtenerPropiedadById.php?id_propiedad=${id}`)
+if(idPropiedad){
+    fetch(`./../php/obtenerPropiedadById.php?id_propiedad=${idPropiedad}`)
     .then(response => {
         if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
             window.location.href = '../index.html';
@@ -46,7 +46,7 @@ if(id){
     })
     .catch(error => console.error('Error al obtener las propiedades: ',error));
 }else{
-    console.log('no se pasa el id, ', id);
+    console.log('no se pasa el id, ', idPropiedad);
 }
 
 function mostrarPropiedad(propiedad){
@@ -401,7 +401,7 @@ function mostrarPropiedad(propiedad){
 }
 
 //Apertura del modal de confirmacion
-function openDeletePropiedadModal(id){    
+function openDeletePropiedadModal(idPropiedad){    
     let modal = new bootstrap.Modal(document.getElementById('deleteModal'), {
         keyboard: false
     });
@@ -409,15 +409,15 @@ function openDeletePropiedadModal(id){
 
     // En el click del boton usa la funcion (puede ser de una propiedad u otro)
     document.getElementById('btnConfirm').onclick = function() {
-        eliminarPropiedad(id);
+        eliminarPropiedad(idPropiedad);
     };
 }
 
 //Funcion que elimina la propiedad por su id
-function eliminarPropiedad(propiedad_id) {
+function eliminarPropiedad(idPropiedad) {
 
     let formData = new FormData();
-    formData.append("id_propiedad", propiedad_id) //Almacena el id como cuerpo de la solicitud
+    formData.append("id_propiedad", idPropiedad) //Almacena el id como cuerpo de la solicitud
 
     fetch(`../php/eliminarPropiedad.php`, {
         method: "POST",
@@ -467,11 +467,11 @@ function openEditModal(propiedad){
 
     //Guardar
     document.getElementById('btnSaveChanges').onclick = function() {
-        guardarCambios(propiedad.id);        
+        guardarCambios(idPropiedad);        
     };
 }
 
-function guardarCambios(propiedad_id){
+function guardarCambios(idPropiedad){
     //Obtener los datos del formulario
     const nombre = document.getElementById('editNombre').value;
     const tipo = document.getElementById('editTipo').value;
@@ -491,7 +491,7 @@ function guardarCambios(propiedad_id){
 
     //seteo de valores en objeto
     const propiedadActualizada = {
-        id: propiedad_id,
+        id: idPropiedad,
         nombre: nombre,
         tipo: tipo,
         precio: precio,
@@ -543,9 +543,9 @@ document.addEventListener("click", function (event) {
 });
 
 //Movimientos
-function cargarMovimientos(id){
-    if(id){
-        fetch(`./../php/obtenerMovimientos.php?id_propiedad=${id}`)
+function cargarMovimientos(idPropiedad){
+    if(idPropiedad){
+        fetch(`./../php/obtenerMovimientos.php?id_propiedad=${idPropiedad}`)
         .then(response => {
             if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
                 window.location.href = '../index.html';
@@ -563,7 +563,7 @@ function cargarMovimientos(id){
 
                 let cabeceraTabla = `
                 <div class="tablaMovimientos">
-                                <table class="table table-striped table-bordered">
+                                <table id="tablaMovimientos" class="table table-striped table-bordered">
                                     <thead class="cabeceraTabla">
                                     <tr>
                                         <th>Fecha</th>
@@ -643,7 +643,7 @@ function cargarMovimientos(id){
                 datosContainer.innerHTML = `
                             <div class="balanceContainer">
                                 <div class="volverButton">
-                                    <a href="propiedadDetails.html?id_propiedad=${id}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
+                                    <a href="propiedadDetails.html?id_propiedad=${idPropiedad}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
                                 </div>
                                 <div class="datosPrincipales">
                                     <div class="balance">
@@ -699,7 +699,7 @@ function cargarMovimientos(id){
                                     </div>
                                     <div class="modal-footer py-1">
                                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-sm btn-success" data-bs-dismiss="modal" onclick="guardarIngresos(${id})">+ Añadir</button>
+                                        <button type="button" class="btn btn-sm btn-success" data-bs-dismiss="modal" onclick="guardarIngresos(${idPropiedad})">+ Añadir</button>
                                     </div>
                                     </div>
                                 </div>
@@ -729,7 +729,7 @@ function cargarMovimientos(id){
                                     </div>
                                     <div class="modal-footer py-1">
                                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="guardarGastos(${id})">- Añadir</button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="guardarGastos(${idPropiedad})">- Añadir</button>
                                     </div>
                                     </div>
                                 </div>
@@ -752,111 +752,47 @@ function cargarMovimientos(id){
                                 </div>
                             </div>
                             <div class="modal fade" id="editMovimientoModal" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                <div class="modal-header py-2">
-                                    <h6 class="modal-title">Editar Propiedad</h6>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body p-2 formEdicion">
-                                <div class="row g-2 mb-3">
-                                    <div class="col-md-8">
-                                    <label for="nombre" class="form-label mb-1">Nombre</label>
-                                    <input type="text" id="editNombre" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h6 class="modal-title">Editar Movimiento</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="col-md-4">
-                                    <label for="tipo" class="form-label mb-1">Tipo</label>
-                                    <select name="tipo" id="editTipo" class="form-select" required>
-                                        <option selected disabled value="">Seleccione un tipo</option>
-                                        <option value="Casa">Casa</option>
-                                        <option value="Piso">Piso</option>
-                                        <option value="Apartamento">Apartamento</option>
-                                        <option value="Chalet">Chalet</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
+                                    <div class="modal-body p-2 formEdicion">
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-md-12">
+                                            <label for="concepto" class="form-label mb-1">Concepto</label>
+                                            <input type="text" id="editConcepto" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                        <label for="tipoMovimiento" class="form-label mb-1">Tipo</label>
+                                        <select name="tipo" id="editTipoMovimiento" class="form-select" required>
+                                            <option value="Gasto">Gasto</option>
+                                            <option value="Ingreso">Ingreso</option>
+                                        </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cantidadMovimiento" class="form-label mb-1">Cantidad</label>
+                                            <input type="number" class="form-control" id="editCantidadMovimiento" name="cantidadMovimiento" placeholder="----€" required>
+                                        </div>
+                                    </div>
+                            
+                                    <hr class="my-1 border border-success border-1 opacity-50">
 
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                    <label for="precio" class="form-label mb-1">Precio</label>
-                                    <input type="number" class="form-control" id="editPrecio" name="precio" placeholder="----€" required>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                        <label for="comentario" class="form-label mb-1">Comentarios</label>
+                                        <input type="text" class="form-control" id="editComentario" name="comentario" required>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4">
-                                    <label for="frecuencia" class="form-label mb-1">Frecuencia</label>
-                                    <select name="frecuencia" id="editFrecuencia_pago" class="form-select" required>
-                                    <option value="mes">Mes</option>
-                                        <option value="noche">Noche</option>
-                                        <option value="semana">Semana</option>
-                                    </select>
+                                    <div class="modal-footer py-1">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnSaveMovimientoChanges">Guardar Cambios</button>
                                     </div>
-                                    <div class="col-md-4">
-                                    <label for="disponibilidad" class="form-label mb-1">¿Disponible?</label>
-                                    <select name="disponibilidad" id="editDisponibilidad" class="form-select" required>
-                                        <option value="1">Sí</option>
-                                        <option value="0">No</option>
-                                    </select>
                                     </div>
                                 </div>
-                        
-                                <hr class="my-2 border border-success border-1 opacity-50">
-
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                    <label for="direccion" class="form-label mb-1">Dirección</label>
-                                    <input type="text" class="form-control" id="editDireccion" name="direccion" required>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-8">
-                                    <label for="ciudad" class="form-label mb-1">Ciudad</label>
-                                    <input type="text" class="form-control" id="editCiudad" name="ciudad" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                    <label for="codigo_postal" class="form-label mb-1">C.P.</label>
-                                    <input type="number" class="form-control" id="editCodigo_postal" name="codigo_postal" required>
-                                    </div>
-                                </div>
-
-                                <!--Añadir aqui el mapa para el cambio de latitud y longitud-->
-
-                                <hr class="my-2 border border-success border-1 opacity-50">
-
-                                <div class="row mb-3">
-                                    <!-- Tamaño y Planta -->
-                                    <div class="col-md-6">
-                                    <label for="tamaño" class="form-label mb-1">Tamaño (m²)</label>
-                                    <input type="number" class="form-control" id="editTamanio" name="tamaño" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                    <label for="planta" class="form-label mb-1">Planta</label>
-                                    <input type="text" class="form-control" id="editPlanta" name="planta">
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                    <label for="habitaciones" class="form-label mb-1">Habitaciones</label>
-                                    <input type="number" class="form-control" id="editHabitaciones" name="habitaciones" min="0">
-                                    </div>
-                                    <div class="col-md-4">
-                                    <label for="baños" class="form-label mb-1">Baños</label>
-                                    <input type="number" class="form-control" id="editBanios" name="baños" min="0" >
-                                    </div>
-                                    <div class="col-md-4">
-                                    <label for="año_construccion" class="form-label mb-1">Año const.</label>
-                                    <input type="number" class="form-control" id="editAnio" name="año_construccion" min="1500" max="2100">
-                                    </div>
-                                </div>
-
-                                </div>
-                                <div class="modal-footer py-1">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-primary" id="btnSaveMovimientoChanges">Guardar Cambios</button>
-                                </div>
-                                </div>
-                            </div>
                             </div>
                 `;
             
@@ -947,13 +883,13 @@ function cargarMovimientos(id){
     }
 }
 
-function guardarIngresos(id){
+function guardarIngresos(idPropiedad){
     const conceptoIngrs = document.querySelector('#conceptoIngrs').value;
     const cantidadIngrs = document.querySelector('#cantidadIngrs').value;
     const comentariosIngrs = document.querySelector('#comentariosIngrs').value;
 
     const ingreso = {
-        idPropiedad: id,
+        idPropiedad: idPropiedad,
         concepto: conceptoIngrs,
         cantidad: cantidadIngrs,
         tipo: 'Ingreso',
@@ -976,7 +912,7 @@ function guardarIngresos(id){
         return response.json();
     })    .then(data => {
         if (data.success) {
-            cargarMovimientos(id);
+            cargarMovimientos(idPropiedad);
             conceptoIngrs = '';
             cantidadIngrs = '';
             comentariosIngrs = '';
@@ -985,10 +921,10 @@ function guardarIngresos(id){
     .catch(error => console.error("Error:", error));
 }
 
-function autoIngreso(id, concepto, cantidad, idReserva){
+function autoIngreso(idPropiedad, concepto, cantidad, idReserva){
 
     const autoIngreso = {
-        idPropiedad: id,
+        idPropiedad: idPropiedad,
         concepto: concepto,
         cantidad: cantidad,
         tipo: 'Ingreso',
@@ -1014,13 +950,13 @@ function autoIngreso(id, concepto, cantidad, idReserva){
     .catch(error => console.error("Error:", error));
 }
 
-function guardarGastos(id){
-    const conceptoGasto = document.querySelector('#conceptoGasto').value;
-    const cantidadGasto = document.querySelector('#cantidadGasto').value;
-    const comentariosGasto = document.querySelector('#comentariosGasto').value;
+function guardarGastos(idPropiedad){
+    let conceptoGasto = document.querySelector('#conceptoGasto').value;
+    let cantidadGasto = document.querySelector('#cantidadGasto').value;
+    let comentariosGasto = document.querySelector('#comentariosGasto').value;
 
     const gasto = {
-        idPropiedad: id,
+        idPropiedad: idPropiedad,
         concepto: conceptoGasto,
         cantidad: cantidadGasto,
         tipo: 'Gasto',
@@ -1043,7 +979,7 @@ function guardarGastos(id){
         return response.json();
     })    .then(data => {
         if (data.success) {
-            cargarMovimientos(id);
+            cargarMovimientos(idPropiedad);
             conceptoGasto = '';
             cantidadGasto = '';
             comentariosGasto = '';
@@ -1087,7 +1023,7 @@ function eliminarMovimiento(id){
     })    
     .then(data => {        
         if (data.success) {
-            cargarMovimientos(id);
+            cargarMovimientos(idPropiedad);
             //MENSAJE DE SUCCESS
         }
     })
@@ -1095,6 +1031,12 @@ function eliminarMovimiento(id){
 }
 
 function openEditMovimientoModal(movimiento){
+
+    //Cargamos los valores existentes
+    document.getElementById('editConcepto').value = movimiento.concepto;
+    document.getElementById('editTipoMovimiento').value = movimiento.tipo;
+    document.getElementById('editCantidadMovimiento').value = movimiento.cantidad;
+    document.getElementById('editComentario').value = movimiento.comentarios;
 
     //Abrir modal
     let modal = new bootstrap.Modal(document.getElementById('editMovimientoModal'), {
@@ -1104,19 +1046,55 @@ function openEditMovimientoModal(movimiento){
 
     //Guardar
     document.getElementById('btnSaveMovimientoChanges').onclick = function() {
-        guardarCambiosMovimiento(movimiento.id);        
+        guardarCambiosMovimiento(movimiento);        
     };
 }
 
-function guardarCambiosMovimiento(idMovimiento){
-    console.log(idMovimiento);
+function guardarCambiosMovimiento(movimiento){
+    console.log('id movimiento '+movimiento.id);
+    console.log('id Propiedad '+idPropiedad);
+    
+    const concepto = document.getElementById('editConcepto').value;
+    const tipo = document.getElementById('editTipoMovimiento').value;
+    const cantidad = document.getElementById('editCantidadMovimiento').value;
+    const comentario = document.getElementById('editComentario').value;
 
-    // Aquí va algo como esto
-    // document.getElementById('editNombre').value = propiedad.nombre;
+    const movimientoActualizado = {
+        id: movimiento.id,
+        concepto: concepto,
+        tipo: tipo,
+        cantidad: cantidad,
+        comentario: comentario,
+        idPropiedad: idPropiedad
+    }
+
+    //Envio de datos
+    fetch('../php/editarMovimiento.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(movimientoActualizado)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
+        if (data.success) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editMovimientoModal'));
+            modal.hide();
+            cargarMovimientos(idPropiedad);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+
 }
 
 // Reservas
-function cargarReservas(id){
+function cargarReservas(idPropiedad){
 
     let reservas = [];
     let cabeceraTabla = '';
@@ -1125,8 +1103,8 @@ function cargarReservas(id){
 
     datosContainer.innerHTML = '';
     
-    if (id) {
-        fetch(`./../php/obtenerReservas.php?id_propiedad=${id}`)
+    if (idPropiedad) {
+        fetch(`./../php/obtenerReservas.php?id_propiedad=${idPropiedad}`)
         .then(response => {
             if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
                 window.location.href = '../index.html';
@@ -1202,7 +1180,7 @@ function cargarReservas(id){
                 datosContainer.innerHTML = `
                     <div class="reservasContainer">
                         <div class="volverButton">
-                            <a href="propiedadDetails.html?id_propiedad=${id}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
+                            <a href="propiedadDetails.html?id_propiedad=${idPropiedad}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
                         </div>
                         <div class="buttonContainer">
                             <button id="newReserva" class="newReserva" data-bs-toggle="modal" data-bs-target="#newReservaModal">+ Añadir Reserva</button>
@@ -1274,7 +1252,7 @@ function cargarReservas(id){
                                 </div>
                                 <div class="modal-footer py-1">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${id})">+ Añadir</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${idPropiedad})">+ Añadir</button>
                                 </div>
                                 </div>
                             </div>
@@ -1323,7 +1301,7 @@ function cargarReservas(id){
         }
 }
 
-function guardarReserva(id){
+function guardarReserva(idPropiedad){
     const fechaInicio = document.querySelector('#fechaIni').value;
     const fechaFin = document.querySelector('#fechaFin').value;
     const cobro = document.querySelector('#cobro').value;
@@ -1335,7 +1313,7 @@ function guardarReserva(id){
     const notas = document.querySelector('#notasReserva').value;
 
     const reserva = {
-        idPropiedad: id,
+        idPropiedad: idPropiedad,
         fechaInicio: fechaInicio,
         fechaFin: fechaFin,
         cobro: cobro,
@@ -1365,9 +1343,9 @@ function guardarReserva(id){
         return response.json();
     })    
     .then(data => {
-        autoIngreso(id, concepto, cobro, data.idReserva);
+        autoIngreso(idPropiedad, concepto, cobro, data.idReserva);
         if (data.success) {
-            cargarReservas(id);
+            cargarReservas(idPropiedad);
             fechaInicio = '';
             fechaFin = '';
             cobro = '';
@@ -1384,9 +1362,9 @@ function guardarReserva(id){
 
 //Llamadas menú
 balanceButton.addEventListener('click', function (){  
-    cargarMovimientos(id);
+    cargarMovimientos(idPropiedad);
 })
 
 reservaButton.addEventListener('click', function (){  
-    cargarReservas(id);
+    cargarReservas(idPropiedad);
 })
