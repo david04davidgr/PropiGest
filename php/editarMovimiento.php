@@ -20,7 +20,7 @@ if (isset($data['id'], $data['concepto'], $data['tipo'], $data['cantidad'], $dat
 
         $stmt->execute([$concepto, $tipo, $cantidad, $comentario, $idPropiedad, $id]);
 
-        echo json_encode(["success" => true, "message" => "Movimiento actualizada correctamente"]);
+        echo json_encode(["success" => true, "message" => "Movimiento actualizado correctamente"]);
     } catch (Exception $e) {
         echo json_encode(["success" => false, "message" => "Error al actualizar: " . $e->getMessage()]);
     }

@@ -1,83 +1,5 @@
 //Variables
-//Grafico Balance
-    let graficoBalance = document.querySelector('#graphBalance');
-    const labelsBal = ['Ingresos', 'Gastos'];
-    const colorsBal = ['#4caf50','rgb(255, 0, 0)'];
 
-    const dataBal = {
-        labels: labelsBal,
-        datasets: [{
-            data: [5000,350],
-            backgroundColor: colorsBal,
-        }]
-    };
-    
-    const configBal = {
-        type: 'doughnut',
-        data: dataBal,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color:'#f5f5f5',
-                    }
-                }
-            }
-        }
-    };
-
-    //Grafico actividad de propiedades
-    let graficoActividad = document.querySelector('#graphActividad');
-
-    const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Propiedades Activas',
-            data: [5, 9, 0, 1, 6, 5, 20, 0, 1, 6, 5, 0],
-            fill: false,
-            borderColor: '#4caf50',
-            tension:0.1
-        }]
-    };
-
-    const config = {
-        type: 'line',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#f5f5f5',
-                    }
-                },
-                tooltip: {
-                    titleColor: '#f5f5f5',
-                    bodyColor: '#333',
-                    backgroundColor: '#4caf50',
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: 'white'
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: 'white'
-                    }
-                }
-            }
-        }
-    };
 
     //Obtencion de datos BD
     fetch('./../php/obtenerPropiedades.php')
@@ -95,11 +17,130 @@
     })
     .catch(error => console.error('Error al obtener las propiedades: ',error));
     
+    fetch('./../php/obtenerAllMovimientos.php')
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        movimientos = data;
+        const mes = new Date().getMonth();
+        let ingresosPorMes = Array(12).fill(0);
+        let gastosPorMes = Array(12).fill(0);
+
+        if (movimientos.length > 0) {
+            movimientos.forEach(movimiento => {
+
+                if (movimiento.tipo.toLowerCase() == "ingreso") {
+                    ingresosPorMes[mes] += Number(movimiento.cantidad);
+                }else{
+                    gastosPorMes[mes] += Number(movimiento.cantidad);
+                }
+            });
+        }
+
+        //Grafico Balance
+        let graficoBalance = document.querySelector('#graphBalance');
+        const labelsBal = ['Ingresos', 'Gastos'];
+        const colorsBal = ['#4caf50','rgb(255, 0, 0)'];
+
+        const dataBal = {
+            labels: labelsBal,
+            datasets: [{
+                data: [ingresosPorMes[mes],gastosPorMes[mes]],
+                backgroundColor: colorsBal,
+            }]
+        };
+        
+        const configBal = {
+            type: 'doughnut',
+            data: dataBal,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color:'#f5f5f5',
+                        }
+                    }
+                }
+            }
+        };
+
+        //Grafico actividad de propiedades
+        // let graficoActividad = document.querySelector('#graphActividad');
+
+        // const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        // const data = {
+        //     labels: labels,
+        //     datasets: [{
+        //         label: 'Propiedades Activas',
+        //         data: [5, 9, 0, 1, 6, 5, 20, 0, 1, 6, 5, 0],
+        //         fill: false,
+        //         borderColor: '#4caf50',
+        //         tension:0.1
+        //     }]
+        // };
+
+        // const config = {
+        //     type: 'line',
+        //     data: data,
+        //     options: {
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'bottom',
+        //                 labels: {
+        //                     color: '#f5f5f5',
+        //                 }
+        //             },
+        //             tooltip: {
+        //                 titleColor: '#f5f5f5',
+        //                 bodyColor: '#333',
+        //                 backgroundColor: '#4caf50',
+        //             }
+        //         },
+        //         scales: {
+        //             x: {
+        //                 ticks: {
+        //                     color: 'white'
+        //                 }
+        //             },
+        //             y: {
+        //                 ticks: {
+        //                     color: 'white'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // };
+
+        new Chart(graficoBalance, configBal);//Crea grafico de balance
+        new Chart(graficoActividad, config);//Crea grafico de actividad
+    })
+    .catch(error => console.error('Error al obtener los movimientos: ',error));
     
+    fetch('./../php/obtenerAllReservas.php')
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => console.error('Error al obtener las reservas: ',error));
+
     //Funciones
-    new Chart(graficoBalance, configBal);//Crea grafico de balance
-    new Chart(graficoActividad, config);//Crea grafico de actividad
-    
     function mostrarPropiedades(propiedades){
         let disponibles = 0;
         let noDisponibles = 0;     

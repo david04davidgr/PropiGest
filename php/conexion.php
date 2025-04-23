@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = ""; // Sin contraseña por defecto en XAMPP
+$username = "user_propiedades";
+$password = "user_PropiGest";
 $dbname = "alquiler_propiedades";
 
 // Crear conexión

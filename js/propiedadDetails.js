@@ -542,6 +542,15 @@ document.addEventListener("click", function (event) {
     }
 });
 
+//Llamadas menú
+balanceButton.addEventListener('click', function (){  
+    cargarMovimientos(idPropiedad);
+})
+
+reservaButton.addEventListener('click', function (){  
+    cargarReservas(idPropiedad);
+})
+
 //Movimientos
 function cargarMovimientos(idPropiedad){
     if(idPropiedad){
@@ -568,8 +577,8 @@ function cargarMovimientos(idPropiedad){
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Concepto</th>
-                                        <th>Tipo</th> <!-- Ingreso o Gasto -->
-                                        <th>Comentarios</th> <!-- Alquiler, mantenimiento, luz, etc -->
+                                        <th>Tipo</th>
+                                        <th>Comentarios</th>
                                         <th>Importe (€)</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -1006,7 +1015,6 @@ function eliminarMovimiento(id){
     let formData = new FormData();
 
     idMovimiento = id;
-
     
     formData.append("idMovimiento", id) //Almacena el id como cuerpo de la solicitud
 
@@ -1051,9 +1059,6 @@ function openEditMovimientoModal(movimiento){
 }
 
 function guardarCambiosMovimiento(movimiento){
-    console.log('id movimiento '+movimiento.id);
-    console.log('id Propiedad '+idPropiedad);
-    
     const concepto = document.getElementById('editConcepto').value;
     const tipo = document.getElementById('editTipoMovimiento').value;
     const cantidad = document.getElementById('editCantidadMovimiento').value;
@@ -1090,7 +1095,6 @@ function guardarCambiosMovimiento(movimiento){
         }
     })
     .catch(error => console.error("Error:", error));
-
 }
 
 // Reservas
@@ -1138,6 +1142,7 @@ function cargarReservas(idPropiedad){
                                         <th>Email Inq.</th>
                                         <th>Cobro</th>
                                         <th>Notas</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -1160,6 +1165,23 @@ function cargarReservas(idPropiedad){
                                 <td>${reserva.emailInquilino}</td>
                                 <td class="cobro">${reserva.cobro}€</td>
                                 <td>${reserva.notas}</td>
+                                <td class="acciones">
+                                    <button 
+                                        class="editar"
+                                        class="editar"
+                                        data-bs-toggle="modal" 
+                                        onclick='openEditReservaModal(${JSON.stringify(reserva)})'
+                                        ><i class="fas fa-pen" style="color: #ffffff;"></i> 
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        class="eliminar" 
+                                        data-bs-toggle="modal" 
+                                        onclick="openDeleteReservaModal(${reserva.id})"
+                                        >
+                                        <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
+                                    </button>
+                                </td>
                             </tr>
                         `
                     });                    
@@ -1261,6 +1283,92 @@ function cargarReservas(idPropiedad){
                         ${datosReservas}
                         ${pieTabla}
                     </div>
+                    <div class="modal fade" id="deleteReservaModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                    <h6 class="modal-title">Confirmar eliminación</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-2">
+                                        ¿Realmente desea eliminar esta reserva?, su ingreso se eliminará también.
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="deleteReserva" data-bs-dismiss="modal">Confirmar</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="editReservaModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h6 class="modal-title">Editar Reserva</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-2">
+                                        <div class="formReservaContainer">
+                                            <form id="formReserva">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaIni" class="form-label mb-1">Fecha Inicio</label>
+                                                        <input id="editFechaIni" type="dateTime-local" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaFin" class="form-label mb-1">Fecha Fin</label>
+                                                        <input id="editFechaFin" type="dateTime-local" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editCobro" class="form-label mb-1">A cobrar (€):</label>
+                                                        <input id="editCobro" type="number" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-5">
+                                                        <label for="editNombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
+                                                        <input type="text" id="editNombreInquilino" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label for="editApellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
+                                                        <input type="text" id="editApellidosInquilino" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editDniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
+                                                        <input type="text" id="editDniInquilino" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editTelefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
+                                                        <input type="tel" id="editTelefonoInquilino" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <label for="editEmailInquilino" class="form-label mb-1">Email Inquilino</label>
+                                                        <input type="email" id="editEmailInquilino" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <label for="editNotas" class="form-label mb-1">Notas</label>
+                                                        <textarea name="editNotas" id="editNotas" class="form-control mb-1"></textarea>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnSaveReservaChanges">Guardar Cambios</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
                 `;
 
                 const calendarEl = document.getElementById('calendar');
@@ -1325,7 +1433,7 @@ function guardarReserva(idPropiedad){
         notasReserva: notas,
     }
 
-    let concepto = '<b>Reserva '+ nombreInquilino + '</b> ' + fechaInicio + '/' + fechaFin;
+    let concepto = 'Reserva '+ nombreInquilino + ' ' + fechaInicio + '/' + fechaFin;
     
     //Envio de datos
     fetch('../php/guardarReservas.php', {
@@ -1360,11 +1468,116 @@ function guardarReserva(idPropiedad){
     .catch(error => console.error("Error:", error));
 }
 
-//Llamadas menú
-balanceButton.addEventListener('click', function (){  
-    cargarMovimientos(idPropiedad);
-})
+function openDeleteReservaModal(id){    
+    let modal = new bootstrap.Modal(document.getElementById('deleteReservaModal'), {
+        keyboard: false
+    });
+    modal.show();
 
-reservaButton.addEventListener('click', function (){  
-    cargarReservas(idPropiedad);
-})
+    // En el click del boton usa la funcion (puede ser de una propiedad u otro)
+    document.getElementById('deleteReserva').onclick = function(){
+        eliminarReserva(id);
+    }
+}
+
+function eliminarReserva(id){
+    let formData = new FormData();
+
+    idReserva = id;
+
+    formData.append("idReserva", id) //Almacena el id como cuerpo de la solicitud
+
+    fetch(`../php/eliminarReserva.php`, {
+        method: "POST",
+        body: formData,        
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    
+    .then(data => {        
+        if (data.success) {
+            cargarReservas(idPropiedad);
+            //MENSAJE DE SUCCESS
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function openEditReservaModal(reserva){
+
+    //Cargamos los valores existentes
+    document.getElementById('editFechaIni').value = reserva.fechaInicio;
+    document.getElementById('editFechaFin').value = reserva.fechaFin;
+    document.getElementById('editCobro').value = reserva.cobro;
+    document.getElementById('editNombreInquilino').value = reserva.nombreInquilino;
+    document.getElementById('editApellidosInquilino').value = reserva.apellidosInquilino;
+    document.getElementById('editDniInquilino').value = reserva.dniInquilino;
+    document.getElementById('editTelefonoInquilino').value = reserva.telefonoInquilino;
+    document.getElementById('editEmailInquilino').value = reserva.emailInquilino;
+    document.getElementById('editNotas').value = reserva.notas;
+
+    //Abrir modal
+    let modal = new bootstrap.Modal(document.getElementById('editReservaModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    //Guardar
+    document.getElementById('btnSaveReservaChanges').onclick = function() {
+        guardarCambiosReserva(reserva);        
+    };
+}
+
+function guardarCambiosReserva(reserva){
+
+    const fechaInicio = document.getElementById('editFechaIni').value;
+    const fechaFin = document.getElementById('editFechaFin').value;
+    const cobro = document.getElementById('editCobro').value;
+    const nombreInquilino = document.getElementById('editNombreInquilino').value;
+    const apellidosInquilino = document.getElementById('editApellidosInquilino').value;
+    const dniInquilino = document.getElementById('editDniInquilino').value;
+    const telefonoInquilino = document.getElementById('editTelefonoInquilino').value;
+    const emailInquilino = document.getElementById('editEmailInquilino').value;
+    const notas = document.getElementById('editNotas').value;
+
+    const reservaActualizada = {
+        id: reserva.id,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin,
+        cobro: cobro,
+        nombreInquilino: nombreInquilino,
+        apellidosInquilino: apellidosInquilino,
+        dniInquilino: dniInquilino,
+        telefonoInquilino: telefonoInquilino,
+        emailInquilino: emailInquilino,
+        notas: notas
+    }
+
+    //Envio de datos
+    fetch('../php/editarReserva.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservaActualizada)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    .then(data => {
+        if (data.success) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editReservaModal'));
+            modal.hide();
+            cargarReservas(idPropiedad);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
