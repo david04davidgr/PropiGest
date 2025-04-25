@@ -165,18 +165,23 @@ main{
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                padding: 1%;
-                background-color: #4CAF50;
+                padding: 1.5%;
+                background-color: #f5f5f5;
                 border-radius: 5px;
+                border: 3px solid #4CAF50;
 
                 p{
+                    font-size: 1.10rem;
                     margin-bottom: 2%;
-                    color: #333;
+                    font-weight: bold;
+                    margin-bottom: 6%;
+                    color: #4CAF50;
                 }
 
                 h2{
                     margin-top: -8%;
-                    font-size: 1rem;
+                    font-size: 0.8rem;
+                    color: #333;
                 }
             }
 
@@ -187,18 +192,23 @@ main{
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                padding: 1%;
-                background-color: red;
+                padding: 1.5%;
+                background-color: #f5f5f5;
                 border-radius: 5px;
+                border: 3px solid red;
 
                 p{
+                    font-size: 1.10rem;
                     margin-bottom: 5%;
-                    color: #333;
+                    color: red;
+                    font-weight: bold;
+                    margin-bottom: 6%;
                 }
 
                 h2{
                     margin-top: -8%;
-                    font-size: 1rem;
+                    font-size: 0.8rem;
+                    color: #333;
                 }
             }
         }
@@ -273,6 +283,8 @@ main{
             align-items: center;
             background-color: lightgray;
             border-radius: 10px;
+            border: 3px solid rgb(112, 112, 112);
+            filter: drop-shadow(1px 1px 5px black);
 
             p{
                 height: 5px;

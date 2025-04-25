@@ -42,6 +42,8 @@
             });
         }
 
+        mostrarStats(mes, ingresosPorMes, gastosPorMes);
+
         //Grafico Balance
         let graficoBalance = document.querySelector('#graphBalance');
         const labelsBal = ['Ingresos', 'Gastos'];
@@ -72,58 +74,7 @@
             }
         };
 
-        //Grafico actividad de propiedades
-        // let graficoActividad = document.querySelector('#graphActividad');
-
-        // const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-        // const data = {
-        //     labels: labels,
-        //     datasets: [{
-        //         label: 'Propiedades Activas',
-        //         data: [5, 9, 0, 1, 6, 5, 20, 0, 1, 6, 5, 0],
-        //         fill: false,
-        //         borderColor: '#4caf50',
-        //         tension:0.1
-        //     }]
-        // };
-
-        // const config = {
-        //     type: 'line',
-        //     data: data,
-        //     options: {
-        //         responsive: true,
-        //         maintainAspectRatio: false,
-        //         plugins: {
-        //             legend: {
-        //                 position: 'bottom',
-        //                 labels: {
-        //                     color: '#f5f5f5',
-        //                 }
-        //             },
-        //             tooltip: {
-        //                 titleColor: '#f5f5f5',
-        //                 bodyColor: '#333',
-        //                 backgroundColor: '#4caf50',
-        //             }
-        //         },
-        //         scales: {
-        //             x: {
-        //                 ticks: {
-        //                     color: 'white'
-        //                 }
-        //             },
-        //             y: {
-        //                 ticks: {
-        //                     color: 'white'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // };
-
         new Chart(graficoBalance, configBal);//Crea grafico de balance
-        new Chart(graficoActividad, config);//Crea grafico de actividad
     })
     .catch(error => console.error('Error al obtener los movimientos: ',error));
     
@@ -137,10 +88,90 @@
     })
     .then(data => {
         console.log(data);
+        reservas = data;
+
+        let reservasPorMes = Array(12).fill(0);
+
+        if (reservas.length > 0) {
+            reservas.forEach(reserva => {
+                const fecha = new Date(reserva.fechaInicio);
+                const mes = fecha.getMonth();
+                reservasPorMes[mes]++;
+            });
+        }
+        
+        //Grafico actividad de propiedades
+        let graficoActividad = document.querySelector('#graphActividad');
+
+        const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        const dataReservas = {
+            labels: labels,
+            datasets: [{
+                label: 'Número de Reservas',
+                data: reservasPorMes,
+                fill: false,
+                borderColor: '#4caf50',
+                tension:0.1
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: dataReservas,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#f5f5f5',
+                        }
+                    },
+                    tooltip: {
+                        titleColor: '#f5f5f5',
+                        bodyColor: '#333',
+                        backgroundColor: '#4caf50',
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(graficoActividad, config);//Crea grafico de reservas
     })
     .catch(error => console.error('Error al obtener las reservas: ',error));
 
     //Funciones
+    function mostrarStats(mes, ingresosPorMes, gastosPorMes){
+        const ingresos = document.getElementById('ingresos');
+        const gastos = document.getElementById('gastos');
+
+        ingresos.innerHTML = '';
+        ingresos.innerHTML = `
+            <p>${ingresosPorMes[mes]}€</p>
+            <h2>Ingresos</h2>
+        `;
+
+        gastos.innerHTML = '';
+        gastos.innerHTML = `
+            <p>${gastosPorMes[mes]}€</p>
+            <h2>Gastos</h2>
+        `;
+    }
+
     function mostrarPropiedades(propiedades){
         let disponibles = 0;
         let noDisponibles = 0;     
