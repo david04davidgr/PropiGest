@@ -136,7 +136,8 @@ fetch('./../php/verificarSesion.php')
     function onMapClick(e) {
         popup
         .setLatLng(e.latlng) // Configura la posición del popup
-        .setContent(`You clicked the map at ${e.latlng.toString()}`) // Configura el contenido
+        // .setContent(`You clicked the map at ${e.latlng.toString()}`) // Configura el contenido
+        .setContent(`¿Desea crear una propiedad aquí? ${e.latlng.toString()}`) // Configura el contenido
         .openOn(map); // Muestra el popup en el mapa
     }
     
