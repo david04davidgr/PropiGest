@@ -77,24 +77,24 @@ fetch('./../php/verificarSesion.php')
     L.control.layers(baseMaps).addTo(map);
     
     //Añade buscador
-    L.Control.geocoder({
-        defaultMarkGeocode: false,
-        position: 'topleft',
-        placeholder: 'Buscar dirección...',
-        collapsed: false,
-        geocoder: L.Control.Geocoder.nominatim()
-    })
-    .on('markgeocode', function(e) {
-        const bbox = e.geocode.bbox;
-        const poly = L.polygon([
-            bbox.getSouthEast(),
-            bbox.getNorthEast(),
-            bbox.getNorthWest(),
-            bbox.getSouthWest()
-        ]);
-        map.fitBounds(poly.getBounds());
-    })
-    .addTo(map);
+    // L.Control.geocoder({
+    //     defaultMarkGeocode: false,
+    //     position: 'topleft',
+    //     placeholder: 'Buscar dirección...',
+    //     collapsed: false,
+    //     geocoder: L.Control.Geocoder.nominatim()
+    // })
+    // .on('markgeocode', function(e) {
+    //     const bbox = e.geocode.bbox;
+    //     const poly = L.polygon([
+    //         bbox.getSouthEast(),
+    //         bbox.getNorthEast(),
+    //         bbox.getNorthWest(),
+    //         bbox.getSouthWest()
+    //     ]);
+    //     map.fitBounds(poly.getBounds());
+    // })
+    // .addTo(map);
     
     //Evita un click sobre el mapa bajo el boton
     L.DomEvent.disableClickPropagation(document.querySelector('#new_propiedad'));

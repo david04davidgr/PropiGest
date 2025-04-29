@@ -326,7 +326,7 @@ function mostrarPropiedad(propiedad){
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-2">
-                        ¿Realmente desea eliminar esta propiedad?
+                        ¿Realmente desea eliminar esta propiedad?, se eliminaran todos sus movimientos, reservas, documentos y mantenimientos.
                     </div>
                     <div class="modal-footer py-1">
                       <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
