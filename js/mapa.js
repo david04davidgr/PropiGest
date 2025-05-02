@@ -133,15 +133,15 @@ fetch('./../php/verificarSesion.php')
     
     const popup = L.popup();
     
-    function onMapClick(e) {
-        popup
-        .setLatLng(e.latlng) // Configura la posición del popup
-        // .setContent(`You clicked the map at ${e.latlng.toString()}`) // Configura el contenido
-        .setContent(`¿Desea crear una propiedad aquí? ${e.latlng.toString()}`) // Configura el contenido
-        .openOn(map); // Muestra el popup en el mapa
-    }
+    // function onMapClick(e) {
+    //     popup
+    //     .setLatLng(e.latlng) // Configura la posición del popup
+    //     // .setContent(`You clicked the map at ${e.latlng.toString()}`) // Configura el contenido
+    //     .setContent(`¿Desea crear una propiedad aquí? ${e.latlng.toString()}`) // Configura el contenido
+    //     .openOn(map); // Muestra el popup en el mapa
+    // }
     
-    map.on('click', onMapClick);
+    // map.on('click', onMapClick);
     
     function adjustMapSize() {
         const currentCenter = map.getCenter();
