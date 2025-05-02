@@ -19,11 +19,6 @@ $habitaciones = $_POST['habitaciones'];
 $banios = $_POST['baños'];
 $anioConstruccion = $_POST['año_construccion'];
 
-// Ver los datos de POST
-echo '<pre>';
-var_dump($_POST);  // Para ver los datos de texto
-echo '</pre>';
-
 // Crear la carpeta si no existe
 $directorio = '../uploads/imagenes/';
 if (!is_dir($directorio)) {

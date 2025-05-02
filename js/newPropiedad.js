@@ -137,13 +137,23 @@ fetch('../php/verificarSesion.php')
       }, 200);
   });
 
-  btnEnviar.addEventListener('click', function(e){
-    e.preventDefault;
+  btnEnviar.addEventListener('click', function(e) {
+    e.preventDefault();
 
+    // Asegura que las coordenadas estén seteadas
     document.querySelector('#latitud').value = latitud;
     document.querySelector('#longitud').value = longitud;
 
+    const archivos = document.querySelector('input[type="file"]').files;
+    for (let i = 0; i < archivos.length; i++) {
+        const archivo = archivos[i];
+        if (!archivo.type.startsWith('image/')) {
+            alert('Solo se permiten archivos de imagen.');
+            return;
+        }
+    }
+
     document.querySelector('#propiedadForm').submit();
-  });
+});
 
   

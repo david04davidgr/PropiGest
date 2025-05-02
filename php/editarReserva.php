@@ -24,6 +24,9 @@ if (isset($data['id'], $data['fechaInicio'], $data['fechaFin'], $data['cobro'], 
 
         $stmt->execute([$fechaInicio, $fechaFin, $cobro, $nombreInquilino, $apellidosInquilino, $dniInquilino, $telefonoInquilino, $emailInquilino, $notas, $id]);
 
+        $stmtIngreso = $pdo->prepare("UPDATE movimientos SET cantidad = ? WHERE idReserva = ?");
+        $stmtIngreso->execute([$cobro, $id]);
+
         echo json_encode(["success" => true, "message" => "Reserva actualizada correctamente"]);
     } catch (Exception $e) {
         echo json_encode(["success" => false, "message" => "Error al actualizar: " . $e->getMessage()]);
