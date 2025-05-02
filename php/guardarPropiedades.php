@@ -2,6 +2,16 @@
 include 'verificarSesion.php';
 include 'conexion.php';
 
+// Validación básica de campos obligatorios
+$campos_obligatorios = ['nombre', 'tipo', 'precio', 'frecuencia', 'disponibilidad', 'direccion', 'ciudad', 'codigo_postal', 'latitud', 'longitud', 'tamaño', 'año_construccion'];
+
+foreach ($campos_obligatorios as $campo) {
+    if (empty($_POST[$campo])) {
+        die("Error: El campo '$campo' es obligatorio.");
+    }
+}
+
+// Asignación de variables desde POST
 $imagenes = $_FILES['imagenes'];
 $nombre = $_POST['nombre'];
 $tipo = $_POST['tipo'];
@@ -19,31 +29,42 @@ $habitaciones = $_POST['habitaciones'];
 $banios = $_POST['baños'];
 $anioConstruccion = $_POST['año_construccion'];
 
+$permitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+echo '<pre>';
+print_r($_FILES);
+echo '</pre>';
+
 // Crear la carpeta si no existe
 $directorio = '../uploads/imagenes/';
 if (!is_dir($directorio)) {
     mkdir($directorio, 0777, true);
 }
 
-$rutas_imagenes = [];  // Array para almacenar rutas de imágenes
+$rutas_imagenes = [];
 
 if (isset($imagenes) && $imagenes['error'][0] == 0) {
     foreach ($imagenes['tmp_name'] as $key => $tmp_name) {
+        // Validar tipo MIME
+        $tipo_mime = mime_content_type($tmp_name);
+        if (!in_array($tipo_mime, $permitidos)) {
+            die("Error: El archivo '" . $imagenes['name'][$key] . "' no es una imagen válida.");
+        }
+
         $nombre_imagen = basename($imagenes['name'][$key]);
         $ruta_destino = $directorio . $nombre_imagen;
 
-        // Mover la imagen a la carpeta "uploads"
         if (move_uploaded_file($tmp_name, $ruta_destino)) {
             $rutas_imagenes[] = '../uploads/imagenes/' . $nombre_imagen;
         }
     }
 }
 
+// Imagen por defecto si no se subieron válidas
 if (empty($rutas_imagenes)) {
     $rutas_imagenes[] = '../uploads/imagenes/default.png';
 }
 
-// Convertir el array de rutas a un string separado por comas (para almacenarlo en la BD)
 $rutas_imagenes_str = implode(',', $rutas_imagenes);
 
 $sql = "INSERT INTO propiedades 
@@ -51,20 +72,22 @@ $sql = "INSERT INTO propiedades
         VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
+if (!$stmt) {
+    die("Error en prepare: " . $conn->error);
+}
 
-// Ajustar el tipo de datos en el bind_param según la columna
 $stmt->bind_param("ssssdsdsssssiiisi", 
     $rutas_imagenes_str, $nombre, $direccion, $ciudad, $codigo_postal, $tipo, $latitud, $longitud, $precio, $frecuencia_pago, $disponibilidad, $tamanio, $habitaciones, $banios, $planta, $anioConstruccion, $_SESSION['usuario_id']
 );
 
 if ($stmt->execute()) {
     $id_propiedad = $conn->insert_id;
-    header("Location: ../html/vistaMapa.html?id_propiedad=". $id_propiedad);
+    header("Location: ../html/inicio.html");
+    exit;
 } else {
     echo "Error: " . $stmt->error;
 }
 
-// Cerrar conexión
 $stmt->close();
 $conn->close();
 ?>

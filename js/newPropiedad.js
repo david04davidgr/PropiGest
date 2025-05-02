@@ -10,11 +10,57 @@ fetch('../php/verificarSesion.php')
     window.location.href = '../index.html';
   });
 
-//Variables
   const btnEnviar = document.querySelector('#añadir');
 
   let latitud;
   let longitud;
+
+  const inputImagenes = document.getElementById('imagenes');
+  const preview = document.getElementById('preview');
+  let archivosSeleccionados = [];
+  
+  inputImagenes.addEventListener('change', function () {
+    const nuevosArchivos = Array.from(this.files);
+  
+    nuevosArchivos.forEach((archivo) => {
+      archivosSeleccionados.push(archivo);
+      const reader = new FileReader();
+  
+      reader.onload = function (e) {
+        const index = archivosSeleccionados.length - 1;
+        const div = document.createElement('div');
+        div.classList.add('imgPreview');
+        div.innerHTML = `
+          <img src="${e.target.result}" width="100" style="margin: 5px;">
+          <button type="button" data-index="${index}">
+            <i class="fa-solid fa-circle-xmark" style="color: #ff0000;"></i>
+          </button>
+        `;
+        preview.appendChild(div);
+      };
+  
+      reader.readAsDataURL(archivo);
+    });
+  
+    actualizarInput();
+  });
+  
+  preview.addEventListener('click', function (e) {
+    if (e.target.closest('button')) {
+      const button = e.target.closest('button');
+      const div = button.parentElement;
+      const index = Array.from(preview.children).indexOf(div);
+      archivosSeleccionados.splice(index, 1);
+      div.remove();
+      actualizarInput();
+    }
+  });
+  
+  function actualizarInput() {
+    const dataTransfer = new DataTransfer();
+    archivosSeleccionados.forEach(file => dataTransfer.items.add(file));
+    inputImagenes.files = dataTransfer.files;
+  }
 
   //Declaración del mapa y control de capas
   let map;
@@ -139,12 +185,23 @@ fetch('../php/verificarSesion.php')
 
   btnEnviar.addEventListener('click', function(e) {
     e.preventDefault();
+    const form = document.querySelector('#propiedadForm');
 
     // Asegura que las coordenadas estén seteadas
     document.querySelector('#latitud').value = latitud;
     document.querySelector('#longitud').value = longitud;
 
-    const archivos = document.querySelector('input[type="file"]').files;
+    const camposObligatorios = ['nombre', 'tipo', 'precio', 'frecuencia', 'disponibilidad', 'direccion', 'ciudad', 'codigo_postal', 'latitud', 'longitud', 'tamaño', 'año_construccion'];
+
+    for (let campo of camposObligatorios) {
+      const valor = form.elements[campo]?.value?.trim();
+      if (!valor) {
+        alert(`Por favor completa el campo: ${campo}`);
+        return;
+      }
+    }
+
+    const archivos = inputImagenes.files;
     for (let i = 0; i < archivos.length; i++) {
         const archivo = archivos[i];
         if (!archivo.type.startsWith('image/')) {
@@ -153,7 +210,7 @@ fetch('../php/verificarSesion.php')
         }
     }
 
-    document.querySelector('#propiedadForm').submit();
+    form.submit();
 });
 
   
