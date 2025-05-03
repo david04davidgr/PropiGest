@@ -2,7 +2,9 @@ const title = document.querySelector('#title');
 const carrusel = document.querySelector('#carrusel_imagenes');
 const datosContainer = document.querySelector('#datosContainer');
 const balanceButton = document.querySelector('#balanceButton');
-const reservaButton = document.querySelector('#reservaButton')
+const reservaButton = document.querySelector('#reservaButton');
+const mantenimientoButton = document.querySelector('#mantenimientoButton');
+const documentosButton = document.querySelector('#documentosButton');
 
 let totalIngresos = 0;
 let totalGastos = 0;
@@ -560,6 +562,12 @@ balanceButton.addEventListener('click', function (){
 reservaButton.addEventListener('click', function (){  
     cargarReservas(idPropiedad);
 })
+
+mantenimientoButton.addEventListener('click', function (){
+    cargarMantenimientos(idPropiedad);
+})
+
+
 
 //Movimientos
 function cargarMovimientos(idPropiedad){
@@ -1211,10 +1219,11 @@ function cargarReservas(idPropiedad){
 
                 datosContainer.innerHTML = `
                     <div class="reservasContainer">
-                        <div class="volverButton">
-                            <a href="propiedadDetails.html?id_propiedad=${idPropiedad}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
-                        </div>
-                        <div class="buttonContainer">
+                    <div class="volverButton">
+                    <a href="propiedadDetails.html?id_propiedad=${idPropiedad}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
+                    </div>
+                    <div class="buttonContainer">
+                            <h3>Reservas</h3>
                             <button id="newReserva" class="newReserva" data-bs-toggle="modal" data-bs-target="#newReservaModal">+ Añadir Reserva</button>
                         </div>
                         <div class="calendarContainer">
@@ -1590,4 +1599,384 @@ function guardarCambiosReserva(reserva){
     })
     .catch(error => console.error("Error:", error));
 }
+
+//Mantenimientos
+function cargarMantenimientos(){
+   
+    datosContainer.innerHTML = '';
+    let tarjetasMantenimiento = '';
+    let estadoMantenimiento = '';
+
+    if (idPropiedad) {
+        fetch(`./../php/obtenerMantenimientos.php?id_propiedad=${idPropiedad}`)
+        .then(response => {
+            if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+                window.location.href = '../index.html';
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            mantenimientos = data  
+            let mantenimientosCalendario = '';
+            let factura = '';
+            
+            if (mantenimientos.length > 0) {
+                mantenimientosCalendario = mantenimientos.map(mantenimiento => {
+                    return {
+                        title: `${mantenimiento.titulo}`,
+                        start: mantenimiento.fechaProgramada,
+                        end: mantenimiento.fechaRealizacion,
+                        color: '#333',
+                    };
+                });
+                
+                mantenimientos.forEach(mantenimiento => {
+                    estadoMantenimiento = '';
+                    factura = '';
+
+                    if (mantenimiento.estado === "pendiente") {
+                        estadoMantenimiento = `
+                            <p style="color: red;font-weight:bold">${mantenimiento.estado}</p>
+                        `;
+                    }
+
+                    if (mantenimiento.estado === "en proceso") {
+                        estadoMantenimiento = `
+                            <p style="color: orange;font-weight:bold">${mantenimiento.estado}</p>
+                        `;
+                    }
+
+                    if (mantenimiento.estado === "completado") {
+                        estadoMantenimiento = `
+                            <p style="color: green;font-weight:bold">${mantenimiento.estado}</p>
+                        `;
+                    }
+
+                    if (mantenimiento.ruta) {
+                        factura = `<p><a href="${mantenimiento.ruta}" target="_blank">Ver Factura 📃</a></p>`
+                    }else{
+                        factura = `<p>No Disponible</p>`
+                    }
+                    
+                    tarjetasMantenimiento += `
+                            <div class="tarjeta">
+                                <div class="tituloEmpresa">
+                                    <div class="titulo"><h3>${mantenimiento.titulo}</h3></div>
+                                    <div class="empresa"><p>${mantenimiento.empresa}</p></div>
+                                </div>
+                                <div class="descripcion">
+                                    <h4>Descripcion</h4>
+                                    <p>${mantenimiento.descripcion}</p>
+                                </div>
+                                <div class="tipoEstado">
+                                    <div class="tipo">
+                                        <h4>Tipo</h4>
+                                        <p>${mantenimiento.tipo}</p>
+                                    </div>
+                                    <div class="estado">
+                                        <h4>Estado</h4>
+                                        ${estadoMantenimiento}
+                                    </div>
+                                </div>
+                                <div class="fechas">
+                                    <div class="fechaProgramada">
+                                        <h4>Fecha Programada</h4>
+                                        <p>${mantenimiento.fechaProgramada}</p>
+                                    </div>
+                                    <div class="fechaRealizacion">
+                                        <h4>Fecha Realización</h4>
+                                        <p>${mantenimiento.fechaRealizacion}</p>
+                                    </div>
+                                </div>
+                                <div class="costeFactura">
+                                    <div class="coste">
+                                        <h4>Coste</h4>
+                                        <p>${mantenimiento.coste}€</p>
+                                    </div>
+                                    <div class="factura">
+                                        <h4>Factura</h4>
+                                        ${factura}
+                                    </div>
+                                </div>
+                            </div>
+                    `
+                });                    
+            }else{
+                tarjetasMantenimiento = `
+                    <p>No hay mantenimientos disponibles todavía</p>
+                `
+            }
+    
+            datosContainer.innerHTML = `
+                    <div class="mantenimientosContainer">
+                    <div class="volverButton">
+                    <a href="propiedadDetails.html?id_propiedad=${idPropiedad}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
+                    </div>
+                    <div class="buttonContainer">
+                            <h3>Mantenimientos</h3>
+                            <button id="newMantenimiento" class="newMantenimiento" data-bs-toggle="modal" data-bs-target="#newMantenimientoModal">+ Añadir Mantenimiento</button>
+                        </div>
+                        <div class="calendarContainer">
+                            <div id="calendar"></div>
+                        </div>
+                        <div class="modal fade" id="newMantenimientoModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header py-2">
+                                    <h6 class="modal-title">Añadir nuevo mantenimiento</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-2">
+                                    <div class="formMantenimientoContainer">
+                                        <form id="formMantenimiento">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="fechaIni" class="form-label mb-1">Fecha Inicio</label>
+                                                    <input id="fechaIni" type="dateTime-local" class="form-control mb-1">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="fechaFin" class="form-label mb-1">Fecha Fin</label>
+                                                    <input id="fechaFin" type="dateTime-local" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="cobro" class="form-label mb-1">A cobrar (€):</label>
+                                                    <input id="cobro" type="number" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row mb-3">
+                                                <div class="col-md-5">
+                                                    <label for="nombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
+                                                    <input type="text" id="nombreInquilino" class="form-control mb-1">
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <label for="apellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
+                                                    <input type="text" id="apellidosInquilino" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="dniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
+                                                    <input type="text" id="dniInquilino" class="form-control mb-1">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="telefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
+                                                    <input type="tel" id="telefonoInquilino" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="emailInquilino" class="form-label mb-1">Email Inquilino</label>
+                                                    <input type="email" id="emailInquilino" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-12">
+                                                    <label for="notas" class="form-label mb-1">Notas</label>
+                                                    <textarea name="notas" id="notasReserva" class="form-control mb-1"></textarea>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer py-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarMantenimiento(${idPropiedad})">+ Añadir</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="tarjetasContainer">
+                    ${tarjetasMantenimiento}
+                    </div>
+                    </div>
+                    <div class="modal fade" id="deleteMantenimientoModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                    <h6 class="modal-title">Confirmar eliminación</h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-2">
+                                        ¿Realmente desea eliminar este mantenimiento?, su gasto se eliminará también.
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="deleteReserva" data-bs-dismiss="modal">Confirmar</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="editMantenimientoModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header py-2">
+                                        <h6 class="modal-title">Editar Mantenimiento</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-2">
+                                        <div class="formMantenimientoContainer">
+                                            <form id="formMantenimiento">
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaIni" class="form-label mb-1">Fecha Inicio</label>
+                                                        <input id="editFechaIni" type="dateTime-local" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaFin" class="form-label mb-1">Fecha Fin</label>
+                                                        <input id="editFechaFin" type="dateTime-local" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editCobro" class="form-label mb-1">A cobrar (€):</label>
+                                                        <input id="editCobro" type="number" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-5">
+                                                        <label for="editNombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
+                                                        <input type="text" id="editNombreInquilino" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label for="editApellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
+                                                        <input type="text" id="editApellidosInquilino" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editDniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
+                                                        <input type="text" id="editDniInquilino" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editTelefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
+                                                        <input type="tel" id="editTelefonoInquilino" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <label for="editEmailInquilino" class="form-label mb-1">Email Inquilino</label>
+                                                        <input type="email" id="editEmailInquilino" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <label for="editNotas" class="form-label mb-1">Notas</label>
+                                                        <textarea name="editNotas" id="editNotas" class="form-control mb-1"></textarea>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer py-1">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-sm btn-primary" id="btnSaveMantenimientoChanges">Guardar Cambios</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                `;
+
+
+            const calendarEl = document.getElementById('calendar');
+        
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'esLocale',
+            firstDay: 1,
+            height: 'auto',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            buttonText:{
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                list: 'Agenda'
+            },
+            selectable: true,
+            // editable: true,
+            dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
+            eventColor: '#333', // color por defecto
+
+            // dateClick: function(info) {
+            //     alert('Fecha seleccionada: ' + info.dateStr);
+            // },
+            // eventClick: function(info) {
+            //     alert('Evento: ' + info.event.title);
+            // },
+            events: mantenimientosCalendario,  
+            });
+        
+            calendar.render();            
+        })
+        }
+}
+
+function guardarMantenimiento(idPropiedad){
+    const titulo = document.querySelector('#titulo').value;
+    const descripcion = document.querySelector('#descripcion').value;
+    const tipo = document.querySelector('#tipo').value;
+    const fechaProgramada = document.querySelector('#fechaProgramada').value;
+    const fechaRealizacion = document.querySelector('#fechaRealizacion').value;
+    const empresa = document.querySelector('#empresa').value;
+    const estado = document.querySelector('#estado').value;
+    const coste = document.querySelector('#coste').value;
+    const notas = document.querySelector('#notasReserva').value;
+
+    const reserva = {
+        idPropiedad: idPropiedad,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin,
+        cobro: cobro,
+        nombreInquilino: nombreInquilino,
+        apellidosInquilino: apellidosInquilino,
+        dniInquilino: dniInquilino,
+        telefonoInquilino: telefonoInquilino,
+        emailInquilino: emailInquilino,
+        notasReserva: notas,
+    }
+
+    let concepto = 'Reserva '+ nombreInquilino + ' ' + fechaInicio + '/' + fechaFin;
+    
+    //Envio de datos
+    fetch('../php/guardarReservas.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reserva)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    
+    .then(data => {
+        autoIngreso(idPropiedad, concepto, cobro, data.idReserva);
+        if (data.success) {
+            cargarReservas(idPropiedad);
+            fechaInicio = '';
+            fechaFin = '';
+            cobro = '';
+            nombreInquilino = '';
+            apellidosInquilino = '';
+            dniInquilino = '';
+            emailInquilino = '';
+            telefonoInquilino = '';
+            notas = '';
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
 
