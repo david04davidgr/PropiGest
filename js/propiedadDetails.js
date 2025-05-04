@@ -1732,51 +1732,61 @@ function cargarMantenimientos(){
                                         <form id="formMantenimiento">
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
-                                                    <label for="fechaIni" class="form-label mb-1">Fecha Inicio</label>
-                                                    <input id="fechaIni" type="dateTime-local" class="form-control mb-1">
+                                                    <label for="titulo" class="form-label mb-1">Titulo *</label>
+                                                    <input id="titulo" type="text" class="form-control mb-1" required>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label for="fechaFin" class="form-label mb-1">Fecha Fin</label>
-                                                    <input id="fechaFin" type="dateTime-local" class="form-control mb-1">
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-md-6">
-                                                    <label for="cobro" class="form-label mb-1">A cobrar (€):</label>
-                                                    <input id="cobro" type="number" class="form-control mb-1">
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="row mb-3">
-                                                <div class="col-md-5">
-                                                    <label for="nombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
-                                                    <input type="text" id="nombreInquilino" class="form-control mb-1">
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <label for="apellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
-                                                    <input type="text" id="apellidosInquilino" class="form-control mb-1">
-                                                </div>
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-md-6">
-                                                    <label for="dniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
-                                                    <input type="text" id="dniInquilino" class="form-control mb-1">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="telefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
-                                                    <input type="tel" id="telefonoInquilino" class="form-control mb-1">
+                                                    <label for="empresa" class="form-label mb-1">Empresa</label>
+                                                    <input id="empresa" type="text" class="form-control mb-1">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-12">
-                                                    <label for="emailInquilino" class="form-label mb-1">Email Inquilino</label>
-                                                    <input type="email" id="emailInquilino" class="form-control mb-1">
+                                                    <label for="descripcion" class="form-label mb-1">Descripcion *</label>
+                                                    <textarea id="descripcion" class="form-control mb-1" role="textarea" required></textarea>
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
-                                                <div class="col-md-12">
-                                                    <label for="notas" class="form-label mb-1">Notas</label>
-                                                    <textarea name="notas" id="notasReserva" class="form-control mb-1"></textarea>
+                                                <div class="col-md-6">
+                                                    <label for="tipo" class="form-label mb-1 mt-1">Tipo *</label>
+                                                    <select name="tipo" id="tipo" class="form-select form-control mb-1" role="choice" required>
+                                                        <option disabled selected>Elija un tipo</option>
+                                                        <option value="preventivo">preventivo</option>
+                                                        <option value="correctivo">correctivo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="estado" class="form-label mb-1 mt-1">Estado</label>
+                                                    <select name="estado" id="estado" class="form-select mb-1" required>
+                                                        <option disabled selected>Defina un estado</option>
+                                                        <option value="pendiente" style="color: red;font-weight: bold;">pendiente</option>
+                                                        <option value="en proceso" style="color: orange;font-weight: bold;">en proceso</option>
+                                                        <option value="completado" style="color: green;font-weight: bold;">completado</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="fechaProgramada" class="form-label mb-1">Fecha Programada *</label>
+                                                    <input type="datetime-local" id="fechaProgramada" class="form-control mb-1" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="fechaRealizacion" class="form-label mb-1">Fecha Realización</label>
+                                                    <input type="datetime-local" id="fechaRealizacion" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="coste" class="form-label mb-1">Coste</label>
+                                                    <input type="number" id="coste" class="form-control mb-1">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="factura" class="form-label mb-1">Factura</label>
+                                                    <input type="file" id="factura" class="form-control mb-1">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div id="previewFactura" class="col-md-12">
                                                 </div>
                                             </div>
                                         </form>
@@ -1881,6 +1891,60 @@ function cargarMantenimientos(){
                             </div>
                 `;
 
+                document.getElementById('factura').addEventListener('change', function (e) {
+                    const preview = document.getElementById('previewFactura');
+                    preview.innerHTML = ''; // Limpiar vista previa anterior
+                
+                    preview.innerHTML = `
+                        <hr>
+                    `;
+                    const file = e.target.files[0];
+                    if (!file) return;
+                
+                    const fileType = file.type;
+                
+                    // Crear contenedor general
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'mb-2';
+                
+                    // Botón "Quitar"
+                    const removeBtn = document.createElement('button');
+                    removeBtn.textContent = 'Quitar Archivo';
+                    removeBtn.className = 'btn btn-sm btn-danger mb-2';
+                    removeBtn.type = 'button';
+                    removeBtn.onclick = function () {
+                        document.getElementById('factura').value = '';
+                        preview.innerHTML = '';
+                    };
+                
+                    // Vista previa del archivo
+                    let fileView;
+                    if (fileType.startsWith('image/')) {
+                        fileView = document.createElement('img');
+                        fileView.src = URL.createObjectURL(file);
+                        fileView.style.maxWidth = '100%';
+                        fileView.onload = () => URL.revokeObjectURL(fileView.src);
+                    } else if (fileType === 'application/pdf') {
+                        fileView = document.createElement('iframe');
+                        fileView.src = URL.createObjectURL(file);
+                        fileView.style.width = '100%';
+                        fileView.style.height = '400px';
+                        fileView.onload = () => URL.revokeObjectURL(fileView.src);
+                    } else {
+                        fileView = document.createElement('p');
+                        fileView.textContent = `Archivo seleccionado: ${file.name}`;
+                    }
+                
+                    // Nombre del archivo (siempre)
+                    const fileName = document.createElement('p');
+                    fileName.textContent = `Archivo: ${file.name}`;
+                    fileName.className = 'mt-2 fst-italic';
+                
+                    wrapper.appendChild(removeBtn);
+                    wrapper.appendChild(fileName);
+                    wrapper.appendChild(fileView);
+                    preview.appendChild(wrapper);
+                });
 
             const calendarEl = document.getElementById('calendar');
         
