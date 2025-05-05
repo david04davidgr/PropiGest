@@ -1,8 +1,66 @@
-//Variables
+//Verificacion de seguridad acceso
+fetch('../php/verificarSesion.php')
+  .then(res => {
+    if (res.status === 401) {
+      window.location.href = '../index.html';
+    }
+  })
+  .catch(err => {
+    console.error('Error de sesión:', err);
+    window.location.href = '../index.html';
+  });
+
   const btnEnviar = document.querySelector('#añadir');
 
   let latitud;
   let longitud;
+
+  const inputImagenes = document.getElementById('imagenes');
+  const preview = document.getElementById('preview');
+  let archivosSeleccionados = [];
+  
+  inputImagenes.addEventListener('change', function () {
+    const nuevosArchivos = Array.from(this.files);
+  
+    nuevosArchivos.forEach((archivo) => {
+      archivosSeleccionados.push(archivo);
+      const reader = new FileReader();
+  
+      reader.onload = function (e) {
+        const index = archivosSeleccionados.length - 1;
+        const div = document.createElement('div');
+        div.classList.add('imgPreview');
+        div.innerHTML = `
+          <img src="${e.target.result}" width="100" style="margin: 5px;">
+          <button type="button" data-index="${index}">
+            <i class="fa-solid fa-circle-xmark" style="color: #ff0000;"></i>
+          </button>
+        `;
+        preview.appendChild(div);
+      };
+  
+      reader.readAsDataURL(archivo);
+    });
+  
+    actualizarInput();
+  });
+  
+  preview.addEventListener('click', function (e) {
+    if (e.target.closest('button')) {
+      const button = e.target.closest('button');
+      const div = button.parentElement;
+      const index = Array.from(preview.children).indexOf(div);
+      archivosSeleccionados.splice(index, 1);
+      div.remove();
+      actualizarInput();
+    }
+  });
+  
+  function actualizarInput() {
+    const dataTransfer = new DataTransfer();
+    archivosSeleccionados.forEach(file => dataTransfer.items.add(file));
+    inputImagenes.files = dataTransfer.files;
+  }
 
   //Declaración del mapa y control de capas
   let map;
@@ -41,16 +99,40 @@
             //Icono propiedad
             let houseIcon = L.icon({
               iconUrl: '../src/casa (1).png',
-              iconSize: [64, 64],       // Tamaño reducido
-              iconAnchor: [32, 64],     // Mitad del ancho y base del ícono
-              popupAnchor: [0, -64]     // Popup sobre el ícono
+              iconSize: [64, 64],
+              iconAnchor: [32, 64],
+              popupAnchor: [0, -64]
             });
+
+            //Añade buscador
+            L.Control.geocoder({
+              defaultMarkGeocode: false,
+              position: 'topleft',
+              placeholder: 'Buscar dirección...',
+              geocoder: L.Control.Geocoder.nominatim()
+            })
+              .on('markgeocode', function (e) {
+                const bbox = e.geocode.bbox;
+                const poly = L.polygon([
+                  bbox.getSouthEast(),
+                  bbox.getNorthEast(),
+                  bbox.getNorthWest(),
+                  bbox.getSouthWest()
+                ]);
+                map.fitBounds(poly.getBounds());
+              })
+              .addTo(map);
 
             //Obtencion de propiedades y creado automatico de tarjetas
               //Obtencion de datos BD
-              fetch('./../php/inicio.php')
-                .then(response => response.json())
-                .then(data => {
+              fetch('./../php/obtenerPropiedades.php')
+              .then(response => {
+                if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+                    window.location.href = '../index.html';
+                    return;
+                }
+                return response.json();
+            })                .then(data => {
                   console.log(data);
                   createCards(data);
                 })
@@ -83,9 +165,9 @@
 
             function onMapClick(e) {
               popup
-                .setLatLng(e.latlng) // Configura la posición del popup
-                .setContent(`Ubicacion Guardada ✅`) // Configura el contenido
-                .openOn(map); // Muestra el popup en el mapa
+                .setLatLng(e.latlng)
+                .setContent(`Ubicacion Guardada ✅`)
+                .openOn(map);
 
                 latitud = e.latlng.lat;
                 longitud = e.latlng.lng;
@@ -96,19 +178,39 @@
             map.on('click', onMapClick);
             
           } else {
-              // Si ya existe, redibujar el mapa para que se vea bien
               map.invalidateSize();
           }
-      }, 200); // Esperar un poco para evitar errores
+      }, 200);
   });
 
-  btnEnviar.addEventListener('click', function(e){
-    e.preventDefault;
+  btnEnviar.addEventListener('click', function(e) {
+    e.preventDefault();
+    const form = document.querySelector('#propiedadForm');
 
+    // Asegura que las coordenadas estén seteadas
     document.querySelector('#latitud').value = latitud;
     document.querySelector('#longitud').value = longitud;
 
-    document.querySelector('#propiedadForm').submit();
-  });
+    const camposObligatorios = ['nombre', 'tipo', 'precio', 'frecuencia', 'disponibilidad', 'direccion', 'ciudad', 'codigo_postal', 'latitud', 'longitud', 'tamaño', 'año_construccion'];
+
+    for (let campo of camposObligatorios) {
+      const valor = form.elements[campo]?.value?.trim();
+      if (!valor) {
+        alert(`Por favor completa el campo: ${campo}`);
+        return;
+      }
+    }
+
+    const archivos = inputImagenes.files;
+    for (let i = 0; i < archivos.length; i++) {
+        const archivo = archivos[i];
+        if (!archivo.type.startsWith('image/')) {
+            alert('Solo se permiten archivos de imagen.');
+            return;
+        }
+    }
+
+    form.submit();
+});
 
   

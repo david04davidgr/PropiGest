@@ -9,9 +9,14 @@ let estado_lista = true;
 //Funciones 
 
     //Obtencion de datos BD
-    fetch('./../php/inicio.php')
-        .then(response => response.json())
-        .then(data => {
+    fetch('./../php/obtenerPropiedades.php')
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })        .then(data => {
             // console.log(data);
             listPropiedades(data);
         })
@@ -61,26 +66,33 @@ let estado_lista = true;
             propiedades.forEach(prop => {
                 
                 let status;
-                let imagen = prop.imagenes ? prop.imagenes : '../uploads/imagenes/default.png';
+                let imagenes = prop.imagenes;
+                imagenes = imagenes ? imagenes.split(',') : [];
+    
+                let imagenDefault = '../uploads/imagenes/default.png';
+    
+                if (imagenes.length == 0) {
+                    imagenes[0] = [imagenDefault];
+                }
 
-                if(prop.disponibilidad === "1"){
-                    status = `Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+                if(prop.disponibilidad === 1){
+                    status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
                 }
-                if(prop.disponibilidad === "0"){
-                    status = `No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
-                }
+                if(prop.disponibilidad === 0){
+                    status = `<i class="fa-solid fa-x" style="color: #ff0000;"></i><span style="color:#ff0000"> No Disponible</span>`;
+                }             
 
                 const li = document.createElement('li');
                 li.classList.add('tarjeta_propiedad_aside');
                 li.innerHTML = `
-                    <img src="${imagen}" width="100%" alt="casa villanueva">
+                    <img src="${imagenes[0]}" width="100%" alt="casa villanueva">
                     <p class="contenido">
                         <b>${prop.nombre}</b><br>
                         <b>${prop.precio}€/Mes</b><br>
                         <b class="status">${status}</b>
                     </p>
                     <div class="foot_tarjeta">
-                        <a href="">
+                        <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}">
                             <button class="btn_izqd"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
                         </a>
                         <a href="../html/vistaMapa.html">
