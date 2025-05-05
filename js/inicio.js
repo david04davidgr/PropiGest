@@ -254,8 +254,14 @@
     }
 
     function mostarTotalPropiedades(propiedades){
-        const totalContainer = document.querySelector('#totalPropiedades');        
-        totalContainer.innerHTML = `${propiedades.length}`;
+        const totalContainer = document.querySelector('#totalPropiedades'); 
+        let total = 0;
+        if (propiedades.length < 1) {
+            total = 0;
+        }else{
+            total = propiedades.length
+        }       
+        totalContainer.innerHTML = `${total}`;
     }
 
     function mostarPropiedadesDisponibles(disponibles){

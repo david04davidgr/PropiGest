@@ -8,7 +8,7 @@ if (isset($_GET['id_propiedad'])) {
     $id = intval($_GET['id_propiedad']);
 
     try {
-        $stmt = $pdo->prepare("SELECT * FROM mantenimientos WHERE idPropiedad = ? ORDER BY creadoEn DESC");
+        $stmt = $pdo->prepare("SELECT m.*, d.ruta AS rutaDocumento, d.titulo AS tituloDocumento, d.tipo AS tipoDocumento FROM mantenimientos m LEFT JOIN documentos d ON m.idDocumento = d.id WHERE m.idPropiedad = ? ORDER BY m.creadoEn DESC");
         $stmt->execute([$id]);
         $mantenimientos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         

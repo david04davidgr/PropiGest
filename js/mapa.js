@@ -26,7 +26,7 @@ fetch('./../php/verificarSesion.php')
     });
 
     // Capa de etiquetas (CartoDB Positron)
-    var labelsView = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    let labelsView = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         attribution: '© CartoDB'
     });
@@ -42,7 +42,7 @@ fetch('./../php/verificarSesion.php')
     let baseMaps = {
         "Vista Predeterminada": normalView,
         "Vista Satélite": hybridView,
-        "Vista Urbana": labelsView
+        "Vista Urbana": labelsView,
     };
     
     //Icono propiedad
@@ -108,8 +108,15 @@ fetch('./../php/verificarSesion.php')
         propiedades.forEach(prop => {
             
             let status;
-            let imagen = prop.imagenes ? prop.imagenes : 'uploads/imagenes/default.png';
-            
+            let imagenes = prop.imagenes;
+            imagenes = imagenes ? imagenes.split(',') : [];
+
+            let imagenDefault = '../uploads/imagenes/default.png';
+
+            if (imagenes.length == 0) {
+                imagenes[0] = [imagenDefault];
+            }
+
             if(prop.disponibilidad === 1){
                 status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
             }
@@ -118,7 +125,7 @@ fetch('./../php/verificarSesion.php')
             }             
             
             if (prop.latitud || prop.longitud != null) {
-                let marcador = L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagen}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><div class="foot_tarjeta">
+                let marcador = L.marker([`${prop.latitud}`, `${prop.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagenes[0]}" width="100%" alt="${prop.nombre}"><p class="contenido"><b>${prop.nombre}</b><br><b>${prop.precio}€/Mes</b><br><b class="status">${status}</b></p><div class="foot_tarjeta">
                     <a href="../html/propiedadDetails.html?id_propiedad=${prop.id}" class="btn_container">
                         <button class="btn_admin"><i class="fa-regular fa-pen-to-square"></i> Administrar</button>
                     </a>
@@ -183,7 +190,7 @@ fetch('./../php/verificarSesion.php')
                     console.log(marcador);
                     
                     
-                    map.setView([data.latitud, data.longitud], 50);
+                    map.setView([data.latitud, data.longitud], 17);
                     marcador.openPopup();
                 } else {
                     console.error("Coordenadas no encontradas para la propiedad.");

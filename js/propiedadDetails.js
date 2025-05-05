@@ -563,6 +563,7 @@ reservaButton.addEventListener('click', function (){
     cargarReservas(idPropiedad);
 })
 
+// EN DESARROLLO
 mantenimientoButton.addEventListener('click', function (){
     cargarMantenimientos(idPropiedad);
 })
@@ -654,7 +655,7 @@ function cargarMovimientos(idPropiedad){
                 }else{
                     datosMovimientos = `
                         <tr class="table-secondary fw-bold">
-                            <td colspan="5" class="text-center">No hay movimientos todavia</td>
+                            <td colspan="6" class="text-center">No hay movimientos todavia</td>
                         </tr>
                     `
                 }
@@ -1206,7 +1207,7 @@ function cargarReservas(idPropiedad){
                 }else{
                     datosReservas = `
                         <tr class="table-secondary fw-bold">
-                            <td colspan="9" class="text-center">No hay reservas todavia</td>
+                            <td colspan="10" class="text-center">No hay reservas todavia</td>
                         </tr>
                     `
                 }
@@ -1600,7 +1601,7 @@ function guardarCambiosReserva(reserva){
     .catch(error => console.error("Error:", error));
 }
 
-//Mantenimientos
+//Mantenimientos (EN DESARROLLO)
 function cargarMantenimientos(){
    
     datosContainer.innerHTML = '';
@@ -1653,10 +1654,10 @@ function cargarMantenimientos(){
                         `;
                     }
 
-                    if (mantenimiento.ruta) {
-                        factura = `<p><a href="${mantenimiento.ruta}" target="_blank">Ver Factura 📃</a></p>`
+                    if (mantenimiento.rutaDocumento) {
+                        factura = `<p><a href="${mantenimiento.rutaDocumento}" target="_blank" class="verDocumentoBtn"><i class="fas fa-file-alt"></i> Ver Factura</a></p>`
                     }else{
-                        factura = `<p>No Disponible</p>`
+                        factura = `<p><a class="sinFactura"><i class="fas fa-file-alt"></i> No Disponible</a></p>`
                     }
                     
                     tarjetasMantenimiento += `
@@ -1733,17 +1734,17 @@ function cargarMantenimientos(){
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <label for="titulo" class="form-label mb-1">Titulo *</label>
-                                                    <input id="titulo" type="text" class="form-control mb-1" required>
+                                                    <input id="titulo" name="titulo" type="text" class="form-control mb-1" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="empresa" class="form-label mb-1">Empresa</label>
-                                                    <input id="empresa" type="text" class="form-control mb-1">
+                                                    <input id="empresa" name="empresa" type="text" class="form-control mb-1">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-12">
                                                     <label for="descripcion" class="form-label mb-1">Descripcion *</label>
-                                                    <textarea id="descripcion" class="form-control mb-1" role="textarea" required></textarea>
+                                                    <textarea id="descripcion" name="descripcion" class="form-control mb-1" role="textarea" required></textarea>
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
@@ -1768,21 +1769,21 @@ function cargarMantenimientos(){
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <label for="fechaProgramada" class="form-label mb-1">Fecha Programada *</label>
-                                                    <input type="datetime-local" id="fechaProgramada" class="form-control mb-1" required>
+                                                    <input type="datetime-local" id="fechaProgramada" name="fechaProgramada" class="form-control mb-1" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="fechaRealizacion" class="form-label mb-1">Fecha Realización</label>
-                                                    <input type="datetime-local" id="fechaRealizacion" class="form-control mb-1">
+                                                    <input type="datetime-local" id="fechaRealizacion" name="fechaRealizacion" class="form-control mb-1">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-6">
                                                     <label for="coste" class="form-label mb-1">Coste</label>
-                                                    <input type="number" id="coste" class="form-control mb-1">
+                                                    <input type="number" id="coste" name="coste" class="form-control mb-1">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="factura" class="form-label mb-1">Factura</label>
-                                                    <input type="file" id="factura" class="form-control mb-1">
+                                                    <input type="file" id="factura" name="factura" class="form-control mb-1">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
@@ -1985,38 +1986,17 @@ function cargarMantenimientos(){
 }
 
 function guardarMantenimiento(idPropiedad){
-    const titulo = document.querySelector('#titulo').value;
-    const descripcion = document.querySelector('#descripcion').value;
-    const tipo = document.querySelector('#tipo').value;
-    const fechaProgramada = document.querySelector('#fechaProgramada').value;
-    const fechaRealizacion = document.querySelector('#fechaRealizacion').value;
-    const empresa = document.querySelector('#empresa').value;
-    const estado = document.querySelector('#estado').value;
-    const coste = document.querySelector('#coste').value;
-    const notas = document.querySelector('#notasReserva').value;
 
-    const reserva = {
-        idPropiedad: idPropiedad,
-        fechaInicio: fechaInicio,
-        fechaFin: fechaFin,
-        cobro: cobro,
-        nombreInquilino: nombreInquilino,
-        apellidosInquilino: apellidosInquilino,
-        dniInquilino: dniInquilino,
-        telefonoInquilino: telefonoInquilino,
-        emailInquilino: emailInquilino,
-        notasReserva: notas,
-    }
+    const formElement = document.querySelector('#formMantenimiento');
+    const formData = new FormData(formElement);
 
-    let concepto = 'Reserva '+ nombreInquilino + ' ' + fechaInicio + '/' + fechaFin;
-    
+    // Añades solo lo que no está en el formulario
+    formData.append("idPropiedad", idPropiedad);
+
     //Envio de datos
-    fetch('../php/guardarReservas.php', {
+    fetch('../php/guardarMantenimientos.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(reserva)
+        body: formData
     })
     .then(response => {
         if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
@@ -2026,18 +2006,9 @@ function guardarMantenimiento(idPropiedad){
         return response.json();
     })    
     .then(data => {
-        autoIngreso(idPropiedad, concepto, cobro, data.idReserva);
         if (data.success) {
-            cargarReservas(idPropiedad);
-            fechaInicio = '';
-            fechaFin = '';
-            cobro = '';
-            nombreInquilino = '';
-            apellidosInquilino = '';
-            dniInquilino = '';
-            emailInquilino = '';
-            telefonoInquilino = '';
-            notas = '';
+            cargarMantenimientos(idPropiedad);
+            formElement.reset();
         }
     })
     .catch(error => console.error("Error:", error));

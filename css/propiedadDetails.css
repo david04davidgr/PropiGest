@@ -893,19 +893,23 @@ textarea#notas{
 
 .tarjetasContainer{
     width: 100%;
+    max-height: 800px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #4caf50 #333;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
     flex-wrap: wrap;
     gap: 2%;
 }
 
 .tarjeta{
-    width: 33.3%;
+    width: 30%;
     padding: 2%;
     margin-top: 2%;
     margin-bottom: 1%;
-    border: 2px solid #333;
+    border: 3px solid #333;
     border-radius: 10px;
 }
 
@@ -1035,6 +1039,39 @@ textarea#notas{
         h4{
             font-size: 1rem;
             margin-bottom: -1%;
+        }
+
+        .verDocumentoBtn {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-top: 1%;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .verDocumentoBtn:hover {
+            background-color: #45a049;
+        }
+
+        .sinFactura{
+            display: inline-block;
+            padding: 8px 12px;
+            margin-top: 1%;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .sinFactura:hover{
+            background-color: rgb(230, 0, 0);
+            cursor: not-allowed;
         }
     }
 }

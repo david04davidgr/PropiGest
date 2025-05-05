@@ -66,7 +66,14 @@ let estado_lista = true;
             propiedades.forEach(prop => {
                 
                 let status;
-                let imagen = prop.imagenes ? prop.imagenes : '../uploads/imagenes/default.png';
+                let imagenes = prop.imagenes;
+                imagenes = imagenes ? imagenes.split(',') : [];
+    
+                let imagenDefault = '../uploads/imagenes/default.png';
+    
+                if (imagenes.length == 0) {
+                    imagenes[0] = [imagenDefault];
+                }
 
                 if(prop.disponibilidad === 1){
                     status = `<i class="fa-solid fa-check" style="color: #4CAF50;"></i><span style="color:#4CAF50"> Disponible</span>`;
@@ -78,7 +85,7 @@ let estado_lista = true;
                 const li = document.createElement('li');
                 li.classList.add('tarjeta_propiedad_aside');
                 li.innerHTML = `
-                    <img src="${imagen}" width="100%" alt="casa villanueva">
+                    <img src="${imagenes[0]}" width="100%" alt="casa villanueva">
                     <p class="contenido">
                         <b>${prop.nombre}</b><br>
                         <b>${prop.precio}€/Mes</b><br>

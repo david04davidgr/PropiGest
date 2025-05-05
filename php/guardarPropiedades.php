@@ -31,10 +31,6 @@ $anioConstruccion = $_POST['año_construccion'];
 
 $permitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-echo '<pre>';
-print_r($_FILES);
-echo '</pre>';
-
 // Crear la carpeta si no existe
 $directorio = '../uploads/imagenes/';
 if (!is_dir($directorio)) {
