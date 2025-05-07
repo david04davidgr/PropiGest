@@ -1,6 +1,4 @@
 //Variables
-
-
     //Obtencion de datos BD
     fetch('./../php/obtenerPropiedades.php')
     .then(response => {
@@ -241,7 +239,7 @@
         }else{
             contenedor.innerHTML = `
                 <div class="buttonContainer">
-                    <p>¡Añade tu primera propiedad!</p>
+                    <p>¡Añade tu primera propiedad!🏠</p>
                     <a href="../html/newPropiedad.html">
                         <button class="addPropiedadBtn">+ Añadir Propiedad</button>
                     </a>
@@ -256,12 +254,12 @@
     function mostarTotalPropiedades(propiedades){
         const totalContainer = document.querySelector('#totalPropiedades'); 
         let total = 0;
-        if (propiedades.length < 1) {
-            total = 0;
+        if (propiedades.length >= 0) {
+            total = propiedades.length;
         }else{
-            total = propiedades.length
+            total = 0
         }       
-        totalContainer.innerHTML = `${total}`;
+        totalContainer.innerHTML = total;
     }
 
     function mostarPropiedadesDisponibles(disponibles){

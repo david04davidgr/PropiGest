@@ -1700,6 +1700,22 @@ function cargarMantenimientos(){
                                         ${factura}
                                     </div>
                                 </div>
+                                <div class="accionesMantenimiento">
+                                    <button 
+                                        class="editarMantenimiento"
+                                        data-bs-toggle="modal" 
+                                        onclick='openEditMantenimientoModal(${JSON.stringify(mantenimiento)})'
+                                        ><i class="fas fa-pen"></i> 
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        class="eliminarMantenimiento" 
+                                        data-bs-toggle="modal" 
+                                        onclick="openDeleteMantenimientoModal(${mantenimiento.id})"
+                                        >
+                                        <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
+                                    </button>
+                                </div>
                             </div>
                     `
                 });                    
@@ -1816,7 +1832,7 @@ function cargarMantenimientos(){
                                     </div>
                                     <div class="modal-footer py-1">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-danger" id="deleteReserva" data-bs-dismiss="modal">Confirmar</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="deleteMantenimiento" data-bs-dismiss="modal">Eliminar</button>
                                     </div>
                                 </div>
                                 </div>
@@ -1833,51 +1849,61 @@ function cargarMantenimientos(){
                                             <form id="formMantenimiento">
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label for="editFechaIni" class="form-label mb-1">Fecha Inicio</label>
-                                                        <input id="editFechaIni" type="dateTime-local" class="form-control mb-1">
+                                                        <label for="editTitulo" class="form-label mb-1">Titulo *</label>
+                                                        <input id="editTitulo" name="editTitulo" type="text" class="form-control mb-1" required>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label for="editFechaFin" class="form-label mb-1">Fecha Fin</label>
-                                                        <input id="editFechaFin" type="dateTime-local" class="form-control mb-1">
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label for="editCobro" class="form-label mb-1">A cobrar (€):</label>
-                                                        <input id="editCobro" type="number" class="form-control mb-1">
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-5">
-                                                        <label for="editNombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
-                                                        <input type="text" id="editNombreInquilino" class="form-control mb-1">
-                                                    </div>
-                                                    <div class="col-md-7">
-                                                        <label for="editApellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
-                                                        <input type="text" id="editApellidosInquilino" class="form-control mb-1">
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label for="editDniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
-                                                        <input type="text" id="editDniInquilino" class="form-control mb-1">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label for="editTelefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
-                                                        <input type="tel" id="editTelefonoInquilino" class="form-control mb-1">
+                                                        <label for="editEmpresa" class="form-label mb-1">Empresa</label>
+                                                        <input id="editEmpresa" name="editEmpresa" type="text" class="form-control mb-1">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="editEmailInquilino" class="form-label mb-1">Email Inquilino</label>
-                                                        <input type="email" id="editEmailInquilino" class="form-control mb-1">
+                                                        <label for="editDescripcion" class="form-label mb-1">Descripcion *</label>
+                                                        <textarea id="editDescripcion" name="editDescripcion" class="form-control mb-1" role="textarea" required></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
-                                                    <div class="col-md-12">
-                                                        <label for="editNotas" class="form-label mb-1">Notas</label>
-                                                        <textarea name="editNotas" id="editNotas" class="form-control mb-1"></textarea>
+                                                    <div class="col-md-6">
+                                                        <label for="editTipo" class="form-label mb-1 mt-1">Tipo *</label>
+                                                        <select name="editTipo" id="editTipo" class="form-select form-control mb-1" role="choice" required>
+                                                            <option disabled selected>Elija un tipo</option>
+                                                            <option value="preventivo">preventivo</option>
+                                                            <option value="correctivo">correctivo</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editEstado" class="form-label mb-1 mt-1">Estado</label>
+                                                        <select name="editEstado" id="editEstado" class="form-select mb-1" required>
+                                                            <option disabled selected>Defina un estado</option>
+                                                            <option value="pendiente" style="color: red;font-weight: bold;">pendiente</option>
+                                                            <option value="en proceso" style="color: orange;font-weight: bold;">en proceso</option>
+                                                            <option value="completado" style="color: green;font-weight: bold;">completado</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaProgramada" class="form-label mb-1">Fecha Programada *</label>
+                                                        <input type="datetime-local" id="editFechaProgramada" name="editFechaProgramada" class="form-control mb-1" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaRealizacion" class="form-label mb-1">Fecha Realización</label>
+                                                        <input type="datetime-local" id="editFechaRealizacion" name="editFechaRealizacion" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editCoste" class="form-label mb-1">Coste</label>
+                                                        <input type="number" id="editCoste" name="editCoste" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editFactura" class="form-label mb-1">Factura</label>
+                                                        <input type="file" id="editFactura" name="editFactura" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div id="previewEditFactura" class="col-md-12">
                                                     </div>
                                                 </div>
                                             </form>
@@ -1891,61 +1917,6 @@ function cargarMantenimientos(){
                                 </div>
                             </div>
                 `;
-
-                document.getElementById('factura').addEventListener('change', function (e) {
-                    const preview = document.getElementById('previewFactura');
-                    preview.innerHTML = ''; // Limpiar vista previa anterior
-                
-                    preview.innerHTML = `
-                        <hr>
-                    `;
-                    const file = e.target.files[0];
-                    if (!file) return;
-                
-                    const fileType = file.type;
-                
-                    // Crear contenedor general
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'mb-2';
-                
-                    // Botón "Quitar"
-                    const removeBtn = document.createElement('button');
-                    removeBtn.textContent = 'Quitar Archivo';
-                    removeBtn.className = 'btn btn-sm btn-danger mb-2';
-                    removeBtn.type = 'button';
-                    removeBtn.onclick = function () {
-                        document.getElementById('factura').value = '';
-                        preview.innerHTML = '';
-                    };
-                
-                    // Vista previa del archivo
-                    let fileView;
-                    if (fileType.startsWith('image/')) {
-                        fileView = document.createElement('img');
-                        fileView.src = URL.createObjectURL(file);
-                        fileView.style.maxWidth = '100%';
-                        fileView.onload = () => URL.revokeObjectURL(fileView.src);
-                    } else if (fileType === 'application/pdf') {
-                        fileView = document.createElement('iframe');
-                        fileView.src = URL.createObjectURL(file);
-                        fileView.style.width = '100%';
-                        fileView.style.height = '400px';
-                        fileView.onload = () => URL.revokeObjectURL(fileView.src);
-                    } else {
-                        fileView = document.createElement('p');
-                        fileView.textContent = `Archivo seleccionado: ${file.name}`;
-                    }
-                
-                    // Nombre del archivo (siempre)
-                    const fileName = document.createElement('p');
-                    fileName.textContent = `Archivo: ${file.name}`;
-                    fileName.className = 'mt-2 fst-italic';
-                
-                    wrapper.appendChild(removeBtn);
-                    wrapper.appendChild(fileName);
-                    wrapper.appendChild(fileView);
-                    preview.appendChild(wrapper);
-                });
 
             const calendarEl = document.getElementById('calendar');
         
@@ -2013,5 +1984,128 @@ function guardarMantenimiento(idPropiedad){
     })
     .catch(error => console.error("Error:", error));
 }
+
+function openEditMantenimientoModal(mantenimiento){
+
+    console.log(mantenimiento);
+    
+    //Cargamos los valores existentes
+    document.getElementById('editTitulo').value = mantenimiento.titulo;
+    document.getElementById('editEmpresa').value = mantenimiento.empresa;
+    document.getElementById('editDescripcion').value = mantenimiento.descripcion;
+    document.getElementById('editTipo').value = mantenimiento.tipo;
+    document.getElementById('editEstado').value = mantenimiento.estado;
+    document.getElementById('editFechaProgramada').value = mantenimiento.fechaProgramada;
+    document.getElementById('editFechaRealizacion').value = mantenimiento.fechaRealizacion;
+    document.getElementById('editCoste').value = mantenimiento.coste;
+    document.getAnimations('editFactura').value = mantenimiento.rutaDocumento;
+
+    console.log(mantenimiento.rutaDocumento);
+    
+    //Abrir modal
+    let modal = new bootstrap.Modal(document.getElementById('editMantenimientoModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    const preview = document.getElementById('previewEditFactura');
+    preview.innerHTML = ''; // Limpiar vista previa anterior
+
+    if (mantenimiento.rutaDocumento) {
+        const fileUrl = mantenimiento.rutaDocumento;
+        const fileName = fileUrl.split('/').pop();
+        const fileType = fileUrl.split('.').pop().toLowerCase();
+
+        // Contenedor general
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mb-2';
+
+        // Botón para quitar archivo
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Quitar Archivo';
+        removeBtn.className = 'btn btn-sm btn-danger mb-2';
+        removeBtn.type = 'button';
+        removeBtn.onclick = function () {
+            document.getElementById('editFactura').value = '';
+            preview.innerHTML = '';
+        };
+
+        // Vista previa según tipo
+        let fileView;
+        if (fileType === 'pdf') {
+            fileView = document.createElement('iframe');
+            fileView.src = fileUrl;
+            fileView.style.width = '100%';
+            fileView.style.height = '400px';
+        } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileType)) {
+            fileView = document.createElement('img');
+            fileView.src = fileUrl;
+            fileView.style.maxWidth = '100%';
+        } else {
+            fileView = document.createElement('a');
+            fileView.href = fileUrl;
+            fileView.target = '_blank';
+            fileView.textContent = `Descargar archivo: ${fileName}`;
+        }
+
+        // Mostrar nombre del archivo
+        const fileLabel = document.createElement('p');
+        fileLabel.textContent = `Archivo actual: ${fileName}`;
+        fileLabel.className = 'fst-italic';
+
+        // Añadir elementos
+        wrapper.appendChild(removeBtn);
+        wrapper.appendChild(fileLabel);
+        wrapper.appendChild(fileView);
+        preview.appendChild(wrapper);
+    }
+
+    //Guardar
+    document.getElementById('btnSaveMantenimientoChanges').onclick = function() {
+        guardarCambiosMantenimiento(mantenimiento);        
+    };
+}
+
+function openDeleteMantenimientoModal(id){    
+    let modal = new bootstrap.Modal(document.getElementById('deleteMantenimientoModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    // En el click del boton usa la funcion (puede ser de una propiedad u otro)
+    document.getElementById('deleteMantenimiento').onclick = function(){
+        eliminarMantenimiento(id);
+    }
+}
+
+function eliminarMantenimiento(id){
+    let formData = new FormData();
+
+    idReserva = id;
+
+    formData.append("idMantenimiento", id) //Almacena el id como cuerpo de la solicitud
+
+    fetch(`../php/eliminarMantenimiento.php`, {
+        method: "POST",
+        body: formData,        
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    
+    .then(data => {        
+        if (data.success) {
+            cargarMantenimientos(idPropiedad);
+            //MENSAJE DE SUCCESS
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+
+
 
 

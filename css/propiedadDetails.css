@@ -911,6 +911,51 @@ textarea#notas{
     margin-bottom: 1%;
     border: 3px solid #333;
     border-radius: 10px;
+    transition: 0.5s;
+}
+
+tr:hover .acciones {
+    visibility: visible;
+}
+
+.accionesMantenimiento{
+    width: 32%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+
+    .editarMantenimiento{
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #c4e6c5;
+        color: #4caf50;
+        border: 3px solid #4caf50;
+        border-radius: 5px;
+    }
+
+    .eliminarMantenimiento{
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #e9d9d9;
+        color: red;
+        border: 3px solid red;
+        border-radius: 5px;
+    }
+}
+
+.tarjeta:hover .accionesMantenimiento{
+    opacity: 1;
+    visibility: visible;
 }
 
 .tituloEmpresa{
@@ -918,6 +963,7 @@ textarea#notas{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-top: 1.5%;
     gap: 5%;
 
     .titulo{

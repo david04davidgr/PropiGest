@@ -257,6 +257,10 @@ main{
                     font-weight: bold;
                     color: #4CAF50;
                 }
+
+                h4{
+                    font-size: 1.10vw;
+                }
             }
 
             .no-disponibles{
@@ -274,12 +278,19 @@ main{
                     font-weight: bold;
                     color: red;
                 }
+
+                h4{
+                    width: 140%;
+                    font-size: 1.10vw;
+                    margin-right: -40%;
+                }
             }
         }
 
         .total{
             width: 75%;
-            height: 40%;
+            min-height: 40%;
+            height: auto;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -292,14 +303,14 @@ main{
             p{
                 height: 5px;
                 margin-top: 2%;
-                margin-bottom: 12%;
+                margin-bottom: 15%;
                 font-size: 3rem;
                 font-weight: bold;
                 color: #333;
             }
 
             h3{
-                
+                font-size: 1.20vw;
                 color: #333;
             }
         }
@@ -323,7 +334,6 @@ main{
     margin-left: auto;
     margin-right: auto;
 }
-
 
 .tarjeta_propiedad {
     position: relative;
@@ -475,8 +485,8 @@ main{
         justify-content: center;
         align-items: center;
         position: absolute;
-        top: 92vh;
-        left: 6.5%;
+        top: 90vh;
+        left: 7%;
         z-index: 999;
         text-align: center;
         line-height: 60px;
@@ -509,8 +519,8 @@ main{
         justify-content: center;
         align-items: center;
         position: absolute;
-        top: 92vh;
-        right: 1%;
+        top: 90vh;
+        right: 2%;
         z-index: 999;
         text-align: center;
         line-height: 60px;

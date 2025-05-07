@@ -6,7 +6,7 @@ include 'conexion.php';
 $campos_obligatorios = ['nombre', 'tipo', 'precio', 'frecuencia', 'disponibilidad', 'direccion', 'ciudad', 'codigo_postal', 'latitud', 'longitud', 'tamaño', 'año_construccion'];
 
 foreach ($campos_obligatorios as $campo) {
-    if (empty($_POST[$campo])) {
+    if (!isset($_POST[$campo]) || $_POST[$campo] === '') {
         die("Error: El campo '$campo' es obligatorio.");
     }
 }
