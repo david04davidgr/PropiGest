@@ -1846,7 +1846,11 @@ function cargarMantenimientos(){
                                     </div>
                                     <div class="modal-body p-2">
                                         <div class="formMantenimientoContainer">
-                                            <form id="formMantenimiento">
+                                            <form id="formEditMantenimiento">
+                                                <input type="hidden" name="idMantenimiento" id="editIdMantenimiento">
+                                                <input type="hidden" name="idDocumento" id="editIdDocumento">
+                                                <input type="hidden" name="ruta_existente" id="editRutaExistente">
+                                                <input type="hidden" name="idPropiedad" id="editIdPropiedad">
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
                                                         <label for="editTitulo" class="form-label mb-1">Titulo *</label>
@@ -1986,8 +1990,6 @@ function guardarMantenimiento(idPropiedad){
 }
 
 function openEditMantenimientoModal(mantenimiento){
-
-    console.log(mantenimiento);
     
     //Cargamos los valores existentes
     document.getElementById('editTitulo').value = mantenimiento.titulo;
@@ -1998,9 +2000,6 @@ function openEditMantenimientoModal(mantenimiento){
     document.getElementById('editFechaProgramada').value = mantenimiento.fechaProgramada;
     document.getElementById('editFechaRealizacion').value = mantenimiento.fechaRealizacion;
     document.getElementById('editCoste').value = mantenimiento.coste;
-    document.getAnimations('editFactura').value = mantenimiento.rutaDocumento;
-
-    console.log(mantenimiento.rutaDocumento);
     
     //Abrir modal
     let modal = new bootstrap.Modal(document.getElementById('editMantenimientoModal'), {
@@ -2026,8 +2025,12 @@ function openEditMantenimientoModal(mantenimiento){
         removeBtn.className = 'btn btn-sm btn-danger mb-2';
         removeBtn.type = 'button';
         removeBtn.onclick = function () {
+            console.log(mantenimiento.idDocumento);
             document.getElementById('editFactura').value = '';
             preview.innerHTML = '';
+            if (mantenimiento.idDocumento) {
+                eliminarDocumento(mantenimiento.idDocumento); //Aqui debe cambiarse por el modal de confirmacion
+            }
         };
 
         // Vista previa según tipo
@@ -2062,6 +2065,10 @@ function openEditMantenimientoModal(mantenimiento){
 
     //Guardar
     document.getElementById('btnSaveMantenimientoChanges').onclick = function() {
+        console.log(
+            mantenimiento
+        );
+        
         guardarCambiosMantenimiento(mantenimiento);        
     };
 }
@@ -2083,7 +2090,7 @@ function eliminarMantenimiento(id){
 
     idReserva = id;
 
-    formData.append("idMantenimiento", id) //Almacena el id como cuerpo de la solicitud
+    formData.append("idMantenimiento", id); //Almacena el id como cuerpo de la solicitud
 
     fetch(`../php/eliminarMantenimiento.php`, {
         method: "POST",
@@ -2105,7 +2112,73 @@ function eliminarMantenimiento(id){
     .catch(error => console.error("Error:", error));
 }
 
+function guardarCambiosMantenimiento(mantenimiento){
+    
+    const formData = new FormData();
+    formData.append('id', mantenimiento.id);
+    formData.append('factura_existente', mantenimiento.rutaDocumento ?? '');
+    formData.append('titulo', document.getElementById('editTitulo').value);
+    formData.append('empresa', document.getElementById('editEmpresa').value);
+    formData.append('descripcion', document.getElementById('editDescripcion').value);
+    formData.append('tipo', document.getElementById('editTipo').value);
+    formData.append('estado', document.getElementById('editEstado').value);
+    formData.append('fechaProgramada', document.getElementById('editFechaProgramada').value);
+    formData.append('fechaRealizacion', document.getElementById('editFechaRealizacion').value);
+    formData.append('coste', document.getElementById('editCoste').value);
+    formData.append('idPropiedad', mantenimiento.idPropiedad);
+    formData.append('idDocumento', mantenimiento.idDocumento ?? '');
+    formData.append('idPropiedad', mantenimiento.idPropiedad ?? '');
 
+    if (!mantenimiento.idDocumento) {
+        formData.delete('idDocumento');
+    }
+    // Archivo nuevo (si existe)
+    const nuevoArchivo = document.getElementById('editFactura').files[0];
+    if (nuevoArchivo) {
+        formData.append('factura', nuevoArchivo);
+    }
 
+    // Ruta actual (por si no hay nuevo archivo)
+    formData.append('factura_existente', mantenimiento.rutaDocumento);
 
+    console.log(formData);
+    for (var pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
+    
+    fetch('../php/editarMantenimiento.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.text())
+    .then(data => {
+        console.log(data);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editMantenimientoModal'));
+            modal.hide();
+            document.getElementById('formEditMantenimiento').reset();
+            cargarMantenimientos(idPropiedad);
+    });
+}
+
+//Documentos
+//Pendiente de añadir el modal de confirmacion
+function eliminarDocumento(idDocumento){
+    fetch('../php/eliminarDocumento.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ idDocumento })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Aquí puedes recargar el modal o actualizar la vista
+        }
+    })
+    .catch(error => {
+        console.error('Error en la solicitud:', error);
+    });
+}
 

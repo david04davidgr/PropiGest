@@ -476,7 +476,7 @@ main {
 
         .tarjeta_propiedad_aside {
             position: relative;
-            width: 85%;
+            width: 15vw;
             height: 300px;
             display: flex;
             flex-direction: column;
