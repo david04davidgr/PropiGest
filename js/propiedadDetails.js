@@ -563,7 +563,6 @@ reservaButton.addEventListener('click', function (){
     cargarReservas(idPropiedad);
 })
 
-// EN DESARROLLO
 mantenimientoButton.addEventListener('click', function (){
     cargarMantenimientos(idPropiedad);
 })
@@ -967,6 +966,35 @@ function autoIngreso(idPropiedad, concepto, cantidad, idReserva){
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(autoIngreso)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function autoGasto(idPropiedad, concepto, cantidad, idMantenimiento){
+
+    const autoGasto = {
+        idPropiedad: idPropiedad,
+        concepto: concepto,
+        cantidad: cantidad,
+        tipo: 'Gasto',
+        comentarios: '',
+        idMantenimiento: idMantenimiento
+    }
+    
+    //Envio de datos
+    fetch('../php/guardarMovimientos.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(autoGasto)
     })
     .then(response => {
         if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
@@ -1981,7 +2009,10 @@ function guardarMantenimiento(idPropiedad){
         return response.json();
     })    
     .then(data => {
-        if (data.success) {
+        if (data.success) {      
+            
+            let concepto = 'Mantenimiento: ' + data.titulo
+            autoGasto(idPropiedad, concepto, data.coste, data.idMantenimiento);
             cargarMantenimientos(idPropiedad);
             formElement.reset();
         }
@@ -2141,7 +2172,6 @@ function guardarCambiosMantenimiento(mantenimiento){
     // Ruta actual (por si no hay nuevo archivo)
     formData.append('factura_existente', mantenimiento.rutaDocumento);
 
-    console.log(formData);
     for (var pair of formData.entries()) {
         console.log(pair[0]+ ', ' + pair[1]); 
     }
