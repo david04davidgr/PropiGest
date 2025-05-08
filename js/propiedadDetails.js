@@ -1947,6 +1947,23 @@ function cargarMantenimientos(){
                                     </div>
                                     </div>
                                 </div>
+                                <div class="modal fade" id="deleteDocumentoModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header py-2">
+                                                <h6 class="modal-title">Confirmar eliminación</h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-2">
+                                                ¿Realmente desea eliminar este documento? Se eliminará el documento.
+                                            </div>
+                                            <div class="modal-footer py-1">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                <button type="button" class="btn btn-sm btn-danger" id="deleteDocumento" data-bs-dismiss="modal">Eliminar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                 `;
 
@@ -2056,11 +2073,8 @@ function openEditMantenimientoModal(mantenimiento){
         removeBtn.className = 'btn btn-sm btn-danger mb-2';
         removeBtn.type = 'button';
         removeBtn.onclick = function () {
-            console.log(mantenimiento.idDocumento);
-            document.getElementById('editFactura').value = '';
-            preview.innerHTML = '';
             if (mantenimiento.idDocumento) {
-                eliminarDocumento(mantenimiento.idDocumento); //Aqui debe cambiarse por el modal de confirmacion
+                openDeleteDocumentoModal(mantenimiento.idDocumento);
             }
         };
 
@@ -2192,7 +2206,21 @@ function guardarCambiosMantenimiento(mantenimiento){
 }
 
 //Documentos
-//Pendiente de añadir el modal de confirmacion
+function openDeleteDocumentoModal(id){
+    let modal = new bootstrap.Modal(document.getElementById('deleteDocumentoModal'), {
+    keyboard: false
+    });
+    modal.show();
+
+    // En el click del boton usa la funcion (puede ser de una propiedad u otro)
+    document.getElementById('deleteDocumento').onclick = function(){
+        const preview = document.getElementById('previewEditFactura');
+        document.getElementById('editFactura').value = '';
+        preview.innerHTML = '';
+        eliminarDocumento(id);
+    }
+}
+
 function eliminarDocumento(idDocumento){
     fetch('../php/eliminarDocumento.php', {
         method: 'POST',
