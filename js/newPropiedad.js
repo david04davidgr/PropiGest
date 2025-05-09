@@ -65,7 +65,9 @@ fetch('../php/verificarSesion.php')
   //Declaración del mapa y control de capas
   let map;
 
-  document.getElementById("mapaModal").addEventListener("shown.bs.modal", function () {
+  const modalMapa = document.getElementById("mapaModal"); 
+
+  modalMapa.addEventListener("shown.bs.modal", function () {
       setTimeout(() => {
           if (!map) {
               // Crear el mapa SOLO si no existe
@@ -171,8 +173,11 @@ fetch('../php/verificarSesion.php')
 
                 latitud = e.latlng.lat;
                 longitud = e.latlng.lng;
-                console.log(latitud, longitud);
-                
+
+                setTimeout(() => {
+                  const modal = bootstrap.Modal.getInstance(modalMapa);
+                  modal.hide();            
+                }, 250);
             }
 
             map.on('click', onMapClick);
@@ -196,7 +201,12 @@ fetch('../php/verificarSesion.php')
     for (let campo of camposObligatorios) {
       const valor = form.elements[campo]?.value?.trim();
       if (!valor) {
-        alert(`Por favor completa el campo: ${campo}`);
+        if (campo === 'latitud' || 'longitud') {
+          alert(`Por favor seleccione un ubicación`);
+        }else{
+
+          alert(`Por favor complete el campo: ${campo}`);
+        }
         return;
       }
     }

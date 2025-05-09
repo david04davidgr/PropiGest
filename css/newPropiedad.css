@@ -178,12 +178,12 @@ form {
 }
 
 .modal-content{
-    height: 55vh;
+    height: 65vh;
 }
 
 #map {
     width: 100%;
-    height: 40vh;
+    height: 50vh;
     /* Control de capas */
 
         .leaflet-control-layers{

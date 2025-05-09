@@ -67,7 +67,7 @@
                   <div class="row g-2 mb-3">
                     <div class="col-md-8">
                       <label for="nombre" class="form-label mb-1">Nombre *</label>
-                      <input type="text" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
+                      <input type="text" class="form-control" name="nombre" maxlength="35" placeholder="Casa villaCerro" required>
                     </div>
                     <div class="col-md-4">
                       <label for="tipo" class="form-label mb-1">Tipo *</label>
@@ -86,7 +86,7 @@
                   <div class="row mb-3">
                     <div class="col-md-4">
                       <label for="precio" class="form-label mb-1">Precio *</label>
-                      <input type="number" class="form-control" name="precio" placeholder="----€" required>
+                      <input type="number" class="form-control" name="precio" min="0" placeholder="----€" required>
                     </div>
                     <div class="col-md-4">
                       <label for="frecuencia" class="form-label mb-1">Frecuencia *</label>
@@ -111,7 +111,7 @@
                   <div class="row mb-3">
                     <div class="col-12">
                       <label for="direccion" class="form-label mb-1">Dirección *</label>
-                      <input type="text" class="form-control" name="direccion" required>
+                      <input type="text" class="form-control" name="direccion" maxlength="100" required>
                     </div>
                   </div>
           
@@ -119,11 +119,11 @@
                   <div class="row mb-3">
                     <div class="col-md-8">
                       <label for="ciudad" class="form-label mb-1">Ciudad *</label>
-                      <input type="text" class="form-control" name="ciudad" required>
+                      <input type="text" class="form-control" name="ciudad" maxlength="60" required>
                     </div>
                     <div class="col-md-4">
                       <label for="codigo_postal" class="form-label mb-1">C.P. *</label>
-                      <input type="number" class="form-control" name="codigo_postal" required>
+                      <input type="text" class="form-control" name="codigo_postal" maxlength="12" required>
                     </div>
                   </div>
           
@@ -133,8 +133,8 @@
                       <label class="form-label mb-0 me-2">Ubicación en mapa *</label>
                     </div>
                     <div class="col-12 d-flex align-items-center mb-1">
-                      <button type="button" class="btn btn-outline-primary" data-dismiss="modal" data-bs-toggle="modal" data-bs-target="#mapaModal">
-                        Seleccionar en Mapa
+                      <button type="button" class="btn btn-outline-primary w-100" data-dismiss="modal" data-bs-toggle="modal" data-bs-target="#mapaModal">
+                        Seleccionar Ubicación
                       </button>
                     </div>
                     <input type="number" class="form-control" name="latitud" id="latitud" placeholder="Latitud" step="any" hidden required>
@@ -184,8 +184,8 @@
             </div>
           
             <!-- Modal para el mapa (reducido) -->
-            <div class="modal fade" id="mapaModal" tabindex="-1" aria-hidden="false">
-              <div class="modal-dialog">
+            <div class="modal fade modal-lg" id="mapaModal" tabindex="-1" aria-hidden="false">
+              <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header py-2">
                     <h6 class="modal-title">Seleccionar ubicación</h6>
@@ -193,7 +193,6 @@
                   </div>
                   <div class="modal-body p-2">
                     <div id="map">
-                      <!-- <p class="text-center py-5 bg-light">Componente de mapa</p> -->
                     </div>
                   </div>
                   <div class="modal-footer py-1">

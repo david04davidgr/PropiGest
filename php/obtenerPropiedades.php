@@ -37,4 +37,22 @@ echo json_encode($propiedades);
 // Cerrar la conexión
 $stmt->close();
 $conn->close();
+
+$archivo_control = 'ultima_ejecucion.txt';
+$ejecutar = false;
+
+if (!file_exists($archivo_control)) {
+    $ejecutar = true;
+} else {
+    $ultima = file_get_contents($archivo_control);
+    $hoy = date('Y-m-d');
+    if ($ultima !== $hoy) {
+        $ejecutar = true;
+    }
+}
+
+if ($ejecutar) {
+    include 'actualizarDisponibilidad.php';
+    file_put_contents($archivo_control, date('Y-m-d h:i:sa').' Se ha lanzado correctamente', FILE_APPEND);
+}
 ?>

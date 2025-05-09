@@ -7,7 +7,11 @@ $campos_obligatorios = ['nombre', 'tipo', 'precio', 'frecuencia', 'disponibilida
 
 foreach ($campos_obligatorios as $campo) {
     if (!isset($_POST[$campo]) || $_POST[$campo] === '') {
-        die("Error: El campo '$campo' es obligatorio.");
+        if($campo === 'latitud' || 'longitud'){
+            die("Error: La ubicación es obligatoria.");
+        }else{
+            die("Error: El campo '$campo' es obligatorio.");
+        }
     }
 }
 
