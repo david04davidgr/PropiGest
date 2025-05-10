@@ -3,7 +3,6 @@ const carrusel = document.querySelector('#carrusel_imagenes');
 const datosContainer = document.querySelector('#datosContainer');
 const balanceButton = document.querySelector('#balanceButton');
 const reservaButton = document.querySelector('#reservaButton');
-const mantenimientoButton = document.querySelector('#mantenimientoButton');
 const documentosButton = document.querySelector('#documentosButton');
 
 let totalIngresos = 0;
@@ -581,7 +580,7 @@ function cargarMovimientos(idPropiedad){
             return response.json();
         })
         .then(data => {
-            movimientos = data;
+            let movimientos = data;
 
             const mes = new Date().getMonth();
             let ingresosPorMes = Array(12).fill(0);
@@ -675,15 +674,15 @@ function cargarMovimientos(idPropiedad){
                                 <div class="datosPrincipales">
                                     <div class="balance">
                                         <h4>Balance</h4>
-                                        <p>${balancePorMes[mes]}€</p>
+                                        <p>${balancePorMes[mes].toFixed(2)}€</p>
                                     </div>
                                     <div class="ingresos">
                                         <h4>Ingresos totales</h4>
-                                        <p>+${ingresosPorMes[mes]}€</p>
+                                        <p>+${ingresosPorMes[mes].toFixed(2)}€</p>
                                     </div>
                                     <div class="gastos">
                                         <h4>Gastos totales</h4>
-                                        <p>-${gastosPorMes[mes]}€</p>
+                                        <p>-${gastosPorMes[mes].toFixed(2)}€</p>
                                     </div>
                                 </div>
                                 <div class="graficosContainer">

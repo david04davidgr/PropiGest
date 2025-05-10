@@ -84,3 +84,200 @@ aside{
         font-size: 2.5rem;
     }
 }
+
+main{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.graficasContainer{
+    width: 100%;
+    height: 35vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 1%;
+    background-color: #333;
+    color: white;
+    border-bottom: 4px solid #4CAF50;
+
+    .graficoDonut{
+        width: 20%;
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-right: 2px solid #f5f5f5;
+
+        .infoBalance{
+            height: 40px;
+            width: 70%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 2%;
+            gap: 20px;
+
+            .ingresos{
+                height: 90%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 1.5%;
+                background-color: #f5f5f5;
+                border-radius: 5px;
+                border: 3px solid #4CAF50;
+
+                p{
+                    font-size: 1.10rem;
+                    margin-bottom: 2%;
+                    font-weight: bold;
+                    padding-bottom: 6%;
+                    color: #4CAF50;
+                }
+
+                h2{
+                    margin-top: -8%;
+                    padding-bottom: 9%;
+                    font-size: 0.8rem;
+                    color: #333;
+                }
+            }
+
+            .gastos{
+                height: 90%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 1.5%;
+                background-color: #f5f5f5;
+                border-radius: 5px;
+                border: 3px solid red;
+
+                p{
+                    font-size: 1.10rem;
+                    margin-bottom: 5%;
+                    color: red;
+                    font-weight: bold;
+                    margin-bottom: 6%;
+                }
+
+                h2{
+                    margin-top: -8%;
+                    padding-bottom: 9%;
+                    font-size: 0.8rem;
+                    color: #333;
+                }
+            }
+        }
+    }
+
+    .metrica_bar_actividad{
+        width: 40%;
+        height: 70%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2%;
+    }
+
+    .metrica_actividad{
+        width: 20%;
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-left: 2px solid #f5f5f5;
+
+        .disponibles-noContainer{
+            width: 75%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+
+            .disponibles{
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                /* padding: 2%; */
+
+                p{
+                    height: 5px;
+                    margin-top: 0;
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    color: #4CAF50;
+                }
+
+                h4{
+                    font-size: 1.10vw;
+                }
+            }
+
+            .no-disponibles{
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                /* padding: 2%; */
+
+                p{
+                    height: 5px;
+                    margin-top: 0;
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    color: red;
+                }
+
+                h4{
+                    width: 140%;
+                    font-size: 1.10vw;
+                    margin-right: -40%;
+                }
+            }
+        }
+
+        .total{
+            width: 75%;
+            min-height: 40%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            background-color: lightgray;
+            border-radius: 10px;
+            border: 3px solid rgb(112, 112, 112);
+            filter: drop-shadow(1px 1px 5px black);
+
+            p{
+                height: 5px;
+                margin-top: 2%;
+                margin-bottom: 15%;
+                font-size: 3rem;
+                font-weight: bold;
+                color: #333;
+            }
+
+            h3{
+                font-size: 1.20vw;
+                color: #333;
+            }
+        }
+
+    }
+}
