@@ -49,6 +49,17 @@ function cargarMovimientos(){
                         </tr>
 
                     `
+                    //DATATABLE
+                    //  $(document).ready(function() {
+                    //     $('#tablaMovimientos').DataTable({
+                    //     destroy: true,
+                    //     pageLength: 5,
+                    //     lengthMenu: [5, 10, 20],
+                    //     language: {
+                    //     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                    //     }
+                    //     });
+                    // });
                 });
             }else{
                 graficasContainer = `
@@ -80,7 +91,7 @@ function cargarMovimientos(){
                 `;
 
             let cabeceraTabla = `
-                <table id="tablaMovimientos" class="table table-striped table-bordered">
+                <table id="tablaMovimientos" class="tablaMovimientos table table-striped table-bordered">
                     <thead class="cabeceraTabla">
                     <tr>
                         <th>Fecha</th>
@@ -88,7 +99,6 @@ function cargarMovimientos(){
                         <th>Tipo</th>
                         <th>Comentarios</th>
                         <th>Importe (€)</th>
-                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -123,10 +133,9 @@ function cargarMovimientos(){
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color:'#333',
+                                color:'#f5f5f5',
                                 font:{
-                                    size:14,
-                                    weight: 'bold'
+                                    size:12,
                                 }
                             }
                         }
@@ -200,9 +209,11 @@ function cargarMovimientos(){
                             <p>-${gastosPorMes[mes].toFixed(2)}€</p>
                         </div>
                     </div>
+                    <div class="tablaContainer">
                     ${cabeceraTabla}
                     ${datosMovimientos}
                     ${pieTabla}
+                    </div>
                 `
 
                             // <div class="balanceContainer">

@@ -8,6 +8,7 @@ try {
         FROM movimientos m
         JOIN propiedades p ON m.idPropiedad = p.id
         WHERE p.idUsuario = ?
+        ORDER BY m.fecha DESC
     ");
     $stmt->execute([$_SESSION['usuario_id']]);
     $stmt->execute();
