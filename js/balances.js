@@ -14,6 +14,7 @@ function cargarMovimientos(){
             let movimientos = data;
             console.log(movimientos);
 
+            const mesPalabra = new Date().toLocaleString('es-ES', { month: 'long' });
             const mes = new Date().getMonth();
             let ingresosPorMes = Array(12).fill(0);
             let gastosPorMes = Array(12).fill(0);
@@ -61,34 +62,158 @@ function cargarMovimientos(){
                     //     });
                     // });
                 });
+                
+                graficasContainer.innerHTML = '';
+                
+                graficasContainer.innerHTML = `
+                <div class="graficoDonut">
+                    <canvas id="donutBalance"></canvas>
+                    <div class="infoBalance">
+                        <div class="ingresos" id="ingresos">
+                            <p>${ingresosPorMes[mes]}€</p>
+                            <h2>Ingresos</h2>
+                        </div>
+                        <div class="gastos" id="gastos">
+                            <p>${gastosPorMes[mes]}€</p>
+                            <h2>Gastos</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="graficoBarras">
+                    <canvas id="barrasVersus"></canvas>
+                </div>
+                `;
+
+                //Grafico Balance
+                let graficoBalance = document.querySelector('#donutBalance');
+                const labelsBal = ['Ingresos', 'Gastos'];
+                const colorsBal = ['#4caf50','rgb(255, 0, 0)'];
+            
+                const dataBal = {
+                    labels: labelsBal,
+                    datasets: [{
+                        data: [ingresosPorMes[mes],gastosPorMes[mes]],
+                        backgroundColor: colorsBal,
+                    }]
+                };
+                
+                const configBal = {
+                    type: 'doughnut',
+                    data: dataBal,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color:'#f5f5f5',
+                                    font:{
+                                        size:12,
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                position: 'bottom',
+                                text: `${mesPalabra.toLocaleUpperCase()}`,
+                                color: '#4CAF50',
+                                font: {
+                                    size: 13
+                                }
+                            }
+                        }
+                    }
+                };
+            
+
+                //Grafico doble barras
+                let barrasBalance = document.querySelector('#barrasVersus');
+            
+                
+                const DATA_COUNT = 12;
+                const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 1000};
+            
+                const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                const dataBarras = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Ingresos',
+                            data: ingresosPorMes,
+                            borderColor: 'rgba(75, 192, 192)',
+                            backgroundColor: 'rgb(75, 192, 192, 0.5)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Gastos',
+                            data: gastosPorMes,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderWidth: 1
+                        }
+                    ]
+                };
+                
+                const configBarras = {
+                    type: 'bar',
+                    data: dataBarras,
+                    options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color:'#f5f5f5',
+                                font:{
+                                    size:12,
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            position: 'bottom',
+                            text: 'Balance Anual',
+                            color: '#4CAF50',
+                            font: {
+                                size: 15
+                            }
+                        }
+                    },
+                    scales:{
+                        x:{
+                            ticks:{
+                                color:'#f5f5f5',
+                                font: {
+                                    size: 15
+                                }
+                            }
+                        },
+                        y:{
+                            ticks:{
+                                color:'#f5f5f5'
+                            }
+                        },
+                    }
+                    },
+                };
+
+                new Chart(graficoBalance, configBal);//Crea grafico de balance
+                new Chart(barrasBalance, configBarras);//Crea grafico de balance    
             }else{
-                graficasContainer = `
+                // graficasContainer.innerHTML = '';
+                // graficasContainer.innerHTML = `
+                    
+                // `
+
+                datosMovimientos = `
                     <tr class="table-secondary fw-bold">
                     <td colspan="6" class="text-center">No hay movimientos todavia</td>
                     </tr>
                 `
             }
 
-            graficasContainer.innerHTML = '';
             
-                graficasContainer.innerHTML = `
-                    <div class="graficoDonut">
-                        <canvas id="donutBalance"></canvas>
-                        <div class="infoBalance">
-                            <div class="ingresos" id="ingresos">
-                                <p>${ingresosPorMes[mes]}€</p>
-                                <h2>Ingresos</h2>
-                            </div>
-                            <div class="gastos" id="gastos">
-                                <p>${gastosPorMes[mes]}€</p>
-                                <h2>Gastos</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="graficoBarras">
-                        <canvas id="barrasVersus"></canvas>
-                    </div>
-                `;
 
             let cabeceraTabla = `
                 <table id="tablaMovimientos" class="tablaMovimientos table table-striped table-bordered">
@@ -109,89 +234,7 @@ function cargarMovimientos(){
                             </table>
                 </div>
             `;
-
-            //Grafico Balance
-            let graficoBalance = document.querySelector('#donutBalance');
-            const labelsBal = ['Ingresos', 'Gastos'];
-            const colorsBal = ['#4caf50','rgb(255, 0, 0)'];
         
-            const dataBal = {
-                labels: labelsBal,
-                datasets: [{
-                    data: [ingresosPorMes[mes],gastosPorMes[mes]],
-                    backgroundColor: colorsBal,
-                }]
-            };
-            
-            const configBal = {
-                type: 'doughnut',
-                data: dataBal,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color:'#f5f5f5',
-                                font:{
-                                    size:12,
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-        
-            new Chart(graficoBalance, configBal);//Crea grafico de balance
-
-            //Grafico doble barras
-            let barrasBalance = document.querySelector('#barrasVersus');
-        
-            
-            const DATA_COUNT = 12;
-            const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 1000};
-        
-            const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-            const dataBarras = {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Ingresos',
-                        data: ingresosPorMes,
-                        borderColor: 'rgba(75, 192, 192)',
-                        backgroundColor: 'rgb(75, 192, 192, 0.5)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Gastos',
-                        data: gastosPorMes,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                        borderWidth: 1
-                    }
-                ]
-            };
-            
-            const configBarras = {
-                type: 'bar',
-                data: dataBarras,
-                options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                    position: 'bottom',
-                    },
-                    title: {
-                    display: true,
-                    text: 'Balance Anual'
-                    }
-                }
-                },
-            };
-        
-            new Chart(barrasBalance, configBarras);//Crea grafico de balance
-
             infoContainer.innerHTML = '';
 
                 infoContainer.innerHTML = `

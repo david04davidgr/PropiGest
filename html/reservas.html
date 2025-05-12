@@ -22,8 +22,12 @@
     
     <!-- JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    
-    <link rel="stylesheet" href="../css/balances.css">
+
+    <!-- Calendario -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/locales/es.global.min.js"></script>
+
+    <link rel="stylesheet" href="../css/reservas.css">
 </head>
 <body>
     <aside>
@@ -32,8 +36,8 @@
         <div class="menu">
             <ul>
                 <li><a href="inicio.html"><img src="../src/casa (1).png" alt="Inicio" title="Inicio"></a></li>
-                <li id="activo"><a href="#"><img src="../src/beneficiarse.png" alt="Balance" title="Balance"></a></li>
-                <li><a href="reservas.html"><img src="../src/inquilino.png" alt="Reservas" title="Reservas"></a></li>
+                <li><a href="balances.html"><img src="../src/beneficiarse.png" alt="Balance" title="Balance"></a></li>
+                <li id="activo"><a href="#"><img src="../src/inquilino.png" alt="Reservas" title="Reservas"></a></li>
                 <li><a href=""><img src="../src/documentacion.png" alt="Documentos" title="Documentos"></a></li>
                 <li><a href=""><img src="../src/limpieza.png" alt="Mantenimiento" title="Mantenimiento"></a></li>
             </ul>
@@ -44,12 +48,35 @@
         </div>
     </aside>
     <main>
-        <h2 class="tituloBalance">Balance de tus propiedades</h2>
+        <h2 class="tituloBalance">Reservas de tus propiedades</h2>
         <div class="graficasContainer" id="graficasContainer">
+            <div class="metrica_bar_actividad">
+                <canvas id="graphActividad"></canvas>
+                <h2>Reservas</h2>
+            </div>
+            <div class="metrica_actividad">
+                <div class="disponibles-noContainer">
+                    <div class="disponibles">
+                        <p id="propiedadesDisponibles">-</p>
+                        <h4>Disponibles</h4>
+                    </div>
+                    <div class="no-disponibles">
+                        <p id="propiedadesNoDisponibles">-</p>
+                        <h4>No Disponibles</h4>
+                    </div>
+                </div>
+                <div class="total">
+                    <p id="totalPropiedades">-</p>
+                    <h3>Total</h3>
+                </div>
+            </div>
         </div>
         <div class="infoContainer" id="infoContainer">
+            <div class="calendarContainer">
+                <div id="calendar"></div>
+            </div>
         </div>
     </main>
-    <script src="../js/balances.js"></script>
+    <script src="../js/reservas.js"></script>
 </body>
 </html>
