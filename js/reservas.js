@@ -98,7 +98,7 @@ fetch('./../php/obtenerAllReservas.php')
 
             const eventosCalendario = reservas.map(reserva => {
                 return {
-                    title: `${reserva.nombreInquilino} ${reserva.apellidosInquilino}`,
+                    title: `${reserva.nombre} - ${reserva.nombreInquilino} ${reserva.apellidosInquilino}`,
                     start: reserva.fechaInicio,
                     end: reserva.fechaFin,
                     color: '#4CAF50',
@@ -107,7 +107,7 @@ fetch('./../php/obtenerAllReservas.php')
             
             cabeceraTabla = `
                 <div class="tablaReservas">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-bordered" id="tablaReservas">
                                     <thead class="cabeceraTabla">
                                     <tr>
                                         <th>Fecha Inicio</th>
@@ -119,7 +119,6 @@ fetch('./../php/obtenerAllReservas.php')
                                         <th>Email Inq.</th>
                                         <th>Cobro</th>
                                         <th>Notas</th>
-                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -142,23 +141,6 @@ fetch('./../php/obtenerAllReservas.php')
                                 <td>${reserva.emailInquilino}</td>
                                 <td class="cobro">${reserva.cobro}€</td>
                                 <td>${reserva.notas}</td>
-                                <td class="acciones">
-                                    <button 
-                                        class="editar"
-                                        class="editar"
-                                        data-bs-toggle="modal" 
-                                        onclick='openEditReservaModal(${JSON.stringify(reserva)})'
-                                        ><i class="fas fa-pen" style="color: #ffffff;"></i> 
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        class="eliminar" 
-                                        data-bs-toggle="modal" 
-                                        onclick="openDeleteReservaModal(${reserva.id})"
-                                        >
-                                        <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
-                                    </button>
-                                </td>
                             </tr>
                         `
                     });                    
@@ -176,10 +158,17 @@ fetch('./../php/obtenerAllReservas.php')
                     </div>
                 `;
 
+                 $(document).ready(function() {
+                    $('#tablaReservas').DataTable({
+                        pageLength: 5,
+                        lengthMenu: [5, 10, 20, 50],
+                        language: {
+                            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                        }
+                    });
+                });
+
                 infoContainer.innerHTML = `
-                    <div class="reservasContainer">
-                    <div class="buttonContainer">
-                            <h3>Reservas</h3>
                         </div>
                         <div class="calendarContainer">
                             <div id="calendar"></div>
@@ -187,7 +176,6 @@ fetch('./../php/obtenerAllReservas.php')
                         ${cabeceraTabla}
                         ${datosReservas}
                         ${pieTabla}
-                    </div>                             
                 `;
 
                 const calendarEl = document.getElementById('calendar');
@@ -212,7 +200,7 @@ fetch('./../php/obtenerAllReservas.php')
                 selectable: true,
                 editable: true,
                 dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
-                eventColor: '#378006', // color por defecto
+                eventColor: 'red', // color por defecto
 
                 dateClick: function(info) {
                     alert('Fecha seleccionada: ' + info.dateStr);

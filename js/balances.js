@@ -51,16 +51,16 @@ function cargarMovimientos(){
 
                     `
                     //DATATABLE
-                    //  $(document).ready(function() {
-                    //     $('#tablaMovimientos').DataTable({
-                    //     destroy: true,
-                    //     pageLength: 5,
-                    //     lengthMenu: [5, 10, 20],
-                    //     language: {
-                    //     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-                    //     }
-                    //     });
-                    // });
+                     $(document).ready(function() {
+                        $('#tablaMovimientos').DataTable({
+                        destroy: true,
+                        pageLength: 5,
+                        lengthMenu: [5, 10, 20],
+                        language: {
+                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                        }
+                        });
+                    });
                 });
                 
                 graficasContainer.innerHTML = '';
@@ -258,145 +258,6 @@ function cargarMovimientos(){
                     ${pieTabla}
                     </div>
                 `
-
-                            // <div class="balanceContainer">
-                            //     <div class="volverButton">
-                            //     <a href="propiedadDetails.html?id_propiedad=${idPropiedad}"><i class="fa-solid fa-arrow-left" style="color: #4CAF50;"></i> Volver a detalles</a>
-                            //     </div>
-                            //     
-                            //     <div class="graficosContainer">
-                            //         <canvas id="donutBalance"></canvas>
-                            //         <canvas id="barrasVersus"></canvas>
-                            //     </div>
-                            //     <hr>
-                            //     <div class="balanceButtons">
-                            //         <button id="btnIngreso" class="btnIngreso" data-bs-toggle="modal" 
-                            //         data-bs-target="#ingresoModal"><i class="fa-solid fa-plus"></i> Ingreso</button>
-                            //         <button id="btnGasto" class="btnGasto" data-bs-toggle="modal" 
-                            //         data-bs-target="#gastoModal"><i class="fa-solid fa-minus"></i> Gasto</button>
-                            //     </div>
-                            //     
-                            // </div>
-                            // <div class="modal fade" id="ingresoModal" tabindex="-1" aria-hidden="false">
-                            //     <div class="modal-dialog">
-                            //         <div class="modal-content">
-                            //         <div class="modal-header py-2">
-                            //             <h6 class="modal-title">Añadir ingreso</h6>
-                            //             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            //         </div>
-                            //         <div class="modal-body p-2">
-                            //             <form id="addIngreso">
-                            //                 <div class="mb-3">
-                            //                     <label for="concepto" class="form-label">Concepto *</label>
-                            //                     <input type="text" class="form-control" id="conceptoIngrs" required>
-                            //                 </div>
-                            //                 <div class="mb-3">
-                            //                     <label for="cantidad" class="form-label">Cantidad (€)*</label>
-                            //                     <input type="number" class="form-control" id="cantidadIngrs" required>
-                            //                 </div>
-                            //                 <div class="mb-3">
-                            //                     <label for="comentarios" class="form-label">Comentarios</label>
-                            //                     <input type="text" class="form-control" id="comentariosIngrs">
-                            //                 </div>
-                            //             </form>
-                            //         </div>
-                            //         <div class="modal-footer py-1">
-                            //             <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            //             <button type="button" class="btn btn-sm btn-success" data-bs-dismiss="modal" onclick="guardarIngresos(${idPropiedad})">+ Añadir</button>
-                            //         </div>
-                            //         </div>
-                            //     </div>
-                            // </div>
-                            // <div class="modal fade" id="gastoModal" tabindex="-1" aria-hidden="false">
-                            //     <div class="modal-dialog">
-                            //         <div class="modal-content">
-                            //         <div class="modal-header py-2">
-                            //             <h6 class="modal-title">Añadir gasto</h6>
-                            //             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            //         </div>
-                            //         <div class="modal-body p-2">
-                            //             <form id="addGasto">
-                            //                 <div class="mb-3">
-                            //                     <label for="concepto" class="form-label">Concepto *</label>
-                            //                     <input type="text" class="form-control" id="conceptoGasto" required>
-                            //                 </div>
-                            //                 <div class="mb-3">
-                            //                     <label for="cantidad" class="form-label">Cantidad (€)*</label>
-                            //                     <input type="number" class="form-control" id="cantidadGasto" required>
-                            //                 </div>
-                            //                 <div class="mb-3">
-                            //                     <label for="comentarios" class="form-label">Comentarios</label>
-                            //                     <input type="text" class="form-control" id="comentariosGasto">
-                            //                 </div>
-                            //             </form>
-                            //         </div>
-                            //         <div class="modal-footer py-1">
-                            //             <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            //             <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal" onclick="guardarGastos(${idPropiedad})">- Añadir</button>
-                            //         </div>
-                            //         </div>
-                            //     </div>
-                            // </div>
-                            // <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-                            // <div class="modal-dialog">
-                            //     <div class="modal-content">
-                            //         <div class="modal-header py-2">
-                            //         <h6 class="modal-title">Confirmar eliminación</h6>
-                            //         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            //         </div>
-                            //         <div class="modal-body p-2">
-                            //             ¿Realmente desea eliminar este movimiento?
-                            //         </div>
-                            //         <div class="modal-footer py-1">
-                            //         <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            //         <button type="button" class="btn btn-sm btn-danger" id="deleteMovimiento" data-bs-dismiss="modal">Confirmar</button>
-                            //         </div>
-                            //     </div>
-                            //     </div>
-                            // </div>
-                            // <div class="modal fade" id="editMovimientoModal" tabindex="-1" aria-hidden="true">
-                            //     <div class="modal-dialog">
-                            //         <div class="modal-content">
-                            //         <div class="modal-header py-2">
-                            //             <h6 class="modal-title">Editar Movimiento</h6>
-                            //             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            //         </div>
-                            //         <div class="modal-body p-2 formEdicion">
-                            //         <div class="row g-2 mb-3">
-                            //             <div class="col-md-12">
-                            //                 <label for="concepto" class="form-label mb-1">Concepto</label>
-                            //                 <input type="text" id="editConcepto" class="form-control" name="nombre" placeholder="Casa villaCerro" required>
-                            //             </div>
-                            //         </div>
-                            //         <div class="row mb-3">
-                            //             <div class="col-md-6">
-                            //             <label for="tipoMovimiento" class="form-label mb-1">Tipo</label>
-                            //             <select name="tipo" id="editTipoMovimiento" class="form-select" required>
-                            //                 <option value="Gasto">Gasto</option>
-                            //                 <option value="Ingreso">Ingreso</option>
-                            //             </select>
-                            //             </div>
-                            //             <div class="col-md-6">
-                            //                 <label for="cantidadMovimiento" class="form-label mb-1">Cantidad</label>
-                            //                 <input type="number" class="form-control" id="editCantidadMovimiento" name="cantidadMovimiento" placeholder="----€" required>
-                            //             </div>
-                            //         </div>
-                            
-                            //         <hr class="my-1 border border-success border-1 opacity-50">
-
-                            //         <div class="row mb-3">
-                            //             <div class="col-12">
-                            //             <label for="comentario" class="form-label mb-1">Comentarios</label>
-                            //             <input type="text" class="form-control" id="editComentario" name="comentario" required>
-                            //             </div>
-                            //         </div>
-                            //         <div class="modal-footer py-1">
-                            //             <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            //             <button type="button" class="btn btn-sm btn-primary" id="btnSaveMovimientoChanges">Guardar Cambios</button>
-                            //         </div>
-                            //         </div>
-                            //     </div>
-                            // </div>
         })
 }
 
