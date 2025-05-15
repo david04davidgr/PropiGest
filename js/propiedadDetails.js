@@ -1682,69 +1682,111 @@ function cargarMantenimientos(){
                     }
 
                     if (mantenimiento.rutaDocumento) {
-                        factura = `<p><a href="${mantenimiento.rutaDocumento}" target="_blank" class="verDocumentoBtn"><i class="fas fa-file-alt"></i> Ver Factura</a></p>`
+                        factura = `<p><a href="${mantenimiento.rutaDocumento}" target="_blank" class="verDocumentoBtn">Ver Factura</a></p>`
                     }else{
-                        factura = `<p><a class="sinFactura"><i class="fas fa-file-alt"></i> No Disponible</a></p>`
+                        factura = `<p><a class="sinFactura">No Disponible</a></p>`
                     }
                     
                     tarjetasMantenimiento += `
-                            <div class="tarjeta">
-                                <div class="tituloEmpresa">
-                                    <div class="titulo"><h3>${mantenimiento.titulo}</h3></div>
-                                    <div class="empresa"><p>${mantenimiento.empresa}</p></div>
-                                </div>
-                                <div class="descripcion">
-                                    <h4>Descripcion</h4>
-                                    <p>${mantenimiento.descripcion}</p>
-                                </div>
-                                <div class="tipoEstado">
-                                    <div class="tipo">
-                                        <h4>Tipo</h4>
-                                        <p>${mantenimiento.tipo}</p>
-                                    </div>
-                                    <div class="estado">
-                                        <h4>Estado</h4>
-                                        ${estadoMantenimiento}
+                            <div class="tarjeta ${mantenimiento.estado.toLowerCase().replace(/\s+/g, '-')}">
+                                <div class="tarjeta-header">
+                                    <h2 class="nombre-propiedad">${mantenimiento.nombrePropiedad}</h2>
+                                    <div class="estado-badge ${mantenimiento.estado.toLowerCase().replace(/\s+/g, '-')}">
+                                        <i class="fas ${
+                                            mantenimiento.estado === 'pendiente' ? 'fa-clock' :
+                                            mantenimiento.estado === 'en proceso' ? 'fa-spinner fa-pulse' :
+                                            'fa-check-circle'
+                                        }"></i>
+                                        ${mantenimiento.estado}
                                     </div>
                                 </div>
-                                <div class="fechas">
-                                    <div class="fechaProgramada">
-                                        <h4>Fecha Programada</h4>
-                                        <p>${mantenimiento.fechaProgramada}</p>
+
+                                <div class="tarjeta-body">
+                                    <div class="tipo-intervencion">
+                                        <span class="tipo-badge ${mantenimiento.tipo.toLowerCase()}">
+                                            <i class="fas ${mantenimiento.tipo === 'Correctivo' ? 'fa-bolt' : 'fa-shield-alt'}"></i>
+                                            ${mantenimiento.tipo}
+                                        </span>
                                     </div>
-                                    <div class="fechaRealizacion">
-                                        <h4>Fecha Realización</h4>
-                                        <p>${mantenimiento.fechaRealizacion}</p>
+                                    <div class="titulo-empresa">
+                                        <h3 class="titulo-intervencion">${mantenimiento.titulo}</h3>
+                                        <p class="nombre-empresa"><i class="fas fa-building"></i> ${mantenimiento.empresa}</p>
                                     </div>
-                                </div>
-                                <div class="costeFactura">
-                                    <div class="coste">
-                                        <h4>Coste</h4>
-                                        <p>${mantenimiento.coste}€</p>
+                                    
+                                    <div class="descripcion-intervencion">
+                                        <h4 class="subtitulo"><i class="fas fa-align-left"></i> Descripción</h4>
+                                        <p>${mantenimiento.descripcion}</p>
                                     </div>
-                                    <div class="factura">
-                                        <h4>Factura</h4>
-                                        ${factura}
+                                    
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <i class="fas fa-calendar-check"></i>
+                                            <div>
+                                                <span class="info-label">Programada</span>
+                                                <span class="info-value">${formatearFecha(mantenimiento.fechaProgramada)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <i class="fas fa-calendar-day"></i>
+                                            <div>
+                                                <span class="info-label">Realización</span>
+                                                <span class="info-value">${formatearFecha(mantenimiento.fechaRealizacion)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <i class="fas fa-euro-sign"></i>
+                                            <div>
+                                                <span class="info-label">Coste</span>
+                                                <span class="info-value precio">${mantenimiento.coste} €</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <i class="fas fa-file-invoice"></i>
+                                            <div>
+                                                <span class="info-label">Factura</span>
+                                                ${factura}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="accionesMantenimiento">
-                                    <button 
-                                        class="editarMantenimiento"
-                                        data-bs-toggle="modal" 
-                                        onclick='openEditMantenimientoModal(${JSON.stringify(mantenimiento)})'
-                                        ><i class="fas fa-pen"></i> 
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        class="eliminarMantenimiento" 
-                                        data-bs-toggle="modal" 
-                                        onclick="openDeleteMantenimientoModal(${mantenimiento.id})"
+                                    
+                                    <!-- Botones de Acción -->
+                                    <div class="accionesMantenimiento">
+                                        <button 
+                                            class="editarMantenimiento"
+                                            data-bs-toggle="modal" 
+                                            onclick='openEditMantenimientoModal(${JSON.stringify(mantenimiento)})'
                                         >
-                                        <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
-                                    </button>
+                                            <i class="fas fa-pen"></i> 
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            class="eliminarMantenimiento" 
+                                            data-bs-toggle="modal" 
+                                            onclick="openDeleteMantenimientoModal(${mantenimiento.id})"
+                                        >
+                                            <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                     `
+
+                    function formatearFecha(fechaString) {
+                        if(!fechaString || fechaString === '0000-00-00 00:00:00') {
+                            return '<span class="fecha-no-asignada">No asignada</span>';
+                        }
+                        const opciones = { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        };
+                        return new Date(fechaString).toLocaleDateString('es-ES', opciones);
+                }
                 });                    
             }else{
                 tarjetasMantenimiento = `
