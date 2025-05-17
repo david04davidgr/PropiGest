@@ -1,18 +1,14 @@
 let graficasContainer = document.getElementById('graficasContainer');
 let infoContainer = document.getElementById('infoContainer');
-let cargardo = false;
 
-function cargarMovimientos(){
-    fetch(`./../php/obtenerAllMovimientos.php`)
-        .then(response => {
-            if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
-                window.location.href = '../index.html';
-                return;
-            }
-            return response.json();
-        })
-        .then(data =>{
-            let movimientos = data;
+async function cargarMovimientos(){
+    const response = await fetch(`./../php/obtenerAllMovimientos.php`)
+
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        const movimientos = await response.json()
             console.log(movimientos);
 
             const mesPalabra = new Date().toLocaleString('es-ES', { month: 'long' });
@@ -51,17 +47,6 @@ function cargarMovimientos(){
                         </tr>
 
                     `
-                    //DATATABLE
-                     $(document).ready(function() {
-                        $('#tablaMovimientos').DataTable({
-                        destroy: true,
-                        pageLength: 5,
-                        lengthMenu: [5, 10, 20],
-                        language: {
-                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-                        }
-                        });
-                    });
                 });
                 
                 graficasContainer.innerHTML = '';
@@ -257,8 +242,18 @@ function cargarMovimientos(){
                     ${pieTabla}
                     </div>
                 `
-        })
-    cargardo = true;
+
+                //DATATABLE
+                     $(document).ready(function() {
+                        $('#tablaMovimientos').DataTable({
+                        destroy: true,
+                        pageLength: 5,
+                        lengthMenu: [5, 10, 20],
+                        language: {
+                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                        }
+                        });
+                    });
 }
 
 function cargarTop(){
@@ -308,8 +303,9 @@ function cargarTop(){
     })
 };
 
-cargarMovimientos();
-
-if (cargardo) {
+async function init() {
+    await cargarMovimientos();
     cargarTop();
 }
+
+init();

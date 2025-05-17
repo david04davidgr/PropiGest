@@ -7,7 +7,8 @@ try {
     $stmt = $pdo->prepare("
             SELECT 
                 COUNT(m.id) as nMantenimientos,
-                p.*
+                p.nombre,
+                p.imagenes
             FROM 
                 propiedades p
             INNER JOIN 
