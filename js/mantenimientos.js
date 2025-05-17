@@ -1,8 +1,46 @@
+const graficasContainer = document.querySelector('#graficasContainer')
 const infoContainer = document.querySelector('#infoContainer');
 
+graficasContainer.innerHTML = '';
 infoContainer.innerHTML = '';
+let contenidoPropiedadTop = '';
 let tarjetasMantenimiento = '';
 let estadoMantenimiento = '';
+
+let pendientes = 0;
+let enProceso = 0;
+let completados = 0;
+
+fetch(`./../php/obtenerTopMantenimientos.php`)
+.then(response => {
+    if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+        window.location.href = '../index.html';
+        return;
+    }
+    return response.json();
+})
+.then(data => {
+    let propiedadTop = data[0];
+
+    let imagenes = propiedadTop.imagenes;
+    imagenes = imagenes ? imagenes.split(',') : [];
+
+    let imagenDefault = '../uploads/imagenes/default.png';
+
+    if (imagenes.length == 0) {
+        imagenes[0] = [imagenDefault];
+    }    
+
+    contenidoPropiedadTop = `
+        <div class="propiedadTop">
+            <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
+            <h2>${propiedadTop.nombre}</h2>
+            <hr>
+            <p>${propiedadTop.nMantenimientos}</p>
+            <h3>Top 1 Mantenimientos del Mes</h3>
+        </div>
+    `
+})
 
 fetch(`./../php/obtenerAllMantenimientos.php`)
 .then(response => {
@@ -16,16 +54,36 @@ fetch(`./../php/obtenerAllMantenimientos.php`)
     mantenimientos = data;
     console.log(mantenimientos);
       
+    let mantenimientosPorMes = Array(12).fill(0);
+
+        if (mantenimientos.length > 0) {
+            mantenimientos.forEach(mantenimiento => {
+                const fecha = new Date(mantenimiento.fechaProgramada);
+                const mes = fecha.getMonth();
+                mantenimientosPorMes[mes]++;
+            });
+        }
+        
     let mantenimientosCalendario = '';
     let factura = '';
     
     if (mantenimientos.length > 0) {
         mantenimientosCalendario = mantenimientos.map(mantenimiento => {
+            let color = '';
+            if (mantenimiento.estado === 'pendiente') {
+                color = '#F44336'
+            }else{
+                if (mantenimiento.estado === 'en proceso') {
+                    color = '#FF9800'
+                }else{
+                    color = '#4CAF50'
+                }
+            }
             return {
                 title: `${mantenimiento.titulo}`,
                 start: mantenimiento.fechaProgramada,
                 end: mantenimiento.fechaRealizacion,
-                color: '#333',
+                color: color,
             };
         });
         
@@ -37,18 +95,21 @@ fetch(`./../php/obtenerAllMantenimientos.php`)
                 estadoMantenimiento = `
                     <p style="color: red;font-weight:bold">${mantenimiento.estado}</p>
                 `;
+                pendientes += 1;
             }
 
             if (mantenimiento.estado === "en proceso") {
                 estadoMantenimiento = `
                     <p style="color: orange;font-weight:bold">${mantenimiento.estado}</p>
                 `;
+                enProceso += 1;
             }
 
             if (mantenimiento.estado === "completado") {
                 estadoMantenimiento = `
                     <p style="color: green;font-weight:bold">${mantenimiento.estado}</p>
                 `;
+                completados += 1;
             }
 
             if (mantenimiento.rutaDocumento) {
@@ -56,7 +117,7 @@ fetch(`./../php/obtenerAllMantenimientos.php`)
             }else{
                 factura = `<p><a class="sinFactura">No Disponible</a></p>`
             }
-            
+
             tarjetasMantenimiento += `
                 <div class="tarjeta ${mantenimiento.estado.toLowerCase().replace(/\s+/g, '-')}">
                     <div class="tarjeta-header">
@@ -138,6 +199,7 @@ fetch(`./../php/obtenerAllMantenimientos.php`)
                     };
                     return new Date(fechaString).toLocaleDateString('es-ES', opciones);
                 }
+
         });  
 
     }else{
@@ -145,6 +207,102 @@ fetch(`./../php/obtenerAllMantenimientos.php`)
             <p>No hay mantenimientos disponibles todavía</p>
         `
     }
+
+    graficasContainer.innerHTML += `
+        ${contenidoPropiedadTop}
+        <canvas id="donutEstados"></canvas>
+        <canvas id="lineaMantenimientos"></canvas>
+    `;
+
+    //Grafico Balance
+    const labelsBal = ['Pendientes', 'En proceso', 'Completados'];
+    const colorsBal = ['#F44336','#FF9800','#4CAF50'];
+
+    const dataBal = {
+        labels: labelsBal,
+        datasets: [{
+            data: [pendientes, enProceso, completados],
+            backgroundColor: colorsBal,
+        }]
+    };
+    
+    const configBal = {
+        type: 'doughnut',
+        data: dataBal,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color:'#f5f5f5',
+                        font:{
+                            size:14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const canvaEstados = document.querySelector('#donutEstados')
+
+    new Chart(canvaEstados, configBal);//Crea grafico de balance
+
+     //Grafico actividad de propiedades
+     
+     const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+     
+     const dataMantenimientos = {
+         labels: labels,
+         datasets: [{
+             label: 'Número de Mantenimientos',
+             data: mantenimientosPorMes,
+             fill: false,
+             borderColor: '#4caf50',
+             tension:0.1
+            }]
+        };
+        
+        const config = {
+            type: 'line',
+            data: dataMantenimientos,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#f5f5f5',
+                        }
+                    },
+                    tooltip: {
+                        titleColor: '#f5f5f5',
+                        bodyColor: '#333',
+                        backgroundColor: '#4caf50',
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        };
+        
+        let lineaMantenimientos = document.querySelector('#lineaMantenimientos');
+
+        new Chart(lineaMantenimientos, config);//Crea grafico de reservas
 
     infoContainer.innerHTML = `
         <div class="calendarContainer">

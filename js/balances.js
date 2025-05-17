@@ -43,7 +43,7 @@ function cargarMovimientos(){
                     datosMovimientos += `
                         <tr>
                             <td>${movimiento.fecha}</td>
-                            <td>${movimiento.concepto}</td>
+                            <td>${movimiento.nombre} - ${movimiento.concepto}</td>
                             <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
                             <td>${movimiento.comentarios}</td>
                             <td ${cantidad}${movimiento.cantidad}€</td>
@@ -201,10 +201,6 @@ function cargarMovimientos(){
                 new Chart(graficoBalance, configBal);//Crea grafico de balance
                 new Chart(barrasBalance, configBarras);//Crea grafico de balance    
             }else{
-                // graficasContainer.innerHTML = '';
-                // graficasContainer.innerHTML = `
-                    
-                // `
 
                 datosMovimientos = `
                     <tr class="table-secondary fw-bold">

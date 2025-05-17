@@ -112,11 +112,11 @@ fetch('./../php/obtenerAllReservas.php')
                                     <tr>
                                         <th>Fecha Inicio</th>
                                         <th>Fecha Fin</th>
+                                        <th>Propiedad</th>
                                         <th>Nombre Inq.</th>
                                         <th>Apellidos Inq.</th>
                                         <th>Teléfono Inq.</th>
-                                        <th>DNI Inq.</th>
-                                        <th>Email Inq.</th>
+                                        <th>Email</th>
                                         <th>Cobro</th>
                                         <th>Notas</th>
                                     </tr>
@@ -134,10 +134,10 @@ fetch('./../php/obtenerAllReservas.php')
                             <tr>
                                 <td>${reserva.fechaInicio}</td>
                                 <td>${reserva.fechaFin}</td>
+                                <td>${reserva.nombre}</td>
                                 <td>${reserva.nombreInquilino}</td>
                                 <td>${reserva.apellidosInquilino}</td>
                                 <td>${reserva.telefonoInquilino}</td>
-                                <td>${reserva.dniInquilino}</td>
                                 <td>${reserva.emailInquilino}</td>
                                 <td class="cobro">${reserva.cobro}€</td>
                                 <td>${reserva.notas}</td>

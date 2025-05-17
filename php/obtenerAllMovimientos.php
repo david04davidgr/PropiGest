@@ -4,7 +4,8 @@ include 'conexion.php';
 
 try {
     $stmt = $pdo->prepare("
-        SELECT m.* 
+        SELECT m.*,
+               p.nombre
         FROM movimientos m
         JOIN propiedades p ON m.idPropiedad = p.id
         WHERE p.idUsuario = ?
