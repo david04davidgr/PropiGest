@@ -1,5 +1,6 @@
 let graficasContainer = document.getElementById('graficasContainer');
 let infoContainer = document.getElementById('infoContainer');
+let cargardo = false;
 
 function cargarMovimientos(){
     fetch(`./../php/obtenerAllMovimientos.php`)
@@ -81,6 +82,8 @@ function cargarMovimientos(){
                 </div>
                 <div class="graficoBarras">
                     <canvas id="barrasVersus"></canvas>
+                </div>
+                <div class="propiedadTop" id="propiedadTop">
                 </div>
                 `;
 
@@ -255,6 +258,58 @@ function cargarMovimientos(){
                     </div>
                 `
         })
+    cargardo = true;
 }
 
+function cargarTop(){
+    fetch(`./../php/obtenerTopBalances.php`)
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        let propiedadTop = data[0];
+    
+        console.log(propiedadTop);
+    
+        let imagenes = propiedadTop.imagenes;
+        imagenes = imagenes ? imagenes.split(',') : [];
+    
+        let imagenDefault = '../uploads/imagenes/default.png';
+    
+        if (imagenes.length == 0) {
+            imagenes[0] = [imagenDefault];
+        }    
+    
+        let balance = '';
+        if (propiedadTop.balance > 0) {
+            balance = `<p class="balancePositivo">▲ ${propiedadTop.balance}€</p>`
+        }else{
+            if (propiedadTop.balance < 0) {
+            balance = `<p class="balanceNegativo">▼ ${propiedadTop.balance}€</p>`
+            }else{
+                balance = `<p class="balance">${propiedadTop.balance}€</p>`
+            }
+        }    
+    
+        const propiedadTopContainer = document.querySelector('#propiedadTop');
+    
+        propiedadTopContainer.innerHTML = '';
+        propiedadTopContainer.innerHTML = `
+            <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
+            <h2>${propiedadTop.nombre}</h2>
+            <hr>
+            ${balance}
+            <h3>Top 1 Balances del Mes</h3>
+        `
+    })
+};
+
 cargarMovimientos();
+
+if (cargardo) {
+    cargarTop();
+}

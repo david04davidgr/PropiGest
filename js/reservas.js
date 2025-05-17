@@ -1,6 +1,46 @@
 const infoContainer = document.querySelector('#infoContainer'); 
+let contenidoPropiedadTop = '';
+let cargardo = false;
 
-fetch('./../php/obtenerPropiedades.php')
+function cargarTop(){
+    fetch(`./../php/obtenerTopReservas.php`)
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        let propiedadTop = data[0];
+
+        console.log(propiedadTop);
+        
+
+        let imagenes = propiedadTop.imagenes;
+        imagenes = imagenes ? imagenes.split(',') : [];
+
+        let imagenDefault = '../uploads/imagenes/default.png';
+
+        if (imagenes.length == 0) {
+            imagenes[0] = [imagenDefault];
+        }    
+
+        const propiedadTopContainer = document.querySelector('#propiedadTop');
+
+        propiedadTopContainer.innerHTML = '';
+        propiedadTopContainer.innerHTML = `
+            <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
+            <h2>${propiedadTop.nombre}</h2>
+            <hr>
+            <p>${propiedadTop.nReservas}</p>
+            <h3>Top 1 Reservas del Mes</h3>
+        `
+    })
+}
+
+function cargarReservasPropiedades(){
+    fetch('./../php/obtenerPropiedades.php')
 .then(response => {
     if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
         window.location.href = '../index.html';
@@ -258,3 +298,12 @@ fetch('./../php/obtenerAllReservas.php')
         const noDisponiblesContainer = document.querySelector('#propiedadesNoDisponibles');        
         noDisponiblesContainer.innerHTML = `${noDisponibles}`;
     }
+
+    cargardo = true;
+}
+
+cargarReservasPropiedades();
+
+if (cargardo) {
+    cargarTop();
+}
