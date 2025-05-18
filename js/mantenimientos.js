@@ -4,6 +4,7 @@ const infoContainer = document.querySelector('#infoContainer');
 graficasContainer.innerHTML = '';
 infoContainer.innerHTML = '';
 let contenidoPropiedadTop = '';
+let mantenimientosCalendario = [];
 let tarjetasMantenimiento = '';
 let estadoMantenimiento = '';
 
@@ -30,7 +31,6 @@ async function cargarMantenimientos(){
                 });
             }
             
-        let mantenimientosCalendario = '';
         let factura = '';
         
         if (mantenimientos.length > 0) {
@@ -168,73 +168,21 @@ async function cargarMantenimientos(){
 
             });  
 
-        }else{
-            tarjetasMantenimiento = `
-                <p>No hay mantenimientos disponibles todavía</p>
-            `
-        }
+            //Grafico Balance
+            const labelsBal = ['Pendientes', 'En proceso', 'Completados'];
+            const colorsBal = ['#F44336','#FF9800','#4CAF50'];
 
-        graficasContainer.innerHTML += `
-            ${contenidoPropiedadTop}
-            <canvas id="donutEstados"></canvas>
-            <canvas id="lineaMantenimientos"></canvas>
-        `;
-
-        //Grafico Balance
-        const labelsBal = ['Pendientes', 'En proceso', 'Completados'];
-        const colorsBal = ['#F44336','#FF9800','#4CAF50'];
-
-        const dataBal = {
-            labels: labelsBal,
-            datasets: [{
-                data: [pendientes, enProceso, completados],
-                backgroundColor: colorsBal,
-            }]
-        };
-        
-        const configBal = {
-            type: 'doughnut',
-            data: dataBal,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color:'#f5f5f5',
-                            font:{
-                                size:14,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        const canvaEstados = document.querySelector('#donutEstados')
-
-        new Chart(canvaEstados, configBal);//Crea grafico de balance
-
-        //Grafico actividad de propiedades
-        
-        const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-        
-        const dataMantenimientos = {
-            labels: labels,
-            datasets: [{
-                label: 'Número de Mantenimientos',
-                data: mantenimientosPorMes,
-                fill: false,
-                borderColor: '#4caf50',
-                tension:0.1
+            const dataBal = {
+                labels: labelsBal,
+                datasets: [{
+                    data: [pendientes, enProceso, completados],
+                    backgroundColor: colorsBal,
                 }]
             };
             
-            const config = {
-                type: 'line',
-                data: dataMantenimientos,
+            const configBal = {
+                type: 'doughnut',
+                data: dataBal,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -242,42 +190,113 @@ async function cargarMantenimientos(){
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color: '#f5f5f5',
-                            }
-                        },
-                        tooltip: {
-                            titleColor: '#f5f5f5',
-                            bodyColor: '#333',
-                            backgroundColor: '#4caf50',
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                color: 'white'
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                color: 'white'
+                                color:'#f5f5f5',
+                                font:{
+                                    size:14,
+                                    weight: 'bold'
+                                }
                             }
                         }
                     }
                 }
             };
-            
-            let lineaMantenimientos = document.querySelector('#lineaMantenimientos');
 
+            //Grafico actividad de propiedades
+            
+            const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            const dataMantenimientos = {
+                labels: labels,
+                datasets: [{
+                    label: 'Número de Mantenimientos',
+                    data: mantenimientosPorMes,
+                    fill: false,
+                    borderColor: '#4caf50',
+                    tension:0.1
+                    }]
+                };
+                
+                const config = {
+                    type: 'line',
+                    data: dataMantenimientos,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#f5f5f5',
+                                }
+                            },
+                            tooltip: {
+                                titleColor: '#f5f5f5',
+                                bodyColor: '#333',
+                                backgroundColor: '#4caf50',
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: 'white'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: 'white'
+                                }
+                            }
+                        }
+                    }
+                };
+
+            graficasContainer.innerHTML += `
+                ${contenidoPropiedadTop}
+                <canvas id="donutEstados"></canvas>
+                <canvas id="lineaMantenimientos"></canvas>
+            `;
+
+            const canvaEstados = document.querySelector('#donutEstados')
+            new Chart(canvaEstados, configBal);//Crea grafico de balance
+
+            let lineaMantenimientos = document.querySelector('#lineaMantenimientos');
             new Chart(lineaMantenimientos, config);//Crea grafico de reservas
 
-        infoContainer.innerHTML = `
-            <div class="calendarContainer">
-                <div id="calendar"></div>
+            infoContainer.innerHTML = `
+                <div class="calendarContainer">
+                    <div id="calendar"></div>
+                </div>
+                <div class="tarjetasContainer">
+                    ${tarjetasMantenimiento}
+                </div>
+            `;
+
+            
+        }else{
+
+            
+            graficasContainer.innerHTML = '';
+            graficasContainer.innerHTML = `
+            <div class="noData">
+            <h3>No hay datos disponibles</h3>
             </div>
-            <div class="tarjetasContainer">
+            `;
+
+            mantenimientosCalendario = [];
+
+            tarjetasMantenimiento = `
+                <p style="width:100%;text-align:center">No hay mantenimientos disponibles todavía</p>
+            `
+
+            infoContainer.innerHTML = `
+                <div class="calendarContainer">
+                    <div id="calendar"></div>
+                </div>
                 ${tarjetasMantenimiento}
-            </div>
-        `;
+            `;
+
+        }
+
         const calendarEl = document.getElementById('calendar');
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -298,16 +317,9 @@ async function cargarMantenimientos(){
                 list: 'Agenda'
             },
             selectable: true,
-            // editable: true,
             dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
             eventColor: '#333', // color por defecto
 
-            // dateClick: function(info) {
-            //     alert('Fecha seleccionada: ' + info.dateStr);
-            // },
-            // eventClick: function(info) {
-            //     alert('Evento: ' + info.event.title);
-            // },
             events: mantenimientosCalendario,  
         });
 
@@ -324,25 +336,34 @@ async function cargarTop(){
         let propiedadTop = await response.json();
         console.log(propiedadTop);
         
+        if (propiedadTop.length > 0) {
+            let imagenes = propiedadTop[0].imagenes;
+            imagenes = imagenes ? imagenes.split(',') : [];
+    
+            let imagenDefault = '../uploads/imagenes/default.png';
+    
+            if (imagenes.length == 0) {
+                imagenes[0] = imagenDefault;
+            }    
+    
+            contenidoPropiedadTop = `
+                <div class="propiedadTop">
+                    <img src="${imagenes[0]}" alt="imagen ${propiedadTop[0].nombre}" class="imagenTop">
+                    <h2>${propiedadTop[0].nombre}</h2>
+                    <hr>
+                    <p>${propiedadTop[0].nMantenimientos}</p>
+                    <h3>Top 1 Mantenimientos del Mes</h3>
+                </div>
+            `
+        }else{
+            // graficasContainer.innerHTML = `
+            //     <div class="noData">
+            //         <h3>No hay datos disponibles</h3>
+            //     </div>
+            // `
 
-        let imagenes = propiedadTop[0].imagenes;
-        imagenes = imagenes ? imagenes.split(',') : [];
-
-        let imagenDefault = '../uploads/imagenes/default.png';
-
-        if (imagenes.length == 0) {
-            imagenes[0] = [imagenDefault];
-        }    
-
-        contenidoPropiedadTop = `
-            <div class="propiedadTop">
-                <img src="${imagenes[0]}" alt="imagen ${propiedadTop[0].nombre}" class="imagenTop">
-                <h2>${propiedadTop[0].nombre}</h2>
-                <hr>
-                <p>${propiedadTop[0].nMantenimientos}</p>
-                <h3>Top 1 Mantenimientos del Mes</h3>
-            </div>
-        `
+            cargarMantenimientos();
+        }
 }
 
 async function init() {

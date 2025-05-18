@@ -1,4 +1,7 @@
+const graficasContainer = document.querySelector('#graficasContainer')
 const infoContainer = document.querySelector('#infoContainer'); 
+
+let eventosCalendario = [];
 let contenidoPropiedadTop = '';
 let cargardo = false;
 
@@ -12,51 +15,53 @@ function cargarTop(){
         return response.json();
     })
     .then(data => {
-        let propiedadTop = data[0];
-
-        console.log(propiedadTop);
-        
-
-        let imagenes = propiedadTop.imagenes;
-        imagenes = imagenes ? imagenes.split(',') : [];
-
-        let imagenDefault = '../uploads/imagenes/default.png';
-
-        if (imagenes.length == 0) {
-            imagenes[0] = [imagenDefault];
-        }    
-
-        const propiedadTopContainer = document.querySelector('#propiedadTop');
-
-        propiedadTopContainer.innerHTML = '';
-        propiedadTopContainer.innerHTML = `
-            <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
-            <h2>${propiedadTop.nombre}</h2>
-            <hr>
-            <p>${propiedadTop.nReservas}</p>
-            <h3>Top 1 Reservas del Mes</h3>
-        `
+        if (data) {
+            let propiedadTop = data[0];
+    
+            console.log(propiedadTop);
+            
+    
+            let imagenes = propiedadTop.imagenes;
+            imagenes = imagenes ? imagenes.split(',') : [];
+    
+            let imagenDefault = '../uploads/imagenes/default.png';
+    
+            if (imagenes.length == 0) {
+                imagenes[0] = imagenDefault;
+            }    
+    
+            const propiedadTopContainer = document.querySelector('#propiedadTop');
+    
+            propiedadTopContainer.innerHTML = '';
+            propiedadTopContainer.innerHTML = `
+                <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
+                <h2>${propiedadTop.nombre}</h2>
+                <hr>
+                <p>${propiedadTop.nReservas}</p>
+                <h3>Top 1 Reservas del Mes</h3>
+            `
+        }
     })
 }
 
 function cargarReservasPropiedades(){
     fetch('./../php/obtenerPropiedades.php')
-.then(response => {
-    if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
-        window.location.href = '../index.html';
-        return;
-    }
-    return response.json();
-})
-.then(data => {
-    console.log(data);
-    mostrarPropiedades(data);
-    mostarTotalPropiedades(data);
-})
-.catch(error => console.error('Error al obtener las propiedades: ',error));
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        mostrarPropiedades(data);
+        mostarTotalPropiedades(data);
+    })
+    .catch(error => console.error('Error al obtener las propiedades: ',error));
 
 
-fetch('./../php/obtenerAllReservas.php')
+    fetch('./../php/obtenerAllReservas.php')
     .then(response => {
         if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
             window.location.href = '../index.html';
@@ -135,15 +140,6 @@ fetch('./../php/obtenerAllReservas.php')
         let cabeceraTabla = '';
         let datosReservas = '';
         let pieTabla = '';
-
-            const eventosCalendario = reservas.map(reserva => {
-                return {
-                    title: `${reserva.nombre} - ${reserva.nombreInquilino} ${reserva.apellidosInquilino}`,
-                    start: reserva.fechaInicio,
-                    end: reserva.fechaFin,
-                    color: '#4CAF50',
-                };
-            });
             
             cabeceraTabla = `
                 <div class="tablaReservas">
@@ -165,6 +161,16 @@ fetch('./../php/obtenerAllReservas.php')
                 `;        
 
                 if (reservas.length > 0) {
+
+                    eventosCalendario = reservas.map(reserva => {
+                        return {
+                            title: `${reserva.nombre} - ${reserva.nombreInquilino} ${reserva.apellidosInquilino}`,
+                            start: reserva.fechaInicio,
+                            end: reserva.fechaFin,
+                            color: '#4CAF50',
+                        };
+                    });
+
                     console.log(reservas);
                     
                     reservas.forEach(reserva => {
@@ -185,11 +191,15 @@ fetch('./../php/obtenerAllReservas.php')
                         `
                     });                    
                 }else{
-                    datosReservas = `
-                        <tr class="table-secondary fw-bold">
-                            <td colspan="10" class="text-center">No hay reservas todavia</td>
-                        </tr>
-                    `
+
+                    eventosCalendario = [];
+
+                    graficasContainer.innerHTML = '';
+                    graficasContainer.innerHTML = `
+                        <div class="noData">
+                            <h3>No hay datos disponibles</h3>
+                        </div>
+                    `;
                 }
                 
                 pieTabla = `
@@ -203,7 +213,8 @@ fetch('./../php/obtenerAllReservas.php')
                         pageLength: 5,
                         lengthMenu: [5, 10, 20, 50],
                         language: {
-                            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+                            emptyTable: "No hay movimientos todavía"
                         }
                     });
                 });
@@ -240,14 +251,8 @@ fetch('./../php/obtenerAllReservas.php')
                 selectable: true,
                 editable: true,
                 dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
-                eventColor: 'red', // color por defecto
+                eventColor: '#4CAF50', // color por defecto
 
-                dateClick: function(info) {
-                    alert('Fecha seleccionada: ' + info.dateStr);
-                },
-                eventClick: function(info) {
-                    alert('Evento: ' + info.event.title);
-                },
                 events: eventosCalendario,  
                 });
             

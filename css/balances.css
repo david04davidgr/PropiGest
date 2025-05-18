@@ -16,8 +16,8 @@ aside{
     flex-direction: column;
     background-color: #4CAF50;
     border-right: 2px solid white;
-    flex-shrink: 0; /* Evita que se encoja */
-    overflow-y: auto; /* Scroll solo si es necesario */
+    flex-shrink: 0;
+    overflow-y: auto;
 
     .iconoMenu{
         margin-bottom: -4%;
@@ -96,7 +96,7 @@ main{
 
     h2.tituloBalance{
         width: 100%;
-        height: 100%;
+        height: auto;
         margin: 0;
         padding: 0;
         padding-top: 1%;

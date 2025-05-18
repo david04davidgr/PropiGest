@@ -12,7 +12,6 @@ try {
         ORDER BY m.fecha DESC
     ");
     $stmt->execute([$_SESSION['usuario_id']]);
-    $stmt->execute();
     $movimientos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     if ($movimientos && count($movimientos) > 0) {

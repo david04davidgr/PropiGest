@@ -27,12 +27,12 @@ async function cargarMovimientos(){
 
                     if (movimiento.tipo.toLowerCase() == "ingreso") {
                         tipo = 'bg-success';
-                        cantidad = `class="cantidadIngreso">`
+                        cantidad = `<td class="cantidadIngreso">${movimiento.cantidad}€</td>`;
                         ingresosPorMes[mes] += Number(movimiento.cantidad);
                         balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
                     }else{
                         tipo = 'bg-danger';
-                        cantidad = `class="cantidadGasto">-`
+                        cantidad = `<td class="cantidadGasto">-${movimiento.cantidad}€</td>`;
                         gastosPorMes[mes] += Number(movimiento.cantidad);
                         balancePorMes[mes] = ingresosPorMes[mes] - gastosPorMes[mes];
                     }
@@ -43,7 +43,7 @@ async function cargarMovimientos(){
                             <td>${movimiento.nombre} - ${movimiento.concepto}</td>
                             <td><span class="badge ${tipo}">${movimiento.tipo}</span></td>
                             <td>${movimiento.comentarios}</td>
-                            <td ${cantidad}${movimiento.cantidad}€</td>
+                            <td ${cantidad}</td>
                         </tr>
 
                     `
@@ -52,24 +52,24 @@ async function cargarMovimientos(){
                 graficasContainer.innerHTML = '';
                 
                 graficasContainer.innerHTML = `
-                <div class="graficoDonut">
-                    <canvas id="donutBalance"></canvas>
-                    <div class="infoBalance">
-                        <div class="ingresos" id="ingresos">
-                            <p>${ingresosPorMes[mes]}€</p>
-                            <h2>Ingresos</h2>
-                        </div>
-                        <div class="gastos" id="gastos">
-                            <p>${gastosPorMes[mes]}€</p>
-                            <h2>Gastos</h2>
+                    <div class="graficoDonut">
+                        <canvas id="donutBalance"></canvas>
+                        <div class="infoBalance">
+                            <div class="ingresos" id="ingresos">
+                                <p>${ingresosPorMes[mes]}€</p>
+                                <h2>Ingresos</h2>
+                            </div>
+                            <div class="gastos" id="gastos">
+                                <p>${gastosPorMes[mes]}€</p>
+                                <h2>Gastos</h2>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="graficoBarras">
-                    <canvas id="barrasVersus"></canvas>
-                </div>
-                <div class="propiedadTop" id="propiedadTop">
-                </div>
+                    <div class="graficoBarras">
+                        <canvas id="barrasVersus"></canvas>
+                    </div>
+                    <div class="propiedadTop" id="propiedadTop">
+                    </div>
                 `;
 
                 //Grafico Balance
@@ -190,11 +190,11 @@ async function cargarMovimientos(){
                 new Chart(barrasBalance, configBarras);//Crea grafico de balance    
             }else{
 
-                datosMovimientos = `
-                    <tr class="table-secondary fw-bold">
-                    <td colspan="6" class="text-center">No hay movimientos todavia</td>
-                    </tr>
-                `
+                graficasContainer.innerHTML = `
+                    <div class="noData">
+                        <h3>No hay datos disponibles</h3>
+                    </div>
+                `;
             }
 
             
@@ -250,8 +250,10 @@ async function cargarMovimientos(){
                         pageLength: 5,
                         lengthMenu: [5, 10, 20],
                         language: {
-                        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-                        }
+                            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+                            emptyTable: "No hay movimientos todavía"
+                        },
+                        // data: movimientos || [],
                         });
                     });
 }
@@ -266,40 +268,46 @@ function cargarTop(){
         return response.json();
     })
     .then(data => {
-        let propiedadTop = data[0];
-    
-        console.log(propiedadTop);
-    
-        let imagenes = propiedadTop.imagenes;
-        imagenes = imagenes ? imagenes.split(',') : [];
-    
-        let imagenDefault = '../uploads/imagenes/default.png';
-    
-        if (imagenes.length == 0) {
-            imagenes[0] = [imagenDefault];
-        }    
-    
-        let balance = '';
-        if (propiedadTop.balance > 0) {
-            balance = `<p class="balancePositivo">▲ ${propiedadTop.balance}€</p>`
-        }else{
-            if (propiedadTop.balance < 0) {
-            balance = `<p class="balanceNegativo">▼ ${propiedadTop.balance}€</p>`
+        if (data || data.length > 1) {
+            let propiedadTop = data[0];
+        
+            let imagenes = propiedadTop.imagenes;
+            imagenes = imagenes ? imagenes.split(',') : [];
+        
+            let imagenDefault = '../uploads/imagenes/default.png';
+        
+            if (imagenes.length == 0) {
+                imagenes[0] = [imagenDefault];
+            }    
+        
+            let balance = '';
+            if (propiedadTop.balance > 0) {
+                balance = `<p class="balancePositivo">▲ ${propiedadTop.balance}€</p>`
             }else{
-                balance = `<p class="balance">${propiedadTop.balance}€</p>`
-            }
-        }    
-    
-        const propiedadTopContainer = document.querySelector('#propiedadTop');
-    
-        propiedadTopContainer.innerHTML = '';
-        propiedadTopContainer.innerHTML = `
-            <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
-            <h2>${propiedadTop.nombre}</h2>
-            <hr>
-            ${balance}
-            <h3>Top 1 Balances del Mes</h3>
-        `
+                if (propiedadTop.balance < 0) {
+                balance = `<p class="balanceNegativo">▼ ${propiedadTop.balance}€</p>`
+                }else{
+                    balance = `<p class="balance">${propiedadTop.balance}€</p>`
+                }
+            }    
+        
+            const propiedadTopContainer = document.querySelector('#propiedadTop');
+        
+            propiedadTopContainer.innerHTML = '';
+            propiedadTopContainer.innerHTML = `
+                <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
+                <h2>${propiedadTop.nombre}</h2>
+                <hr>
+                ${balance}
+                <h3>Top 1 Balances del Mes</h3>
+            `
+        }else{
+            graficasContainer.innerHTML = `
+                <div class="noData">
+                    <h3>No hay datos disponibles</h3>
+                </div>
+            `
+        }
     })
 };
 

@@ -362,7 +362,7 @@ function mostrarPropiedad(propiedad){
     let normalView = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    });
     
     let satelliteView = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 19,
@@ -373,7 +373,7 @@ function mostrarPropiedad(propiedad){
     var labelsView = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         attribution: '© CartoDB'
-    });
+    }).addTo(map);
     
     let hybridView = L.layerGroup([
         satelliteView, // Imágenes satelitales
