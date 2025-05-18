@@ -42,6 +42,29 @@
 
         mostrarStats(mes, ingresosPorMes, gastosPorMes);
 
+        const pluginNoData = {
+            id: 'noData',
+            afterDraw(chart) {
+                const { data } = chart;
+                if (
+                !data ||
+                !data.datasets.length ||
+                data.datasets[0].data.length === 0 ||
+                data.datasets[0].data.every(val => val === 0 || val == null)
+                ) {
+                const { ctx, width, height } = chart;
+                ctx.save();
+                ctx.clearRect(0, 0, width, height);
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = '16px sans-serif';
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillText('No se han registrado movimientos', width / 2, height / 2);
+                ctx.restore();
+                }
+            }
+        };
+
         //Grafico Balance
         let graficoBalance = document.querySelector('#graphBalance');
         const labelsBal = ['Ingresos', 'Gastos'];
@@ -69,7 +92,8 @@
                         }
                     }
                 }
-            }
+            },
+            plugins: [pluginNoData]
         };
 
         new Chart(graficoBalance, configBal);//Crea grafico de balance

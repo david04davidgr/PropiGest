@@ -120,6 +120,7 @@ main{
         transition: background-color 0.3s ease, transform 0.2s ease;
         
         &:hover {
+            cursor: pointer;
             background-color: #45a049;
         }
     }
@@ -739,13 +740,16 @@ main{
         .metrica_balance{
             width: 80%;
             padding-bottom: 5%;
+            margin-top: 2%;
             margin-bottom: 2%;
             border-right: none;
             border-bottom: 2px solid #f5f5f5;
+            background-color: #f5f5f55b;
+            border-radius: 5px;
             
             canvas#graphBalance{
-                width: 300px !important;
-                height: 400px !important;
+                width: 250px !important;
+                height: 350px !important;
             }
         }
 
@@ -770,7 +774,9 @@ main{
             }
 
             .no-disponibles>h4{
+                width: 100%;
                 font-size: 1.25rem !important;
+                text-align: center;
             }
 
             .total>h3{
@@ -781,12 +787,12 @@ main{
 
     .propiedades_container{
         width: 100%;
-        height: auto;
+        /* height: auto; */
         min-height: 65%;
         display: flex;
-        overflow-y: visible;
+        /* overflow-y: visible; */
         padding-top: 25px;
-        padding-bottom: 400px;
+        padding-bottom: 25%;
 
         .tarjeta_propiedad{
             width: 90%;
@@ -796,8 +802,9 @@ main{
 
     a#new_propiedad{
         position: fixed;
-        top: 75.5vh;
-        left: 82.5%;
+        top: 75vh;
+        left: auto;
+        right: 2%;
     }
 
     a#vista_mapa{
@@ -839,11 +846,13 @@ main{
 
         .metrica_balance{
             width: 80%;
-            height: auto;
             padding-bottom: 5%;
+            margin-top: 5%;
             margin-bottom: 2%;
             border-right: none;
             border-bottom: 2px solid #f5f5f5;
+            background-color: #f5f5f55b;
+            border-radius: 5px;
             
             canvas#graphBalance{
                 width: 400px !important;
@@ -886,9 +895,9 @@ main{
         height: auto;
         min-height: 65%;
         display: flex;
-        overflow-y: visible;
+        /* overflow-y: visible; */
         padding-top: 25px;
-        padding-bottom: 400px;
+        padding-bottom: 25%;
 
         .tarjeta_propiedad{
             width: 90%;
@@ -899,7 +908,8 @@ main{
     a#new_propiedad{
         position: fixed;
         top: 74vh;
-        left: 88.25%;
+        left: auto;
+        right: 2%;
     }
 
     a#vista_mapa{
@@ -919,15 +929,62 @@ main{
 
 /* Tablets (vertical y horizontal) */
 @media (min-width: 769px) and (max-width: 1024px) {
-    
+
+    aside{
+        width: 8vw;
+    }
+
+    .tarjeta_propiedad{
+        width: 40%;
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 90vh;
+        left: 9%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 90vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        display: none;
+    }
 }
 
 /* Pantallas pequeñas (laptops) */
 @media (min-width: 1025px) and (max-width: 1280px) {
-  /* Laptops de 13-14" */
+    aside{
+        width: 8vw;
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 90vh;
+        left: 10%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 90vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        display: none;
+    }
 }
 
 /* Pantallas grandes (desktop) */
 @media (min-width: 1281px) {
-  /* Monitores de 15" en adelante */
+    aside{
+        width: 6vw;
+    }
+
+    .menuMovil{
+        display: none;
+    }
 }
