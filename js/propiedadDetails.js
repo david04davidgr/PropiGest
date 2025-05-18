@@ -38,6 +38,8 @@ if(idPropiedad){
         if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
             window.location.href = '../index.html';
             return;
+        }else if (response.status === 403){
+            window.location.href = '../html/inicio.html';
         }
         return response.json();
     })    
@@ -1628,7 +1630,7 @@ function guardarCambiosReserva(reserva){
     .catch(error => console.error("Error:", error));
 }
 
-//Mantenimientos (EN DESARROLLO)
+//Mantenimientos
 function cargarMantenimientos(){
    
     datosContainer.innerHTML = '';
@@ -1790,7 +1792,7 @@ function cargarMantenimientos(){
                 });                    
             }else{
                 tarjetasMantenimiento = `
-                    <p>No hay mantenimientos disponibles todavía</p>
+                    <p class="noMantenimientos">No hay mantenimientos disponibles todavía</p>
                 `
             }
     
@@ -2031,13 +2033,6 @@ function cargarMantenimientos(){
             // editable: true,
             dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
             eventColor: '#333', // color por defecto
-
-            // dateClick: function(info) {
-            //     alert('Fecha seleccionada: ' + info.dateStr);
-            // },
-            // eventClick: function(info) {
-            //     alert('Evento: ' + info.event.title);
-            // },
             events: mantenimientosCalendario,  
             });
         

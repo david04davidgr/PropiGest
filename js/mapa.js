@@ -181,6 +181,8 @@ fetch('./../php/verificarSesion.php')
                 if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
                     window.location.href = '../index.html';
                     return;
+                }else if (response.status === 403){
+                    window.location.href = '../html/vistaMapa.html';
                 }
                 return response.json();
             })            .then(data => {

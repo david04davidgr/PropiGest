@@ -270,10 +270,8 @@ async function cargarMantenimientos(){
                     ${tarjetasMantenimiento}
                 </div>
             `;
-
             
         }else{
-
             
             graficasContainer.innerHTML = '';
             graficasContainer.innerHTML = `
