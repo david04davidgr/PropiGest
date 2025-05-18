@@ -472,10 +472,6 @@ main{
         margin-top: 10px;
         align-self: flex-end;
     }
-
-    .tipo-intervencion {
-        justify-content: center;
-    }
 }
 
 /* SCROLLBAR PARA CONTENEDORES */

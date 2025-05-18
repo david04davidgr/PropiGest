@@ -539,98 +539,6 @@ main{
     }
 
 /* Menu movil */
-/* :root {
-  --clr: #222327;
-  --highlight: #2D9CDB;
-}
-
-.menuMovil {
-  position: fixed;
-  bottom: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.nav {
-  width: 400px;
-  height: 74px;
-  background: #fff;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.nav ul {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-.nav ul li {
-  position: relative;
-  list-style: none;
-  width: 70px;
-  height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.nav ul li a {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  text-decoration: none;
-}
-
-.icon {
-  font-size: 1.6em;
-  color: var(--clr);
-  transition: all 0.3s ease;
-}
-
-.text {
-  position: absolute;
-  top: 55px;
-  font-size: 0.7em;
-  opacity: 0;
-  transition: all 0.3s ease;
-  color: var(--clr);
-}
-
-.nav ul li:hover .icon {
-  transform: translateY(-6px);
-  color: var(--highlight);
-}
-
-.nav ul li:hover .text {
-  opacity: 1;
-  transform: translateY(-3px);
-}
-
-.nav ul li.home {
-  transform: translateY(-20px);
-}
-
-.nav ul li.home a {
-  background: #fff;
-  border-radius: 50%;
-  width: 70px;
-  height: 70px;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: 0.3s;
-}  */
-
 :root {
   --primary-green: #4CAF50;    /* Verde principal */
   --secondary-green: #81C784;  /* Verde secundario */
@@ -649,14 +557,18 @@ main{
 }
 
 .nav {
-    width: 350px;
+    width: 300px;
     height: 70px;
     background: var(--white);
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 1%;
+    padding-left: 5%;
+    padding-right: 5%;
     border-radius: 35px;
+    border: 3px solid #333;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -696,35 +608,38 @@ main{
 .nav ul li a img {
     width: 35px;
     height: 35px;
+    object-fit: contain;
     position: relative;
     display: block;
-    line-height: 1;
-    font-size: 1.5em;
-    text-align: center;
     transition: 0.3s;
-    color: var(--text-dark);
+    transform: translateY(0);
+}
+
+.nav ul li a i {
+    width: 35px;
+    height: 35px;
+    font-size: 1.75rem;
+    object-fit: contain;
+    position: relative;
+    display: block;
+    transition: 0.3s;
     transform: translateY(0);
 }
 
 /* Home flotante (círculo verde) */
 .nav ul li.floating-home {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     z-index: 2;
-
-    img{
-        width: 20px;
-        height: 20px;
-        border: 2px solid red;
-    }
 }
 
 .nav ul li.floating-home a img {
-    border: 2px solid red;
-    width: 65px;
-    height: 65px;
-    background: var(--primary-green);
-    color: var(--white);
+    border: 2px solid #333;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    padding: 2px;
+    background-color: var(--primary-green);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -755,9 +670,14 @@ main{
     transform: translateY(-10px);
 }
 
+.nav ul li:hover a i {
+    color: var(--primary-green);
+    transform: translateY(-10px);
+}
+
 .nav ul li:hover a .text {
     opacity: 1;
-    transform: translateY(10px);
+    transform: translateY(14px);
 }
 
 /* Hover especial para el Home */
@@ -786,4 +706,228 @@ main{
 .nav ul li.floating-home.active a img {
     color: var(--white);
     background: var(--primary-green);
+}
+
+/* Responsive */
+/* Móviles pequeños (vertical) */
+@media (max-width: 480px) { 
+
+    body{
+        overflow-y: auto;
+        height: auto;
+    }
+
+    aside{
+        display: none;
+    }
+
+    main{
+        display: block;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .estadisticas{
+        width: auto;
+        height: auto;
+        min-height: 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .metrica_balance{
+            width: 80%;
+            padding-bottom: 5%;
+            margin-bottom: 2%;
+            border-right: none;
+            border-bottom: 2px solid #f5f5f5;
+            
+            canvas#graphBalance{
+                width: 300px !important;
+                height: 400px !important;
+            }
+        }
+
+        .metrica_bar_actividad{
+            width: 80%;
+            display: none;
+            canvas#graphActividad{
+                width: 300px !important;
+                height: 300px !important;
+            }
+        }
+
+        .metrica_actividad{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            margin-bottom: 2%;
+            border-left: none;
+
+            .disponibles>h4{
+                font-size: 1.25rem !important;
+            }
+
+            .no-disponibles>h4{
+                font-size: 1.25rem !important;
+            }
+
+            .total>h3{
+                font-size: 1.25rem !important;
+            }
+        }
+    }
+
+    .propiedades_container{
+        width: 100%;
+        height: auto;
+        min-height: 65%;
+        display: flex;
+        overflow-y: visible;
+        padding-top: 25px;
+        padding-bottom: 400px;
+
+        .tarjeta_propiedad{
+            width: 90%;
+            height: 500px;
+        }
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 75.5vh;
+        left: 82.5%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 83vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        left: 46%;
+    }
+}
+
+/* Móviles grandes (horizontal) / Tablets pequeñas */
+@media (min-width: 481px) and (max-width: 768px) {
+    body{
+        overflow-y: auto;
+        height: auto;
+    }
+
+    aside{
+        display: none;
+    }
+
+    main{
+        display: block;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .estadisticas{
+        width: auto;
+        height: auto;
+        min-height: 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .metrica_balance{
+            width: 80%;
+            height: auto;
+            padding-bottom: 5%;
+            margin-bottom: 2%;
+            border-right: none;
+            border-bottom: 2px solid #f5f5f5;
+            
+            canvas#graphBalance{
+                width: 400px !important;
+                height: 400px !important;
+            }
+        }
+
+        .metrica_bar_actividad{
+            width: 80%;
+            display: none;
+            canvas#graphActividad{
+                width: 300px !important;
+                height: 300px !important;
+            }
+        }
+
+        .metrica_actividad{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            margin-bottom: 2%;
+            border-left: none;
+
+            .disponibles>h4{
+                font-size: 1.25rem !important;
+            }
+
+            .no-disponibles>h4{
+                font-size: 1.25rem !important;
+            }
+
+            .total>h3{
+                font-size: 1.25rem !important;
+            }
+        }
+    }
+
+    .propiedades_container{
+        width: 100%;
+        height: auto;
+        min-height: 65%;
+        display: flex;
+        overflow-y: visible;
+        padding-top: 25px;
+        padding-bottom: 400px;
+
+        .tarjeta_propiedad{
+            width: 90%;
+            height: 500px;
+        }
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 74vh;
+        left: 88.25%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 83vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        left: 46%;
+
+        .nav{
+            width: 350px;
+        }
+    }
+}
+
+/* Tablets (vertical y horizontal) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    
+}
+
+/* Pantallas pequeñas (laptops) */
+@media (min-width: 1025px) and (max-width: 1280px) {
+  /* Laptops de 13-14" */
+}
+
+/* Pantallas grandes (desktop) */
+@media (min-width: 1281px) {
+  /* Monitores de 15" en adelante */
 }
