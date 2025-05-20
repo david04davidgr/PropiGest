@@ -230,32 +230,38 @@ function cargarReservasPropiedades(){
                 `;
 
                 const calendarEl = document.getElementById('calendar');
-            
-                const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'esLocale',
-                firstDay: 1,
-                height: 'auto',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                buttonText:{
-                    today: 'Hoy',
-                    month: 'Mes',
-                    week: 'Semana',
-                    day: 'Día',
-                    list: 'Agenda'
-                },
-                selectable: true,
-                editable: true,
-                dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
-                eventColor: '#4CAF50', // color por defecto
 
-                events: eventosCalendario,  
+                
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'esLocale',
+                    firstDay: 1,
+                    height: 'auto',
+                    contentHeight: 'auto',
+                    aspectRatio: 1.5,
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: mobileView() ? '' : 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    buttonText:{
+                        today: 'Hoy',
+                        month: 'Mes',
+                        week: 'Semana',
+                        day: 'Día',
+                        list: 'Agenda'
+                    },
+                    selectable: true,
+                    editable: true,
+                    dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
+                    eventColor: '#4CAF50', // color por defecto
+                    
+                    events: eventosCalendario,  
                 });
-            
+                
+                function mobileView() {
+                    return window.innerWidth < 768;
+                }
                 calendar.render();
     })
     .catch(error => console.error('Error al obtener las reservas: ',error));
