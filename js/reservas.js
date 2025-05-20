@@ -252,7 +252,6 @@ function cargarReservasPropiedades(){
                         list: 'Agenda'
                     },
                     selectable: true,
-                    editable: true,
                     dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
                     eventColor: '#4CAF50', // color por defecto
                     
@@ -262,6 +261,7 @@ function cargarReservasPropiedades(){
                 function mobileView() {
                     return window.innerWidth < 768;
                 }
+
                 calendar.render();
     })
     .catch(error => console.error('Error al obtener las reservas: ',error));

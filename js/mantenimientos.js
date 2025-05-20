@@ -252,8 +252,12 @@ async function cargarMantenimientos(){
 
             graficasContainer.innerHTML += `
                 ${contenidoPropiedadTop}
-                <canvas id="donutEstados"></canvas>
-                <canvas id="lineaMantenimientos"></canvas>
+                <div class="graphMantenimientos">
+                    <canvas id="lineaMantenimientos"></canvas>
+                </div>
+                <div class="graphEstados">
+                    <canvas id="donutEstados"></canvas>
+                </div>
             `;
 
             const canvaEstados = document.querySelector('#donutEstados')
@@ -302,10 +306,12 @@ async function cargarMantenimientos(){
             locale: 'esLocale',
             firstDay: 1,
             height: 'auto',
+            contentHeight: 'auto',
+            aspectRatio: 1.5,
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: mobileView() ? '' : 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             buttonText:{
                 today: 'Hoy',
@@ -321,6 +327,10 @@ async function cargarMantenimientos(){
             events: mantenimientosCalendario,  
         });
 
+        function mobileView() {
+            return window.innerWidth < 768;
+        }
+        
         calendar.render();            
 }
 
