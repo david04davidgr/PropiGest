@@ -146,6 +146,11 @@ main{
         align-items: center;
         border-right: 2px solid #f5f5f5;
 
+        canvas#graphBalance{
+            max-width: 500px;
+            max-height: 300px;
+        }
+
         .infoBalance{
             height: 40px;
             width: 70%;
@@ -739,18 +744,17 @@ main{
         align-items: center;
 
         .metrica_balance{
-            width: 80%;
+            width: 90%;
             padding-bottom: 5%;
-            margin-top: 2%;
-            margin-bottom: 2%;
+            /* margin-top: 2%; */
+            /* margin-bottom: 2%; */
             border-right: none;
             border-bottom: 2px solid #f5f5f5;
             background-color: #f5f5f55b;
             border-radius: 5px;
             
             canvas#graphBalance{
-                width: 250px !important;
-                height: 350px !important;
+                max-width: 270px !important;
             }
         }
 
@@ -803,19 +807,23 @@ main{
 
     a#new_propiedad{
         position: fixed;
-        top: 75vh;
+        top: 73vh;
         left: auto;
         right: 2%;
     }
 
     a#vista_mapa{
         position: fixed;
-        top: 83vh;
+        top: 81vh;
         right: 2%;
     }
 
     .menuMovil{
         left: 46%;
+
+        .nav{
+            width: 250px;
+        }
     }
 }
 
@@ -846,7 +854,7 @@ main{
         align-items: center;
 
         .metrica_balance{
-            width: 80%;
+            width: 90%;
             padding-bottom: 5%;
             margin-top: 5%;
             margin-bottom: 2%;
@@ -856,8 +864,7 @@ main{
             border-radius: 5px;
             
             canvas#graphBalance{
-                width: 400px !important;
-                height: 400px !important;
+                max-width: 270px !important;
             }
         }
 

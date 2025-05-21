@@ -894,6 +894,7 @@ function cargarMovimientos(idPropiedad){
                     data: dataBarras,
                     options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                         position: 'bottom',
@@ -1430,7 +1431,7 @@ function cargarReservas(idPropiedad){
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    right: mobileView() ? '' : 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 buttonText:{
                     today: 'Hoy',
@@ -1452,6 +1453,10 @@ function cargarReservas(idPropiedad){
                 },
                 events: eventosCalendario,  
                 });
+
+                function mobileView() {
+                    return window.innerWidth < 768;
+                }
             
                 calendar.render();
             })
@@ -2020,7 +2025,7 @@ function cargarMantenimientos(){
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: mobileView() ? '' : 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             buttonText:{
                 today: 'Hoy',
@@ -2035,6 +2040,10 @@ function cargarMantenimientos(){
             eventColor: '#333', // color por defecto
             events: mantenimientosCalendario,  
             });
+
+            function mobileView() {
+                return window.innerWidth < 768;
+            }
         
             calendar.render();            
         })
