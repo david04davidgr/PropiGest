@@ -1952,6 +1952,10 @@ textarea#notas{
         width: 8vw;
     }
 
+    .info_container{
+        margin-left: 1.5%;
+    }
+
     .propiedadTop{
         height: 170px !important;
     }
@@ -1959,6 +1963,15 @@ textarea#notas{
     .metrica_bar_actividad{
         padding-left: 2%;
         padding-right: 2%;
+    }
+
+    .graficosContainer{
+        width: 90%;
+        flex-direction: column;
+
+        canvas#barrasVersus{
+            max-height: 300px;
+        }
     }
 
     .tablaReservas{
@@ -1983,13 +1996,13 @@ textarea#notas{
         width: 8vw;
     }
 
-    .propiedadTop{
-        height: 180px !important;
-    }
+    .graficosContainer{
+        width: 90%;
+        flex-direction: column;
 
-    .metrica_bar_actividad{
-        padding-left: 2%;
-        padding-right: 2%;
+        canvas#barrasVersus{
+            max-height: 300px;
+        }
     }
 
     .tablaReservas{
@@ -2007,11 +2020,6 @@ textarea#notas{
 @media (min-width: 1281px) {
     aside{
         width: 6vw;
-    }
-
-    .metrica_bar_actividad{
-        padding-left: 2%;
-        padding-right: 2%;
     }
 
     .tablaReservas{
