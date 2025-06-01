@@ -15,12 +15,21 @@ function cargarTop(){
         return response.json();
     })
     .then(data => {
-        if (data) {
-            let propiedadTop = data[0];
-    
+        let propiedadTop = data;
+        if (propiedadTop.error) {
             console.log(propiedadTop);
+            let imagenDefault = '../uploads/imagenes/default.png';
             
-    
+            const propiedadTopContainer = document.querySelector('#propiedadTop');
+
+            propiedadTopContainer.innerHTML = '';
+            propiedadTopContainer.innerHTML = `
+                <img src="${imagenDefault}" alt="imagen default" class="imagenTop">
+                <h2>No hay datos de este mes</h2>
+                <hr>
+                <h3>Top 1 Reservas del Mes</h3>
+            ` 
+        }else{
             let imagenes = propiedadTop.imagenes;
             imagenes = imagenes ? imagenes.split(',') : [];
     

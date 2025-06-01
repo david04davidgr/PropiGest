@@ -342,9 +342,25 @@ async function cargarTop(){
         }
 
         let propiedadTop = await response.json();
-        console.log(propiedadTop);
+        console.log(propiedadTop.error);
         
-        if (propiedadTop.length > 0) {
+        if (propiedadTop.error) {
+            console.log('tiene error', propiedadTop.error);
+            
+            let imagenDefault = '../uploads/imagenes/default.png';
+            
+            contenidoPropiedadTop = '';
+            contenidoPropiedadTop = `
+                <div class="propiedadTop">
+                    <img src="${imagenDefault}" alt="imagen default" class="imagenTop">
+                    <h2>No hay datos de este mes</h2>
+                    <hr>
+                    <p>-</p>
+                    <h3>Top 1 Mantenimientos del Mes</h3>
+                </div>
+            ` 
+        }else{
+            console.log('no tiene error', propiedadTop);
             let imagenes = propiedadTop[0].imagenes;
             imagenes = imagenes ? imagenes.split(',') : [];
     
@@ -356,21 +372,13 @@ async function cargarTop(){
     
             contenidoPropiedadTop = `
                 <div class="propiedadTop">
-                    <img src="${imagenes[0]}" alt="imagen ${propiedadTop[0].nombre}" class="imagenTop">
-                    <h2>${propiedadTop[0].nombre}</h2>
+                    <img src="${imagenes[0]}" alt="imagen ${propiedadTop.nombre}" class="imagenTop">
+                    <h2>${propiedadTop.nombre}</h2>
                     <hr>
-                    <p>${propiedadTop[0].nMantenimientos}</p>
+                    <p>${propiedadTop.nMantenimientos}</p>
                     <h3>Top 1 Mantenimientos del Mes</h3>
                 </div>
             `
-        }else{
-            // graficasContainer.innerHTML = `
-            //     <div class="noData">
-            //         <h3>No hay datos disponibles</h3>
-            //     </div>
-            // `
-
-            cargarMantenimientos();
         }
 }
 

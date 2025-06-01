@@ -1,11 +1,11 @@
 <?php
-$servername = "localhost";
+$host = "localhost";
 $username = "user_propiedades";
 $password = "user_PropiGest";
 $dbname = "alquiler_propiedades";
 
 // Crear conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Verificar conexión
 if ($conn->connect_error) {
@@ -14,7 +14,7 @@ if ($conn->connect_error) {
     // echo('conexion exitosa');
 
 try {
-    $pdo = new PDO("mysql:serverName=$servername;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Error al conectar a la base de datos: " . $e->getMessage());

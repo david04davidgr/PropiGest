@@ -3,6 +3,10 @@ include 'verificarSesion.php';
 include 'conexion.php';
 
 try {
+
+    $primerDiaMes = date('Y-m-01');
+    $ultimoDiaMes = date('Y-m-t');
+
     $stmt = $pdo->prepare("
         SELECT 
             p.id,
@@ -16,21 +20,24 @@ try {
         FROM 
             propiedades p
         LEFT JOIN 
-            movimientos m ON p.id = m.idPropiedad
+            movimientos m ON p.id = m.idPropiedad AND m.fecha BETWEEN ? AND ?
         WHERE 
             p.idUsuario = ?
         GROUP BY 
             p.id, p.nombre  
-        ORDER BY `balance` DESC
+        HAVING
+            balance > 0
+        ORDER BY balance DESC
+        LIMIT 1
     ");
-    $stmt->execute([$_SESSION['usuario_id']]);
+    $stmt->execute([$primerDiaMes, $ultimoDiaMes, $_SESSION['usuario_id']]);
     $stmt->execute();
-    $movimientos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $movimientos = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($movimientos && count($movimientos) > 0) {
         echo json_encode($movimientos);
     } else {
-        echo json_encode(["error" => "No hay movimientos disponibles para este usuario"]);
+        echo json_encode(["error" => "No hay movimientos disponibles para este mes"]);
     }
 } catch (PDOException $e) {
     echo json_encode(["error" => "Error en la consulta SQL: " . $e->getMessage()]);

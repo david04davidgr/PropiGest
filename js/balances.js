@@ -11,7 +11,7 @@ async function cargarMovimientos(){
         const movimientos = await response.json()
             console.log(movimientos);
 
-            const mesPalabra = new Date().toLocaleString('es-ES', { month: 'long' });
+            // const mesPalabra = new Date().toLocaleString('es-ES', { month: 'long' });
             const mes = new Date().getMonth();
             let ingresosPorMes = Array(12).fill(0);
             let gastosPorMes = Array(12).fill(0);
@@ -104,7 +104,7 @@ async function cargarMovimientos(){
                             title: {
                                 display: true,
                                 position: 'bottom',
-                                text: `${mesPalabra.toLocaleUpperCase()}`,
+                                text: `Datos de este año`,
                                 color: '#4CAF50',
                                 font: {
                                     size: 13
@@ -268,9 +268,21 @@ function cargarTop(){
         return response.json();
     })
     .then(data => {
-        if (data || data.length > 1) {
-            let propiedadTop = data[0];
+        let propiedadTop = data;
         
+        if (propiedadTop.error) {
+            let imagenDefault = '../uploads/imagenes/default.png';
+            
+            const propiedadTopContainer = document.querySelector('#propiedadTop');
+
+            propiedadTopContainer.innerHTML = '';
+            propiedadTopContainer.innerHTML = `
+                <img src="${imagenDefault}" alt="imagen default" class="imagenTop">
+                <h2>No hay datos de este mes</h2>
+                <hr>
+                <h3>Top 1 Balances del Mes</h3>
+            ` 
+        }else{   
             let imagenes = propiedadTop.imagenes;
             imagenes = imagenes ? imagenes.split(',') : [];
         
@@ -289,7 +301,7 @@ function cargarTop(){
                 }else{
                     balance = `<p class="balance">${propiedadTop.balance}€</p>`
                 }
-            }    
+            }  
         
             const propiedadTopContainer = document.querySelector('#propiedadTop');
         
@@ -300,12 +312,6 @@ function cargarTop(){
                 <hr>
                 ${balance}
                 <h3>Top 1 Balances del Mes</h3>
-            `
-        }else{
-            graficasContainer.innerHTML = `
-                <div class="noData">
-                    <h3>No hay datos disponibles</h3>
-                </div>
             `
         }
     })

@@ -24,12 +24,12 @@ try {
             LIMIT 1
     ");
     $stmt->execute([$_SESSION['usuario_id']]);
-    $mantenimientos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $mantenimientos = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($mantenimientos && count($mantenimientos) > 0) {
         echo json_encode($mantenimientos);
     } else {
-        echo json_encode(["error" => "No hay mantenimientos disponibles para este usuario"]);
+        echo json_encode(["error" => "No hay mantenimientos disponibles para este mes"]);
     }
 
 } catch (PDOException $e) {
