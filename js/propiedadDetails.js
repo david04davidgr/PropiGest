@@ -1324,7 +1324,7 @@ function cargarReservas(idPropiedad){
                                 </div>
                                 <div class="modal-footer py-1">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${idPropiedad})">+ Añadir</button>
+                                    <button type="button" class="btn btn-sm btn-success" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${idPropiedad})">+ Añadir</button>
                                 </div>
                                 </div>
                             </div>
@@ -1887,7 +1887,7 @@ function cargarMantenimientos(){
                                 </div>
                                 <div class="modal-footer py-1">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarMantenimiento(${idPropiedad})">+ Añadir</button>
+                                    <button type="button" class="btn btn-sm btn-success" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarMantenimiento(${idPropiedad})">+ Añadir</button>
                                 </div>
                                 </div>
                             </div>
