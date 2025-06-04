@@ -48,7 +48,7 @@
 - [Aviso Legal](./Documentacion/avisoLegal.pdf)
 - [Manual Técnico](./Documentacion/manualTecnico.pdf)
 - [Manual de Usuario](./Documentacion/manualUsuario.pdf)
-- [Memoria de proyecto + visto bueno](./Documentacion/MemoriaProyectoPropigestSigned.pdf)
+- [Memoria de proyecto + visto bueno](./Documentacion/MemoriaProyectoPropiGestSigned.pdf)
 
 ## ⚖️ Licencia y derechos
 
