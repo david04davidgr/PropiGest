@@ -26,7 +26,7 @@
 2. Copia el proyecto en `C:\xampp\htdocs\propiGest`.
 3. Inicia Apache y MySQL desde XAMPP.
 4. Accede a [http://localhost/phpmyadmin](http://localhost/phpmyadmin) y crea una base de datos `propiGest`.
-5. Importa el script `bd/propigest.sql`.
+5. Importa el script `BBDD/propigest.sql`.
 6. Configura el archivo `php/conexion.php` con tus credenciales locales.
 7. Accede a la app en [http://localhost/propiGest/public](http://localhost/propiGest).
 
