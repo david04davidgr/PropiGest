@@ -48,7 +48,7 @@ Este proyecto está protegido legalmente. No está permitido su uso con fines co
 Soy David, desarrollador web en formación y apasionado por las soluciones tecnológicas prácticas. Este proyecto refleja mi capacidad para diseñar e implementar aplicaciones completas desde cero.
 
 📫 Contacto: davidgarcia.r.04@gmail.com 
-🌐 Linkedin: (Linkedin)[https://www.linkedin.com/in/david-garcia-rodriguez-220183238/]
+🌐 Linkedin: [Linkedin](https://www.linkedin.com/in/david-garcia-rodriguez-220183238/)
 
 ---
 
