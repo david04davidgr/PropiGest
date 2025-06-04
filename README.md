@@ -1,55 +1,60 @@
-# 🏡 PropiGest - Aplicación de gestión de propiedades
+# 🏠 PropiGest
 
-**PropiGest** es una aplicación web que desarrollé como proyecto de fin de grado. Permite a propietarios e inmobiliarias gestionar viviendas en alquiler, registrar mantenimientos, visualizar propiedades en un mapa y controlar la actividad económica de cada inmueble.
+**PropiGest** es una aplicación web de gestión de propiedades en alquiler, diseñada para propietarios e inmobiliarias que desean organizar y controlar sus viviendas, reservas, mantenimientos y movimientos económicos de forma sencilla e intuitiva.
 
-Este repositorio forma parte de mi portfolio personal y tiene fines **exclusivamente demostrativos**.
+## 🚀 Características principales
 
-## 🎯 Objetivo del proyecto
+- Gestión de propiedades con imágenes y detalles técnicos.
+- Calendario de reservas interactivo.
+- Gestión de mantenimientos e incidencias.
+- Control de ingresos y gastos por propiedad.
+- Vista en mapa para localizar propiedades fácilmente.
+- Interfaz adaptable (responsive) y fácil de usar.
 
-Desarrollar una solución completa de gestión de propiedades, implementando:
-- Gestión de usuarios y sesiones seguras
-- Gestión de propiedades y su información técnica
-- Calendario de mantenimientos y reservas
-- Registro de ingresos y gastos
-- Visualización geolocalizada (con Leaflet.js)
-- Interfaz adaptable a dispositivos móviles
+## 🧰 Tecnologías utilizadas
 
-## 🛠️ Tecnologías
+- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap
+- **Backend:** PHP 7.4+
+- **Base de datos:** MySQL
+- **Entorno de desarrollo:** XAMPP
+- **Control de versiones:** Git
+- **Servidor recomendado:** Apache
 
-- HTML, CSS, JavaScript, Bootstrap
-- PHP (orientado a objetos)
-- MySQL
-- XAMPP como entorno de desarrollo
+## 🛠️ Instalación local (XAMPP)
 
-## 📸 Capturas del proyecto
+1. Clona este repositorio o descarga el ZIP.
+2. Copia el proyecto en `C:\xampp\htdocs\propiGest`.
+3. Inicia Apache y MySQL desde XAMPP.
+4. Accede a [http://localhost/phpmyadmin](http://localhost/phpmyadmin) y crea una base de datos `propiGest`.
+5. Importa el script `bd/propigest.sql`.
+6. Configura el archivo `php/conexion.php` con tus credenciales locales.
+7. Accede a la app en [http://localhost/propiGest/public](http://localhost/propiGest).
 
-![image](https://github.com/user-attachments/assets/1bb06c3e-a376-48c0-a3e8-e252ca91a06d)
+## 🌐 Despliegue en servidor web
+
+1. Sube los archivos al servidor (vía FTP o panel).
+2. Crea una base de datos y sube el esquema.
+3. Edita el archivo `php/conexion.php` con los datos de tu hosting.
 
 ## 🔐 Seguridad
 
-Este proyecto implementa varias capas de seguridad:
-- Filtros contra inyecciones SQL
-- Validación de URLs y rutas para evitar navegación por directorios
-- Gestión segura de sesiones
-- Prevención básica contra XSS
+- Prevención de SQL Injection, XSS y navegación no autorizada.
+- Gestión segura de sesiones.
+- Separación de carpetas públicas y privadas.
+- Recomendado usar HTTPS en entornos productivos.
 
-## 🧪 Estado del proyecto
+## 📄 Documentación
 
-- ✅ Finalizado como TFG
-- 🧪 Implementado en entorno local y servidor de pruebas
-- 🔒 El código completo no se publica por motivos de protección intelectual
+- [Aviso Legal](./Documentacion/avisoLegal.pdf)
+- [Manual Técnico](./Documentacion/manualTecnico.pdf)
+- [Manual de Usuario](./Documentacion/manualUsuario.pdf)
+- [Memoria de proyecto + visto bueno](./Documentacion/MemoriaProyectoPropigestSigned.pdf)
 
-## ❗ Aviso legal
+## ⚖️ Licencia y derechos
 
-Este proyecto está protegido legalmente. No está permitido su uso con fines comerciales, distribución o modificación sin autorización previa del autor. Se publica con fines exclusivamente demostrativos y educativos.
-
-## 👤 Sobre mí
-
-Soy David, desarrollador web en formación y apasionado por las soluciones tecnológicas prácticas. Este proyecto refleja mi capacidad para diseñar e implementar aplicaciones completas desde cero.
-
-📫 Contacto: davidgarcia.r.04@gmail.com 
-🌐 Linkedin: [Linkedin](https://www.linkedin.com/in/david-garcia-rodriguez-220183238/)
+Este proyecto se encuentra protegido por los derechos de autor. No se permite su reproducción, distribución o modificación sin consentimiento del autor. Todos los derechos reservados © 2025.
 
 ---
 
-© 2025 Todos los derechos reservados. Este repositorio tiene fines educativos y de portfolio.
+**Desarrollado por:** *[Tu nombre]*  
+**Fecha:** Junio de 2025  
