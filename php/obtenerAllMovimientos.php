@@ -4,13 +4,14 @@ include 'conexion.php';
 
 try {
     $stmt = $pdo->prepare("
-        SELECT m.* 
+        SELECT m.*,
+               p.nombre
         FROM movimientos m
         JOIN propiedades p ON m.idPropiedad = p.id
         WHERE p.idUsuario = ?
+        ORDER BY m.fecha DESC
     ");
     $stmt->execute([$_SESSION['usuario_id']]);
-    $stmt->execute();
     $movimientos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     if ($movimientos && count($movimientos) > 0) {

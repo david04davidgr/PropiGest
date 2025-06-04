@@ -1,14 +1,14 @@
 <?php
 session_start();
-include 'conexion.php'; // Asegúrate de que este archivo contiene la conexión a la base de datos
+header('Content-Type: application/json');
+include 'conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
     if (empty($email) || empty($password)) {
-        $_SESSION['error'] = "Todos los campos son obligatorios";
-        header("Location: ../index.php?error=Todos los campos son obligatorios");
+        echo json_encode(["success" => false, "message" => "Todos los campos son obligatorios"]);
         exit();
     }
 
@@ -20,29 +20,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
-        
+
         if (password_verify($password, $user['contrasena'])) {
             $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['usuario_nombre'] = $user['nombre'];
             $_SESSION['usuario_apellidos'] = $user['apellidos'];
             $_SESSION['autenticado'] = true;
-            header("Location: ./../html/inicio.html");
-            exit();
+
+            echo json_encode(["success" => true]);
         } else {
-            $_SESSION['error'] = "Credenciales incorrectas";
-            header("Location: ../index.php?error=Credenciales incorrectas");
-            exit();
+            echo json_encode(["success" => false, "message" => "Usuario/contraseña incorrecta"]);
         }
     } else {
-        $_SESSION['error'] = "El usuario no existe";
-        header("Location: ../index.php?error=El usuario no existe");
-        exit();
+        echo json_encode(["success" => false, "message" => "Usuario/contraseña incorrecta"]);
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    header("Location: ../index.php");
-    exit();
+    echo json_encode(["success" => false, "message" => "Método no permitido"]);
 }
-?>

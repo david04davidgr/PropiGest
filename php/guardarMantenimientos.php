@@ -29,6 +29,7 @@ if (!$stmt->execute()) {
     echo json_encode(["error" => true, "message" => "Error al insertar mantenimiento: " . $stmt->error]);
     exit;
 }
+
 $idMantenimiento = $stmt->insert_id;
 $stmt->close();
 
@@ -71,5 +72,5 @@ if (isset($_FILES['factura']) && $_FILES['factura']['error'] === UPLOAD_ERR_OK) 
 }
 
 $conn->close();
-echo json_encode(["success" => true, "message" => "Mantenimiento registrado correctamente."]);
+echo json_encode(["success" => true, "message" => "Mantenimiento registrado correctamente.", 'idMantenimiento' => $idMantenimiento, 'titulo' => $titulo, 'coste' => $coste]);
 ?>

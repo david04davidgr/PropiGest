@@ -22,7 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id_propiedad'])) {
 
             //Eliminar imágenes de la carpeta
             foreach ($listaImagenes as $imagen) {
-                $rutaCompleta = "../uploads/" . trim($imagen);
+                $nombreArchivo = basename(trim($imagen)); // Solo el nombre del archivo
+                if ($nombreArchivo === 'default.png') {
+                    continue; // No eliminar la imagen por defecto
+                }
+
+                $rutaCompleta = "../uploads/" . $nombreArchivo;
                 if (file_exists($rutaCompleta)) {
                     unlink($rutaCompleta);
                 }

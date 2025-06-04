@@ -1,6 +1,4 @@
 //Variables
-
-
     //Obtencion de datos BD
     fetch('./../php/obtenerPropiedades.php')
     .then(response => {
@@ -44,6 +42,29 @@
 
         mostrarStats(mes, ingresosPorMes, gastosPorMes);
 
+        const pluginNoData = {
+            id: 'noData',
+            afterDraw(chart) {
+                const { data } = chart;
+                if (
+                !data ||
+                !data.datasets.length ||
+                data.datasets[0].data.length === 0 ||
+                data.datasets[0].data.every(val => val === 0 || val == null)
+                ) {
+                const { ctx, width, height } = chart;
+                ctx.save();
+                ctx.clearRect(0, 0, width, height);
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = '16px sans-serif';
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillText('No se han registrado movimientos', width / 2, height / 2);
+                ctx.restore();
+                }
+            }
+        };
+
         //Grafico Balance
         let graficoBalance = document.querySelector('#graphBalance');
         const labelsBal = ['Ingresos', 'Gastos'];
@@ -71,7 +92,8 @@
                         }
                     }
                 }
-            }
+            },
+            plugins: [pluginNoData]
         };
 
         new Chart(graficoBalance, configBal);//Crea grafico de balance
@@ -241,7 +263,7 @@
         }else{
             contenedor.innerHTML = `
                 <div class="buttonContainer">
-                    <p>¡Añade tu primera propiedad!</p>
+                    <p>¡Añade tu primera propiedad!🏠</p>
                     <a href="../html/newPropiedad.html">
                         <button class="addPropiedadBtn">+ Añadir Propiedad</button>
                     </a>
@@ -256,12 +278,12 @@
     function mostarTotalPropiedades(propiedades){
         const totalContainer = document.querySelector('#totalPropiedades'); 
         let total = 0;
-        if (propiedades.length < 1) {
-            total = 0;
+        if (propiedades.length >= 0) {
+            total = propiedades.length;
         }else{
-            total = propiedades.length
+            total = 0
         }       
-        totalContainer.innerHTML = `${total}`;
+        totalContainer.innerHTML = total;
     }
 
     function mostarPropiedadesDisponibles(disponibles){
@@ -273,3 +295,12 @@
         const noDisponiblesContainer = document.querySelector('#propiedadesNoDisponibles');        
         noDisponiblesContainer.innerHTML = `${noDisponibles}`;
     }
+
+const list = document.querySelectorAll('.list');
+function activeLink() {
+  list.forEach((item) =>
+    item.classList.remove('active'));
+    this.classList.add('active');
+}
+list.forEach((item) =>
+  item.addEventListener('click', activeLink));

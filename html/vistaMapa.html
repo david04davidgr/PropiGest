@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,15 +31,14 @@
         <div class="menu">
             <ul>
                 <li><a href="inicio.html"><img src="../src/casa (1).png" alt="Inicio" title="Inicio"></a></li>
-                <li><a href=""><img src="../src/beneficiarse.png" alt="Balance" title="Balance"></a></li>
-                <li><a href=""><img src="../src/inquilino.png" alt="Inquilinos" title="Inquilinos"></a></li>
-                <li><a href=""><img src="../src/documentacion.png" alt="Documentos" title="Documentos"></a></li>
-                <li><a href=""><img src="../src/limpieza.png" alt="Mantenimiento" title="Mantenimiento"></a></li>
+                <li><a href="balances.html"><img src="../src/beneficiarse.png" alt="Balance" title="Balance"></a></li>
+                <li><a href="reservas.html"><img src="../src/inquilino.png" alt="Inquilinos" title="Inquilinos"></a></li>
+                <li><a href="mantenimientos.html"><img src="../src/limpieza.png" alt="Mantenimiento" title="Mantenimiento"></a></li>
             </ul>
         </div>
-        <div class="cuenta">
-            <hr>
-            <a href=""><img src="../src/user.png" alt="cuenta" title="Cuenta"></a>
+        <hr width="100%" style="color: #f5f5f5;opacity: 100%;margin: 0;">
+        <div class="logout">
+            <a href="../php/cerrarSesion.php" title="Cerrar Sesión"><i class="fa-solid fa-right-from-bracket fa-flip-horizontal" style="color: #333;"></i></a>
         </div>
     </aside>
     <main>
@@ -64,6 +63,17 @@
             </ul>
         </div>
     </main>
+    <div class="menuMovil">
+        <div class="nav">
+            <ul class="notalist">
+                <li class="list"><a href="balances.html"><img src="../src/beneficiarse.png" alt="Balance" title="Balance" class="icon-img" width="20px" height="20px"><span class="text">Balance</span></a></li>
+                <li class="list"><a href="reservas.html"><img src="../src/inquilino.png" alt="Reservas" title="Reservas" class="icon-img" width="20px" height="20px"><span class="text">Reservas</span></a></li>
+                <li class="list active floating-home"><a href="inicio.html"><img src="../src/propigestMenuIcon.png" alt="Inicio" class="icon-img" title="Inicio" width="20px" height="20px"><span class="text">Inicio</span></a></li>
+                <li class="list"><a href="mantenimientos.html"><img src="../src/limpieza.png" alt="Mantenimiento" title="Mantenimiento"><span class="text">Mantenimientos</span></a></li>
+                <li class="list"><a href="../php/cerrarSesion.php" title="Cerrar Sesión"><i class="fa-solid fa-right-from-bracket fa-flip-horizontal" style="color: #333;"></i><span class="text">Cerrar Sesión</span></a></li>
+            </ul>
+        </div>
+    </div>
     <script src="../js/mapa.js"></script>
     <script src="../js/mapaContainer.js"></script>
 </body>

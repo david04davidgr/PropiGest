@@ -3,7 +3,6 @@ const carrusel = document.querySelector('#carrusel_imagenes');
 const datosContainer = document.querySelector('#datosContainer');
 const balanceButton = document.querySelector('#balanceButton');
 const reservaButton = document.querySelector('#reservaButton');
-const mantenimientoButton = document.querySelector('#mantenimientoButton');
 const documentosButton = document.querySelector('#documentosButton');
 
 let totalIngresos = 0;
@@ -39,6 +38,8 @@ if(idPropiedad){
         if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
             window.location.href = '../index.html';
             return;
+        }else if (response.status === 403){
+            window.location.href = '../html/inicio.html';
         }
         return response.json();
     })    
@@ -363,7 +364,7 @@ function mostrarPropiedad(propiedad){
     let normalView = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    });
     
     let satelliteView = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 19,
@@ -374,7 +375,7 @@ function mostrarPropiedad(propiedad){
     var labelsView = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         attribution: '© CartoDB'
-    });
+    }).addTo(map);
     
     let hybridView = L.layerGroup([
         satelliteView, // Imágenes satelitales
@@ -563,7 +564,6 @@ reservaButton.addEventListener('click', function (){
     cargarReservas(idPropiedad);
 })
 
-// EN DESARROLLO
 mantenimientoButton.addEventListener('click', function (){
     cargarMantenimientos(idPropiedad);
 })
@@ -582,7 +582,7 @@ function cargarMovimientos(idPropiedad){
             return response.json();
         })
         .then(data => {
-            movimientos = data;
+            let movimientos = data;
 
             const mes = new Date().getMonth();
             let ingresosPorMes = Array(12).fill(0);
@@ -676,15 +676,15 @@ function cargarMovimientos(idPropiedad){
                                 <div class="datosPrincipales">
                                     <div class="balance">
                                         <h4>Balance</h4>
-                                        <p>${balancePorMes[mes]}€</p>
+                                        <p>${balancePorMes[mes].toFixed(2)}€</p>
                                     </div>
                                     <div class="ingresos">
                                         <h4>Ingresos totales</h4>
-                                        <p>+${ingresosPorMes[mes]}€</p>
+                                        <p>+${ingresosPorMes[mes].toFixed(2)}€</p>
                                     </div>
                                     <div class="gastos">
                                         <h4>Gastos totales</h4>
-                                        <p>-${gastosPorMes[mes]}€</p>
+                                        <p>-${gastosPorMes[mes].toFixed(2)}€</p>
                                     </div>
                                 </div>
                                 <div class="graficosContainer">
@@ -894,6 +894,7 @@ function cargarMovimientos(idPropiedad){
                     data: dataBarras,
                     options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                         position: 'bottom',
@@ -967,6 +968,35 @@ function autoIngreso(idPropiedad, concepto, cantidad, idReserva){
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(autoIngreso)
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function autoGasto(idPropiedad, concepto, cantidad, idMantenimiento){
+
+    const autoGasto = {
+        idPropiedad: idPropiedad,
+        concepto: concepto,
+        cantidad: cantidad,
+        tipo: 'Gasto',
+        comentarios: '',
+        idMantenimiento: idMantenimiento
+    }
+    
+    //Envio de datos
+    fetch('../php/guardarMovimientos.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(autoGasto)
     })
     .then(response => {
         if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
@@ -1294,7 +1324,7 @@ function cargarReservas(idPropiedad){
                                 </div>
                                 <div class="modal-footer py-1">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${idPropiedad})">+ Añadir</button>
+                                    <button type="button" class="btn btn-sm btn-success" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarReserva(${idPropiedad})">+ Añadir</button>
                                 </div>
                                 </div>
                             </div>
@@ -1401,7 +1431,7 @@ function cargarReservas(idPropiedad){
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    right: mobileView() ? '' : 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 buttonText:{
                     today: 'Hoy',
@@ -1423,6 +1453,10 @@ function cargarReservas(idPropiedad){
                 },
                 events: eventosCalendario,  
                 });
+
+                function mobileView() {
+                    return window.innerWidth < 768;
+                }
             
                 calendar.render();
             })
@@ -1601,7 +1635,7 @@ function guardarCambiosReserva(reserva){
     .catch(error => console.error("Error:", error));
 }
 
-//Mantenimientos (EN DESARROLLO)
+//Mantenimientos
 function cargarMantenimientos(){
    
     datosContainer.innerHTML = '';
@@ -1655,57 +1689,115 @@ function cargarMantenimientos(){
                     }
 
                     if (mantenimiento.rutaDocumento) {
-                        factura = `<p><a href="${mantenimiento.rutaDocumento}" target="_blank" class="verDocumentoBtn"><i class="fas fa-file-alt"></i> Ver Factura</a></p>`
+                        factura = `<p><a href="${mantenimiento.rutaDocumento}" target="_blank" class="verDocumentoBtn">Ver Factura</a></p>`
                     }else{
-                        factura = `<p><a class="sinFactura"><i class="fas fa-file-alt"></i> No Disponible</a></p>`
+                        factura = `<p><a class="sinFactura">No Disponible</a></p>`
                     }
                     
                     tarjetasMantenimiento += `
-                            <div class="tarjeta">
-                                <div class="tituloEmpresa">
-                                    <div class="titulo"><h3>${mantenimiento.titulo}</h3></div>
-                                    <div class="empresa"><p>${mantenimiento.empresa}</p></div>
-                                </div>
-                                <div class="descripcion">
-                                    <h4>Descripcion</h4>
-                                    <p>${mantenimiento.descripcion}</p>
-                                </div>
-                                <div class="tipoEstado">
-                                    <div class="tipo">
-                                        <h4>Tipo</h4>
-                                        <p>${mantenimiento.tipo}</p>
-                                    </div>
-                                    <div class="estado">
-                                        <h4>Estado</h4>
-                                        ${estadoMantenimiento}
+                            <div class="tarjeta ${mantenimiento.estado.toLowerCase().replace(/\s+/g, '-')}">
+                                <div class="tarjeta-header">
+                                    <h2 class="nombre-propiedad">${mantenimiento.nombrePropiedad}</h2>
+                                    <div class="estado-badge ${mantenimiento.estado.toLowerCase().replace(/\s+/g, '-')}">
+                                        <i class="fas ${
+                                            mantenimiento.estado === 'pendiente' ? 'fa-clock' :
+                                            mantenimiento.estado === 'en proceso' ? 'fa-spinner fa-pulse' :
+                                            'fa-check-circle'
+                                        }"></i>
+                                        ${mantenimiento.estado}
                                     </div>
                                 </div>
-                                <div class="fechas">
-                                    <div class="fechaProgramada">
-                                        <h4>Fecha Programada</h4>
-                                        <p>${mantenimiento.fechaProgramada}</p>
+
+                                <div class="tarjeta-body">
+                                    <div class="tipo-intervencion">
+                                        <span class="tipo-badge ${mantenimiento.tipo.toLowerCase()}">
+                                            <i class="fas ${mantenimiento.tipo === 'Correctivo' ? 'fa-bolt' : 'fa-shield-alt'}"></i>
+                                            ${mantenimiento.tipo}
+                                        </span>
                                     </div>
-                                    <div class="fechaRealizacion">
-                                        <h4>Fecha Realización</h4>
-                                        <p>${mantenimiento.fechaRealizacion}</p>
+                                    <div class="titulo-empresa">
+                                        <h3 class="titulo-intervencion">${mantenimiento.titulo}</h3>
+                                        <p class="nombre-empresa"><i class="fas fa-building"></i> ${mantenimiento.empresa}</p>
                                     </div>
-                                </div>
-                                <div class="costeFactura">
-                                    <div class="coste">
-                                        <h4>Coste</h4>
-                                        <p>${mantenimiento.coste}€</p>
+                                    
+                                    <div class="descripcion-intervencion">
+                                        <h4 class="subtitulo"><i class="fas fa-align-left"></i> Descripción</h4>
+                                        <p>${mantenimiento.descripcion}</p>
                                     </div>
-                                    <div class="factura">
-                                        <h4>Factura</h4>
-                                        ${factura}
+                                    
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <i class="fas fa-calendar-check"></i>
+                                            <div>
+                                                <span class="info-label">Programada</span>
+                                                <span class="info-value">${formatearFecha(mantenimiento.fechaProgramada)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <i class="fas fa-calendar-day"></i>
+                                            <div>
+                                                <span class="info-label">Realización</span>
+                                                <span class="info-value">${formatearFecha(mantenimiento.fechaRealizacion)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <i class="fas fa-euro-sign"></i>
+                                            <div>
+                                                <span class="info-label">Coste</span>
+                                                <span class="info-value precio">${mantenimiento.coste} €</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <i class="fas fa-file-invoice"></i>
+                                            <div>
+                                                <span class="info-label">Factura</span>
+                                                ${factura}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Botones de Acción -->
+                                    <div class="accionesMantenimiento">
+                                        <button 
+                                            class="editarMantenimiento"
+                                            data-bs-toggle="modal" 
+                                            onclick='openEditMantenimientoModal(${JSON.stringify(mantenimiento)})'
+                                        >
+                                            <i class="fas fa-pen"></i> 
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            class="eliminarMantenimiento" 
+                                            data-bs-toggle="modal" 
+                                            onclick="openDeleteMantenimientoModal(${mantenimiento.id})"
+                                        >
+                                            <i class="fa-solid fa-trash" style="color: #ff0000;"></i> 
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                     `
+
+                    function formatearFecha(fechaString) {
+                        if(!fechaString || fechaString === '0000-00-00 00:00:00') {
+                            return '<span class="fecha-no-asignada">No asignada</span>';
+                        }
+                        const opciones = { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric', 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        };
+                        return new Date(fechaString).toLocaleDateString('es-ES', opciones);
+                }
                 });                    
             }else{
                 tarjetasMantenimiento = `
-                    <p>No hay mantenimientos disponibles todavía</p>
+                    <p class="noMantenimientos">No hay mantenimientos disponibles todavía</p>
                 `
             }
     
@@ -1795,7 +1887,7 @@ function cargarMantenimientos(){
                                 </div>
                                 <div class="modal-footer py-1">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-danger" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarMantenimiento(${idPropiedad})">+ Añadir</button>
+                                    <button type="button" class="btn btn-sm btn-success" id="btnConfirm" data-bs-dismiss="modal" onClick="guardarMantenimiento(${idPropiedad})">+ Añadir</button>
                                 </div>
                                 </div>
                             </div>
@@ -1816,7 +1908,7 @@ function cargarMantenimientos(){
                                     </div>
                                     <div class="modal-footer py-1">
                                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-sm btn-danger" id="deleteReserva" data-bs-dismiss="modal">Confirmar</button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="deleteMantenimiento" data-bs-dismiss="modal">Eliminar</button>
                                     </div>
                                 </div>
                                 </div>
@@ -1830,54 +1922,68 @@ function cargarMantenimientos(){
                                     </div>
                                     <div class="modal-body p-2">
                                         <div class="formMantenimientoContainer">
-                                            <form id="formMantenimiento">
+                                            <form id="formEditMantenimiento">
+                                                <input type="hidden" name="idMantenimiento" id="editIdMantenimiento">
+                                                <input type="hidden" name="idDocumento" id="editIdDocumento">
+                                                <input type="hidden" name="ruta_existente" id="editRutaExistente">
+                                                <input type="hidden" name="idPropiedad" id="editIdPropiedad">
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <label for="editFechaIni" class="form-label mb-1">Fecha Inicio</label>
-                                                        <input id="editFechaIni" type="dateTime-local" class="form-control mb-1">
+                                                        <label for="editTitulo" class="form-label mb-1">Titulo *</label>
+                                                        <input id="editTitulo" name="editTitulo" type="text" class="form-control mb-1" required>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label for="editFechaFin" class="form-label mb-1">Fecha Fin</label>
-                                                        <input id="editFechaFin" type="dateTime-local" class="form-control mb-1">
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label for="editCobro" class="form-label mb-1">A cobrar (€):</label>
-                                                        <input id="editCobro" type="number" class="form-control mb-1">
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-5">
-                                                        <label for="editNombreInquilino" class="form-label mb-1 mt-1">Nombre Inquilino</label>
-                                                        <input type="text" id="editNombreInquilino" class="form-control mb-1">
-                                                    </div>
-                                                    <div class="col-md-7">
-                                                        <label for="editApellidosInquilino" class="form-label mb-1 mt-1">Apellidos Inquilino</label>
-                                                        <input type="text" id="editApellidosInquilino" class="form-control mb-1">
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-6">
-                                                        <label for="editDniInquilino" class="form-label mb-1">DNI/NIE Inquilino</label>
-                                                        <input type="text" id="editDniInquilino" class="form-control mb-1">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label for="editTelefonoInquilino" class="form-label mb-1">Teléfono Inquilino</label>
-                                                        <input type="tel" id="editTelefonoInquilino" class="form-control mb-1">
+                                                        <label for="editEmpresa" class="form-label mb-1">Empresa</label>
+                                                        <input id="editEmpresa" name="editEmpresa" type="text" class="form-control mb-1">
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
-                                                        <label for="editEmailInquilino" class="form-label mb-1">Email Inquilino</label>
-                                                        <input type="email" id="editEmailInquilino" class="form-control mb-1">
+                                                        <label for="editDescripcion" class="form-label mb-1">Descripcion *</label>
+                                                        <textarea id="editDescripcion" name="editDescripcion" class="form-control mb-1" role="textarea" required></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
-                                                    <div class="col-md-12">
-                                                        <label for="editNotas" class="form-label mb-1">Notas</label>
-                                                        <textarea name="editNotas" id="editNotas" class="form-control mb-1"></textarea>
+                                                    <div class="col-md-6">
+                                                        <label for="editTipo" class="form-label mb-1 mt-1">Tipo *</label>
+                                                        <select name="editTipo" id="editTipo" class="form-select form-control mb-1" role="choice" required>
+                                                            <option disabled selected>Elija un tipo</option>
+                                                            <option value="preventivo">preventivo</option>
+                                                            <option value="correctivo">correctivo</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editEstado" class="form-label mb-1 mt-1">Estado</label>
+                                                        <select name="editEstado" id="editEstado" class="form-select mb-1" required>
+                                                            <option disabled selected>Defina un estado</option>
+                                                            <option value="pendiente" style="color: red;font-weight: bold;">pendiente</option>
+                                                            <option value="en proceso" style="color: orange;font-weight: bold;">en proceso</option>
+                                                            <option value="completado" style="color: green;font-weight: bold;">completado</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaProgramada" class="form-label mb-1">Fecha Programada *</label>
+                                                        <input type="datetime-local" id="editFechaProgramada" name="editFechaProgramada" class="form-control mb-1" required>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editFechaRealizacion" class="form-label mb-1">Fecha Realización</label>
+                                                        <input type="datetime-local" id="editFechaRealizacion" name="editFechaRealizacion" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-6">
+                                                        <label for="editCoste" class="form-label mb-1">Coste</label>
+                                                        <input type="number" id="editCoste" name="editCoste" class="form-control mb-1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="editFactura" class="form-label mb-1">Factura</label>
+                                                        <input type="file" id="editFactura" name="editFactura" class="form-control mb-1">
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div id="previewEditFactura" class="col-md-12">
                                                     </div>
                                                 </div>
                                             </form>
@@ -1889,63 +1995,25 @@ function cargarMantenimientos(){
                                     </div>
                                     </div>
                                 </div>
+                                <div class="modal fade" id="deleteDocumentoModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header py-2">
+                                                <h6 class="modal-title">Confirmar eliminación</h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-2">
+                                                ¿Realmente desea eliminar este documento? Se eliminará el documento.
+                                            </div>
+                                            <div class="modal-footer py-1">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                <button type="button" class="btn btn-sm btn-danger" id="deleteDocumento" data-bs-dismiss="modal">Eliminar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                 `;
-
-                document.getElementById('factura').addEventListener('change', function (e) {
-                    const preview = document.getElementById('previewFactura');
-                    preview.innerHTML = ''; // Limpiar vista previa anterior
-                
-                    preview.innerHTML = `
-                        <hr>
-                    `;
-                    const file = e.target.files[0];
-                    if (!file) return;
-                
-                    const fileType = file.type;
-                
-                    // Crear contenedor general
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'mb-2';
-                
-                    // Botón "Quitar"
-                    const removeBtn = document.createElement('button');
-                    removeBtn.textContent = 'Quitar Archivo';
-                    removeBtn.className = 'btn btn-sm btn-danger mb-2';
-                    removeBtn.type = 'button';
-                    removeBtn.onclick = function () {
-                        document.getElementById('factura').value = '';
-                        preview.innerHTML = '';
-                    };
-                
-                    // Vista previa del archivo
-                    let fileView;
-                    if (fileType.startsWith('image/')) {
-                        fileView = document.createElement('img');
-                        fileView.src = URL.createObjectURL(file);
-                        fileView.style.maxWidth = '100%';
-                        fileView.onload = () => URL.revokeObjectURL(fileView.src);
-                    } else if (fileType === 'application/pdf') {
-                        fileView = document.createElement('iframe');
-                        fileView.src = URL.createObjectURL(file);
-                        fileView.style.width = '100%';
-                        fileView.style.height = '400px';
-                        fileView.onload = () => URL.revokeObjectURL(fileView.src);
-                    } else {
-                        fileView = document.createElement('p');
-                        fileView.textContent = `Archivo seleccionado: ${file.name}`;
-                    }
-                
-                    // Nombre del archivo (siempre)
-                    const fileName = document.createElement('p');
-                    fileName.textContent = `Archivo: ${file.name}`;
-                    fileName.className = 'mt-2 fst-italic';
-                
-                    wrapper.appendChild(removeBtn);
-                    wrapper.appendChild(fileName);
-                    wrapper.appendChild(fileView);
-                    preview.appendChild(wrapper);
-                });
 
             const calendarEl = document.getElementById('calendar');
         
@@ -1957,7 +2025,7 @@ function cargarMantenimientos(){
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: mobileView() ? '' : 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             buttonText:{
                 today: 'Hoy',
@@ -1970,15 +2038,12 @@ function cargarMantenimientos(){
             // editable: true,
             dayMaxEvents: true, // muestra un "+X más" si hay muchos eventos
             eventColor: '#333', // color por defecto
-
-            // dateClick: function(info) {
-            //     alert('Fecha seleccionada: ' + info.dateStr);
-            // },
-            // eventClick: function(info) {
-            //     alert('Evento: ' + info.event.title);
-            // },
             events: mantenimientosCalendario,  
             });
+
+            function mobileView() {
+                return window.innerWidth < 768;
+            }
         
             calendar.render();            
         })
@@ -2006,7 +2071,10 @@ function guardarMantenimiento(idPropiedad){
         return response.json();
     })    
     .then(data => {
-        if (data.success) {
+        if (data.success) {      
+            
+            let concepto = 'Mantenimiento: ' + data.titulo
+            autoGasto(idPropiedad, concepto, data.coste, data.idMantenimiento);
             cargarMantenimientos(idPropiedad);
             formElement.reset();
         }
@@ -2014,4 +2082,206 @@ function guardarMantenimiento(idPropiedad){
     .catch(error => console.error("Error:", error));
 }
 
+function openEditMantenimientoModal(mantenimiento){
+    
+    //Cargamos los valores existentes
+    document.getElementById('editTitulo').value = mantenimiento.titulo;
+    document.getElementById('editEmpresa').value = mantenimiento.empresa;
+    document.getElementById('editDescripcion').value = mantenimiento.descripcion;
+    document.getElementById('editTipo').value = mantenimiento.tipo;
+    document.getElementById('editEstado').value = mantenimiento.estado;
+    document.getElementById('editFechaProgramada').value = mantenimiento.fechaProgramada;
+    document.getElementById('editFechaRealizacion').value = mantenimiento.fechaRealizacion;
+    document.getElementById('editCoste').value = mantenimiento.coste;
+    
+    //Abrir modal
+    let modal = new bootstrap.Modal(document.getElementById('editMantenimientoModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    const preview = document.getElementById('previewEditFactura');
+    preview.innerHTML = ''; // Limpiar vista previa anterior
+
+    if (mantenimiento.rutaDocumento) {
+        const fileUrl = mantenimiento.rutaDocumento;
+        const fileName = fileUrl.split('/').pop();
+        const fileType = fileUrl.split('.').pop().toLowerCase();
+
+        // Contenedor general
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mb-2';
+
+        // Botón para quitar archivo
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Quitar Archivo';
+        removeBtn.className = 'btn btn-sm btn-danger mb-2';
+        removeBtn.type = 'button';
+        removeBtn.onclick = function () {
+            if (mantenimiento.idDocumento) {
+                openDeleteDocumentoModal(mantenimiento.idDocumento);
+            }
+        };
+
+        // Vista previa según tipo
+        let fileView;
+        if (fileType === 'pdf') {
+            fileView = document.createElement('iframe');
+            fileView.src = fileUrl;
+            fileView.style.width = '100%';
+            fileView.style.height = '400px';
+        } else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileType)) {
+            fileView = document.createElement('img');
+            fileView.src = fileUrl;
+            fileView.style.maxWidth = '100%';
+        } else {
+            fileView = document.createElement('a');
+            fileView.href = fileUrl;
+            fileView.target = '_blank';
+            fileView.textContent = `Descargar archivo: ${fileName}`;
+        }
+
+        // Mostrar nombre del archivo
+        const fileLabel = document.createElement('p');
+        fileLabel.textContent = `Archivo actual: ${fileName}`;
+        fileLabel.className = 'fst-italic';
+
+        // Añadir elementos
+        wrapper.appendChild(removeBtn);
+        wrapper.appendChild(fileLabel);
+        wrapper.appendChild(fileView);
+        preview.appendChild(wrapper);
+    }
+
+    //Guardar
+    document.getElementById('btnSaveMantenimientoChanges').onclick = function() {
+        console.log(
+            mantenimiento
+        );
+        
+        guardarCambiosMantenimiento(mantenimiento);        
+    };
+}
+
+function openDeleteMantenimientoModal(id){    
+    let modal = new bootstrap.Modal(document.getElementById('deleteMantenimientoModal'), {
+        keyboard: false
+    });
+    modal.show();
+
+    // En el click del boton usa la funcion (puede ser de una propiedad u otro)
+    document.getElementById('deleteMantenimiento').onclick = function(){
+        eliminarMantenimiento(id);
+    }
+}
+
+function eliminarMantenimiento(id){
+    let formData = new FormData();
+
+    idReserva = id;
+
+    formData.append("idMantenimiento", id); //Almacena el id como cuerpo de la solicitud
+
+    fetch(`../php/eliminarMantenimiento.php`, {
+        method: "POST",
+        body: formData,        
+    })
+    .then(response => {
+        if (response.status === 401) { //Si el usuario no esta autenticado lo devuelve al index(login)
+            window.location.href = '../index.html';
+            return;
+        }
+        return response.json();
+    })    
+    .then(data => {        
+        if (data.success) {
+            cargarMantenimientos(idPropiedad);
+            //MENSAJE DE SUCCESS
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function guardarCambiosMantenimiento(mantenimiento){
+    
+    const formData = new FormData();
+    formData.append('id', mantenimiento.id);
+    formData.append('factura_existente', mantenimiento.rutaDocumento ?? '');
+    formData.append('titulo', document.getElementById('editTitulo').value);
+    formData.append('empresa', document.getElementById('editEmpresa').value);
+    formData.append('descripcion', document.getElementById('editDescripcion').value);
+    formData.append('tipo', document.getElementById('editTipo').value);
+    formData.append('estado', document.getElementById('editEstado').value);
+    formData.append('fechaProgramada', document.getElementById('editFechaProgramada').value);
+    formData.append('fechaRealizacion', document.getElementById('editFechaRealizacion').value);
+    formData.append('coste', document.getElementById('editCoste').value);
+    formData.append('idPropiedad', mantenimiento.idPropiedad);
+    formData.append('idDocumento', mantenimiento.idDocumento ?? '');
+    formData.append('idPropiedad', mantenimiento.idPropiedad ?? '');
+
+    if (!mantenimiento.idDocumento) {
+        formData.delete('idDocumento');
+    }
+    // Archivo nuevo (si existe)
+    const nuevoArchivo = document.getElementById('editFactura').files[0];
+    if (nuevoArchivo) {
+        formData.append('factura', nuevoArchivo);
+    }
+
+    // Ruta actual (por si no hay nuevo archivo)
+    formData.append('factura_existente', mantenimiento.rutaDocumento);
+
+    for (var pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
+    
+    fetch('../php/editarMantenimiento.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.text())
+    .then(data => {
+        console.log(data);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editMantenimientoModal'));
+            modal.hide();
+            document.getElementById('formEditMantenimiento').reset();
+            cargarMantenimientos(idPropiedad);
+    });
+}
+
+//Documentos
+function openDeleteDocumentoModal(id){
+    let modal = new bootstrap.Modal(document.getElementById('deleteDocumentoModal'), {
+    keyboard: false
+    });
+    modal.show();
+
+    // En el click del boton usa la funcion (puede ser de una propiedad u otro)
+    document.getElementById('deleteDocumento').onclick = function(){
+        const preview = document.getElementById('previewEditFactura');
+        document.getElementById('editFactura').value = '';
+        preview.innerHTML = '';
+        eliminarDocumento(id);
+    }
+}
+
+function eliminarDocumento(idDocumento){
+    fetch('../php/eliminarDocumento.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ idDocumento })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Aquí puedes recargar el modal o actualizar la vista
+        }
+    })
+    .catch(error => {
+        console.error('Error en la solicitud:', error);
+    });
+}
 

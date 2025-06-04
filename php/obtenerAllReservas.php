@@ -4,7 +4,7 @@ include 'conexion.php';
 
 try {
     $stmt = $pdo->prepare("
-        SELECT r.* 
+        SELECT r.*, p.nombre
         FROM reservas r
         JOIN propiedades p ON r.idPropiedad = p.id
         WHERE p.idUsuario = ?

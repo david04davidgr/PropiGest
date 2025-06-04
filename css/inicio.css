@@ -9,7 +9,7 @@ body{
 
 aside{
     position: relative;
-    width: 12vh;
+    width: 6vw;
     height: 100vh;
     padding: 0.6%;
     box-sizing: border-box;
@@ -31,6 +31,7 @@ aside{
 
     .menu{
         width: 100%;
+        height: 100%;
         border-top: 2px solid #f5f5f5;
         margin-top: 2%;
 
@@ -45,7 +46,7 @@ aside{
         }
 
         li{
-            width: 90%;
+            width: 92.5%;
             display: flex;
             flex-direction: column;
             text-align: center;
@@ -71,21 +72,16 @@ aside{
             }
         }
 
-        li#inicio{
+        li#activo{
             background-color: rgba(245, 245, 245, 0.75);
         }
     }
 
-    .cuenta{
-        position: absolute;
-        width: 85%;
-        text-align: center;
-        bottom: 0;
-        margin-bottom: 10%;
-
-        img{
-            width: 50%;
-        }
+    .logout{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2.5rem;
     }
 }
 
@@ -101,7 +97,6 @@ main{
 .buttonContainer{
     width: 100%;
     height: 90%;
-    /* margin-top: 95%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -125,6 +120,7 @@ main{
         transition: background-color 0.3s ease, transform 0.2s ease;
         
         &:hover {
+            cursor: pointer;
             background-color: #45a049;
         }
     }
@@ -149,6 +145,11 @@ main{
         justify-content: center;
         align-items: center;
         border-right: 2px solid #f5f5f5;
+
+        canvas#graphBalance{
+            max-width: 500px;
+            max-height: 300px;
+        }
 
         .infoBalance{
             height: 40px;
@@ -248,7 +249,6 @@ main{
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                /* padding: 2%; */
 
                 p{
                     height: 5px;
@@ -256,6 +256,10 @@ main{
                     font-size: 2.5rem;
                     font-weight: bold;
                     color: #4CAF50;
+                }
+
+                h4{
+                    font-size: 1.10vw;
                 }
             }
 
@@ -265,7 +269,6 @@ main{
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                /* padding: 2%; */
 
                 p{
                     height: 5px;
@@ -274,12 +277,19 @@ main{
                     font-weight: bold;
                     color: red;
                 }
+
+                h4{
+                    width: 140%;
+                    font-size: 1.10vw;
+                    margin-right: -40%;
+                }
             }
         }
 
         .total{
             width: 75%;
-            height: 40%;
+            min-height: 40%;
+            height: auto;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -292,14 +302,14 @@ main{
             p{
                 height: 5px;
                 margin-top: 2%;
-                margin-bottom: 12%;
+                margin-bottom: 15%;
                 font-size: 3rem;
                 font-weight: bold;
                 color: #333;
             }
 
             h3{
-                
+                font-size: 1.20vw;
                 color: #333;
             }
         }
@@ -324,7 +334,6 @@ main{
     margin-right: auto;
 }
 
-
 .tarjeta_propiedad {
     position: relative;
     width: calc(25% - 2%);
@@ -335,7 +344,6 @@ main{
     text-align: center;
     background-color: #f5f5f5;
     border-radius: 20px;
-    /* padding-bottom: 12%; */
     margin-bottom: 4%;
     
     img {
@@ -360,6 +368,7 @@ main{
         h4{
             font-weight: bold;
             margin: 0;
+            overflow-x: hidden;
         }
 
         p{
@@ -475,8 +484,8 @@ main{
         justify-content: center;
         align-items: center;
         position: absolute;
-        top: 92vh;
-        left: 6.5%;
+        top: 90vh;
+        left: 7%;
         z-index: 999;
         text-align: center;
         line-height: 60px;
@@ -509,8 +518,8 @@ main{
         justify-content: center;
         align-items: center;
         position: absolute;
-        top: 92vh;
-        right: 1%;
+        top: 90vh;
+        right: 2%;
         z-index: 999;
         text-align: center;
         line-height: 60px;
@@ -535,3 +544,459 @@ main{
             transform: scale(1);
         }
     }
+
+/* Menu movil */
+:root {
+  --primary-green: #4CAF50;    /* Verde principal */
+  --secondary-green: #81C784;  /* Verde secundario */
+  --white: #FFFFFF;            /* Fondo */
+  --light-gray: #F5F5F5;       /* Gris claro */
+  --text-dark: #333333;        /* Texto */
+}
+
+/* Menu móvil */
+.menuMovil {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.nav {
+    width: 300px;
+    height: 70px;
+    background: var(--white);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1%;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-radius: 35px;
+    border: 3px solid #333;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nav ul {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.nav ul li {
+    position: relative;
+    list-style: none;
+    width: 70px;
+    height: 70px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav ul li a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+/* Iconos normales */
+.nav ul li a img {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    position: relative;
+    display: block;
+    transition: 0.3s;
+    transform: translateY(0);
+}
+
+.nav ul li a i {
+    width: 35px;
+    height: 35px;
+    font-size: 1.75rem;
+    object-fit: contain;
+    position: relative;
+    display: block;
+    transition: 0.3s;
+    transform: translateY(0);
+}
+
+/* Home flotante (círculo verde) */
+.nav ul li.floating-home {
+    width: 120px;
+    height: 120px;
+    z-index: 2;
+}
+
+.nav ul li.floating-home a img {
+    border: 2px solid #333;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    padding: 2px;
+    background-color: var(--primary-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8em;
+    box-shadow: 
+        0 5px 15px rgba(76, 175, 80, 0.4), /* Sombra verde */
+        0 0 0 8px var(--white);             /* Borde blanco */
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+/* Texto de los íconos */
+.nav ul li a .text {
+    position: absolute;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.75em;
+    letter-spacing: 0.05em;
+    transition: 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Hover general (para todos los íconos) */
+.nav ul li:hover a img {
+    color: var(--primary-green);
+    transform: translateY(-10px);
+}
+
+.nav ul li:hover a i {
+    color: var(--primary-green);
+    transform: translateY(-10px);
+}
+
+.nav ul li:hover a .text {
+    opacity: 1;
+    transform: translateY(14px);
+}
+
+/* Hover especial para el Home */
+.nav ul li.floating-home:hover a img {
+    transform: translateY(-25px);
+    background: var(--secondary-green); /* Verde más claro al hover */
+    box-shadow: 
+        0 8px 20px rgba(76, 175, 80, 0.6),
+        0 0 0 8px var(--white);
+}
+
+/* Texto del Home (posición ajustada) */
+.nav ul li.floating-home a .text {
+    transform: translateY(25px);
+}
+
+.nav ul li.floating-home:hover a .text {
+    transform: translateY(15px);
+}
+
+/* Ícono activo (verde) */
+.nav ul li.active a img {
+    color: var(--primary-green);
+}
+
+.nav ul li.floating-home.active a img {
+    color: var(--white);
+    background: var(--primary-green);
+}
+
+/* Responsive */
+/* Móviles pequeños (vertical) */
+@media (max-width: 480px) { 
+
+    body{
+        overflow-y: auto;
+        height: auto;
+    }
+
+    aside{
+        display: none;
+    }
+
+    main{
+        display: block;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .estadisticas{
+        width: auto;
+        height: auto;
+        min-height: 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .metrica_balance{
+            width: 90%;
+            padding-bottom: 5%;
+            /* margin-top: 2%; */
+            /* margin-bottom: 2%; */
+            border-right: none;
+            border-bottom: 2px solid #f5f5f5;
+            background-color: #f5f5f55b;
+            border-radius: 5px;
+            
+            canvas#graphBalance{
+                max-width: 270px !important;
+            }
+        }
+
+        .metrica_bar_actividad{
+            width: 80%;
+            display: none;
+            canvas#graphActividad{
+                width: 300px !important;
+                height: 300px !important;
+            }
+        }
+
+        .metrica_actividad{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            margin-bottom: 2%;
+            border-left: none;
+
+            .disponibles>h4{
+                font-size: 1.25rem !important;
+            }
+
+            .no-disponibles>h4{
+                width: 100%;
+                font-size: 1.25rem !important;
+                text-align: center;
+            }
+
+            .total>h3{
+                font-size: 1.25rem !important;
+            }
+        }
+    }
+
+    .propiedades_container{
+        width: 100%;
+        /* height: auto; */
+        min-height: 65%;
+        display: flex;
+        /* overflow-y: visible; */
+        padding-top: 25px;
+        padding-bottom: 25%;
+
+        .tarjeta_propiedad{
+            width: 90%;
+            height: 500px;
+        }
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 73vh;
+        left: auto;
+        right: 2%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 81vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        left: 46%;
+
+        .nav{
+            width: 250px;
+        }
+    }
+}
+
+/* Móviles grandes (horizontal) / Tablets pequeñas */
+@media (min-width: 481px) and (max-width: 768px) {
+    body{
+        overflow-y: auto;
+        height: auto;
+    }
+
+    aside{
+        display: none;
+    }
+
+    main{
+        display: block;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .estadisticas{
+        width: auto;
+        height: auto;
+        min-height: 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .metrica_balance{
+            width: 90%;
+            padding-bottom: 5%;
+            margin-top: 5%;
+            margin-bottom: 2%;
+            border-right: none;
+            border-bottom: 2px solid #f5f5f5;
+            background-color: #f5f5f55b;
+            border-radius: 5px;
+            
+            canvas#graphBalance{
+                max-width: 270px !important;
+            }
+        }
+
+        .metrica_bar_actividad{
+            width: 80%;
+            display: none;
+            canvas#graphActividad{
+                width: 300px !important;
+                height: 300px !important;
+            }
+        }
+
+        .metrica_actividad{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            margin-bottom: 2%;
+            border-left: none;
+
+            .disponibles>h4{
+                font-size: 1.25rem !important;
+            }
+
+            .no-disponibles>h4{
+                font-size: 1.25rem !important;
+            }
+
+            .total>h3{
+                font-size: 1.25rem !important;
+            }
+        }
+    }
+
+    .propiedades_container{
+        width: 100%;
+        height: auto;
+        min-height: 65%;
+        display: flex;
+        /* overflow-y: visible; */
+        padding-top: 25px;
+        padding-bottom: 25%;
+
+        .tarjeta_propiedad{
+            width: 90%;
+            height: 500px;
+        }
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 74vh;
+        left: auto;
+        right: 2%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 83vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        left: 46%;
+
+        .nav{
+            width: 350px;
+        }
+    }
+}
+
+/* Tablets (vertical y horizontal) */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    aside{
+        width: 8vw;
+    }
+
+    .tarjeta_propiedad{
+        width: 40%;
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 90vh;
+        left: 9%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 90vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        display: none;
+    }
+}
+
+/* Pantallas pequeñas (laptops) */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    aside{
+        width: 8vw;
+    }
+
+    .tarjeta_propiedad{
+        width: 30%;
+    }
+
+    a#new_propiedad{
+        position: fixed;
+        top: 90vh;
+        left: 10%;
+    }
+
+    a#vista_mapa{
+        position: fixed;
+        top: 90vh;
+        right: 2%;
+    }
+
+    .menuMovil{
+        display: none;
+    }
+}
+
+/* Pantallas grandes (desktop) */
+@media (min-width: 1281px) {
+    aside{
+        width: 6vw;
+    }
+
+    .menuMovil{
+        display: none;
+    }
+}
