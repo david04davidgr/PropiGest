@@ -56,5 +56,5 @@ Este proyecto se encuentra protegido por los derechos de autor. No se permite su
 
 ---
 
-**Desarrollado por:** *[Tu nombre]*  
+**Desarrollado por:** *David García Rodríguez*  
 **Fecha:** Junio de 2025  
