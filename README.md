@@ -38,10 +38,10 @@
 
 ## 🔐 Seguridad
 
-- Prevención de SQL Injection, XSS y navegación no autorizada.
+- Prevención de SQL Injection y navegación no autorizada.
 - Gestión segura de sesiones.
-- Separación de carpetas públicas y privadas.
-- Recomendado usar HTTPS en entornos productivos.
+- Evitar listado de directorios.
+- Uso de HTTPS
 
 ## 📄 Documentación
 
@@ -52,7 +52,7 @@
 
 ## ⚖️ Licencia y derechos
 
-Este proyecto se encuentra protegido por los derechos de autor. No se permite su reproducción, distribución o modificación sin consentimiento del autor. Todos los derechos reservados © 2025.
+Este proyecto se encuentra protegido por los derechos de autor. No se permite su reproducción, distribución o modificación sin consentimiento del autor. Todos los derechos reservados © 2025 [AVISO LEGAL](./Documentacion/avisoLegal.pdf).
 
 ---
 
