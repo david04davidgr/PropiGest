@@ -25,8 +25,6 @@ try {
             p.idUsuario = ?
         GROUP BY 
             p.id, p.nombre  
-        HAVING
-            balance > 0
         ORDER BY balance DESC
         LIMIT 1
     ");

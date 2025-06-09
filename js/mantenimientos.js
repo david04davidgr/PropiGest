@@ -342,10 +342,8 @@ async function cargarTop(){
         }
 
         let propiedadTop = await response.json();
-        console.log(propiedadTop.error);
         
         if (propiedadTop.error) {
-            console.log('tiene error', propiedadTop.error);
             
             let imagenDefault = '../uploads/imagenes/default.png';
             
@@ -360,8 +358,7 @@ async function cargarTop(){
                 </div>
             ` 
         }else{
-            console.log('no tiene error', propiedadTop);
-            let imagenes = propiedadTop[0].imagenes;
+            let imagenes = propiedadTop.imagenes;
             imagenes = imagenes ? imagenes.split(',') : [];
     
             let imagenDefault = '../uploads/imagenes/default.png';

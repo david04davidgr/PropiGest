@@ -11,7 +11,7 @@ $tipo = $_POST['tipo'];
 $estado = $_POST['estado'];
 $fechaProgramada = $_POST['fechaProgramada'];
 $fechaRealizacion = $_POST['fechaRealizacion'];
-$coste = $_POST['coste'];
+$coste = isset($_POST['coste']) ? round(floatval($_POST['coste']), 2) : 0.00;
 
 $idDocumento = $_POST['idDocumento'] ?? null;
 $rutaExistente = $_POST['ruta_existente'] ?? null;
@@ -47,6 +47,6 @@ if (isset($_FILES['factura']) && $_FILES['factura']['error'] === UPLOAD_ERR_OK) 
 
 // Actualizar mantenimiento
 $stmt = $conn->prepare("UPDATE mantenimientos SET titulo = ?, empresa = ?, descripcion = ?, tipo = ?, estado = ?, fechaProgramada = ?, fechaRealizacion = ?, coste = ?, idDocumento = ? WHERE id = ?");
-$stmt->bind_param("sssssssidi", $titulo, $empresa, $descripcion, $tipo, $estado, $fechaProgramada, $fechaRealizacion, $coste, $idDocumento, $idMantenimiento);
+$stmt->bind_param("ssssssssdi", $titulo, $empresa, $descripcion, $tipo, $estado, $fechaProgramada, $fechaRealizacion, $coste, $idDocumento, $idMantenimiento);
 $stmt->execute();
 ?>
