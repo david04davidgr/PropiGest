@@ -143,9 +143,20 @@ fetch('../php/verificarSesion.php')
             //Marcadores del mapa
               function createCards(propiedades) {
 
-                console.log(propiedades);
-
                 propiedades.forEach(propiedad => {
+
+                  let imagenURL = '';
+
+                  if (propiedad.imagenes) {
+                    if (propiedad.imagenes.includes(',')) {
+                      const imagenesArray = propiedad.imagenes.split(',');
+                      imagenURL = imagenesArray[0];
+                    } else {
+                      imagenURL = propiedad.imagenes;
+                    }
+                  } else {
+                    imagenURL = '../uploads/imagenes/default.png';
+                  }
 
                   let status;
                   if (propiedad.disponibilidad === "1") {
@@ -156,7 +167,7 @@ fetch('../php/verificarSesion.php')
                   }
 
                   if (propiedad.latitud || propiedad.longitud != null) {
-                    L.marker([`${propiedad.latitud}`, `${propiedad.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${propiedad.imagen}" width="100%" alt="${propiedad.nombre}"><p class="contenido"><b>${propiedad.nombre}</b><br><b>${propiedad.precio}€/Mes</b><br><b class="status">${status}</b></p></div>`);
+                    L.marker([`${propiedad.latitud}`, `${propiedad.longitud}`], { icon: houseIcon }).addTo(map).bindPopup(`<div class="tarjeta_propiedad"><img src="${imagenURL}" width="100%" alt="${propiedad.nombre}"><p class="contenido"><b>${propiedad.nombre}</b><br><b>${propiedad.precio}€/Mes</b><br><b class="status">${status}</b></p></div>`);
                   } else {
                     console.error(`La propiedad ${propiedad.nombre} no tiene ubicacion definida`)
                   }
