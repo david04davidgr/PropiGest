@@ -16,7 +16,7 @@ $tipo = $_POST['tipo'];
 $estado = $_POST['estado'];
 $fechaProgramada = $_POST['fechaProgramada'];
 $fechaRealizacion = $_POST['fechaRealizacion'] ?? null;
-$coste = $_POST['coste'];
+$coste = isset($_POST['coste']) ? round(floatval($_POST['coste']), 2) : 0.00;
 $empresa = $_POST['empresa'] ?? null;
 $idPropiedad = $_POST['idPropiedad'];
 
