@@ -22,7 +22,7 @@ $idPropiedad = $_POST['idPropiedad'];
 
 $stmt = $conn->prepare("INSERT INTO mantenimientos (titulo, descripcion, tipo, estado, fechaProgramada, fechaRealizacion, coste, empresa, idPropiedad) 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("ssssssdsi", 
+$stmt->bind_param("ssssssssi", 
     $titulo, $descripcion, $tipo, $estado, $fechaProgramada, $fechaRealizacion, $coste, $empresa, $idPropiedad);
 
 if (!$stmt->execute()) {
