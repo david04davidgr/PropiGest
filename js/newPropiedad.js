@@ -159,11 +159,11 @@ fetch('../php/verificarSesion.php')
                   }
 
                   let status;
-                  if (propiedad.disponibilidad === "1") {
-                    status = `Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i>`;
+                  if (propiedad.disponibilidad === 1) {
+                    status = `<span style="color:#4CAF50"> Disponible<i class="fa-solid fa-check" style="color: #4CAF50;"></i></span>`;
                   }
-                  if (propiedad.disponibilidad === "0") {
-                    status = `No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i>`;
+                  if (propiedad.disponibilidad === 0) {
+                    status = `<span style="color:red"> No Disponible<i class="fa-solid fa-x" style="color: #ff0000;"></i></span>`;
                   }
 
                   if (propiedad.latitud || propiedad.longitud != null) {

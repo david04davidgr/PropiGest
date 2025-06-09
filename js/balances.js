@@ -293,7 +293,7 @@ function cargarTop(){
             }    
         
             let balance = '';
-            if (propiedadTop.balance > 0) {
+            if (propiedadTop.balance >= 0) {
                 balance = `<p class="balancePositivo">▲ ${propiedadTop.balance}€</p>`
             }else{
                 if (propiedadTop.balance < 0) {
